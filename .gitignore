@@ -35,7 +35,9 @@ Thumbs.db
 data/
 storage/
 uploads/
-models/
+# ML 权重目录（仅限仓库根与 ml/ 下，避免误伤 backend/app/models/ 等 ORM 包）
+/models/
+ml/models/
 *.pt
 *.onnx
 *.pth
