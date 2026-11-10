@@ -1,0 +1,17 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "skating-ml"
+version = "0.1.0"
+description = "Skating Coach multimodal pipeline package (placeholder)"
+requires-python = ">=3.11"
+dependencies = [
+    # 保持轻量：MVP 阶段不引入任何重依赖
+]
+
+[project.optional-dependencies]
+# P1 阶段按需启用：
+# pose = ["mediapipe"]
+# llm  = ["openai"]

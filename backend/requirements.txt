@@ -1,0 +1,15 @@
+# Core web framework
+fastapi
+uvicorn[standard]
+
+# Database
+sqlalchemy>=2.0
+psycopg[binary]
+alembic
+
+# Settings & validation
+pydantic-settings
+
+# ---- 以下为后期阶段依赖，按里程碑再安装 ----
+# Task queue (P1): celery, redis
+# Optimization solver (MVP 后半程): ortools

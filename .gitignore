@@ -1,0 +1,52 @@
+# ---- Python ----
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+dist/
+build/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+htmlcov/
+.coverage
+
+# ---- Node ----
+node_modules/
+frontend/dist/
+*.local
+.vite/
+
+# ---- 环境变量与密钥 ----
+.env
+.env.*
+!.env.example
+
+# ---- IDE / 编辑器 ----
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# ---- 数据与模型（不入库；schema SQL 除外）----
+data/
+storage/
+uploads/
+models/
+*.pt
+*.onnx
+*.pth
+*.ckpt
+*.parquet
+*.mp4
+*.mov
+*.avi
+# 但保留库内种子/结构文件与必要示例
+!db/schema/*.sql
+
+# ---- 日志与临时 ----
+*.log
+tmp/
