@@ -1,9 +1,7 @@
-"""Program optimization endpoints (placeholder).
+"""旧编排入口兼容占位。
 
-TODO: POST /jobs 提交生成任务（选手 + 目标赛事组别 + 节目类型 + 风险档位），
-      GET /jobs/{id} 轮询状态；求解在 Celery worker 中执行并落库。
+TODO：未来生成请求转交智能体会话服务，不直接执行求解器；
+新客户端使用 /api/v1/agent/sessions。当前没有业务路由实现。
 """
-
 from fastapi import APIRouter
-
 router = APIRouter(prefix="/optimizer", tags=["optimizer"])

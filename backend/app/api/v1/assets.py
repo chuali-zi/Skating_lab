@@ -1,4 +1,4 @@
-"""Multimodal asset endpoints (placeholder).
+"""多模态资料接口占位。
 
 TODO: 上传（对象存储 + asset 元数据）、标注（asset_annotation）、
       ML 任务（ml_task）提交与状态查询。

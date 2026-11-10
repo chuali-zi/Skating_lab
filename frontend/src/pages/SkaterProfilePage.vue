@@ -1,5 +1,5 @@
 <script setup lang="ts">
-// TODO: 选手档案——基本信息/身体测量趋势/伤病风险标签/能力画像（element_skill_stat 可视化）
+// TODO：档案、确认后的训练限制、冻结画像、统计样本与证据来源。
 </script>
 
 <template>

@@ -1,21 +1,13 @@
-"""Optimizer service (interface placeholder).
+"""Agent 调用的约束工具端口，不是系统总控。
 
-编排优化（见 docs/PRD.md §9）：
-    - 决策变量 x[p,k]：槽位 p 是否选候选 k（元素×级别×联合跳结构模板）
-    - 硬约束：well_balanced_rule 数据行编译为计数/必备/禁止约束 + 伤病禁忌过滤
-    - 目标：max E[TES] + PCS_est - λ * Risk
-    - 求解器：OR-Tools CP-SAT；Top-K 通过 no-good 约束重复求解
-    - 输出：program_plan / program_element_item / program_score_breakdown /
-            program_constraint_check
-
-TODO: 候选集构建（能力下限过滤）、约束编译、目标装配、求解调用与结果落库、
-      beam search 降级实现。
+TODO：根据冻结规则编译已支持的约束；返回覆盖缺口、求解状态及候选修复。
+CP-SAT 或同类工具只保证已编码约束；未知条款与未知求解状态不得视作通过。
+工具评分使用规则数据，软偏好来自 Agent 的个性化构思；结果须独立复检。
 """
-
 from typing import Protocol
 
 
 class OptimizerService(Protocol):
-    def generate(self, skater_id: int, competition_category_id: int | None,
-                 program_type_id: int, risk_level: str, top_k: int = 3) -> list[int]:
-        """生成 Top-K 方案，返回 program_plan id 列表。"""
+    def solve(self, session_id: int, candidate_plan: dict, frozen_context: dict) -> dict:
+        """返回求解状态、规则覆盖、可行序列及配置；不擅自发布方案。"""
+        ...

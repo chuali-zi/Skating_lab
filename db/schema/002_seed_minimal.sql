@@ -1,5 +1,5 @@
 -- ============================================================================
--- Skating Coach · 最小种子数据（v0.1）
+-- Skating Coach · 最小种子数据（v0.2）
 -- ⚠ 免责声明：本文中的 Base Value / GOE 参数 / 数量限制均为【演示示意值】，
 --    正式数据必须以当季 ISU 官方通讯及协会规程为准，双人核对后录入。
 -- 执行方式：psql -d skating_coach -f db/schema/002_seed_minimal.sql
@@ -63,7 +63,7 @@ INSERT INTO element (id, code, name_en, name_zh, category_id, jump_rotations, ha
 INSERT INTO program_type (id, code, name_zh, discipline, duration_min_sec, duration_max_sec, notes)
 OVERRIDING SYSTEM VALUE VALUES
     (1, 'SP', '短节目', 'singles', 150, 170, '2 分 40 秒 ±10 秒（示意）'),
-    (2, 'FS', '自由滑', 'singles', 230, 280, '成年组女子约 4 分/男子约 4 分 30 秒（示意，以规程为准）');
+    (2, 'FS', '自由滑', 'singles', 230, 280, '时长范围仅作测试夹具，不代表任何正式组别');
 
 -- ----------------------------------------------------------------------------
 -- 规则集版本（示意）
@@ -71,10 +71,10 @@ OVERRIDING SYSTEM VALUE VALUES
 INSERT INTO ruleset_version (id, season_code, discipline, name, isu_communication_no,
                              effective_from, source_url, status) OVERRIDING SYSTEM VALUE VALUES
     (1, '2026-27', 'singles', '2026-27 赛季单人滑规则集（示意）', 'TBD',
-     '2026-07-01', 'https://www.isu.org/xxx', 'active');
+     '2026-07-01', NULL, 'draft');
 
 -- ----------------------------------------------------------------------------
--- 基础分定价（跳跃分值为近年常用值；旋转/步伐为示意值，正式值以官方通讯为准）
+-- 基础分测试夹具（全部为示意，未核对，不可用于正式推荐）
 -- ----------------------------------------------------------------------------
 INSERT INTO element_level_value (ruleset_version_id, element_id, level_code, base_value) VALUES
     -- 跳跃：级别恒为 N

@@ -1,23 +1,14 @@
-# ml —— 多模态 / 姿态估计 / 能力特征抽取（占位包）
+# ml：多模态理解与运动工具骨架
 
-本包是视频与照片分析流水线的家。当前**只有接口占位**，不安装重依赖、不下载模型权重。
+视觉语言理解是首版必需路径，姿态估计是辅助工具。整体目标澄清、能力权衡、方案构思和解释属于 [agent](../agent/README.md)，本包通过接口提供感知能力，不实现完整流程、不下载模型权重。
 
-## 模块划分
-
-| 模块 | 职责 | 阶段 |
+| 模块 | 输入与输出 | 边界 |
 | --- | --- | --- |
-| `skating_ml/pose/` | 姿态估计：视频 → 逐帧关键点（MVP 用 MediaPipe Pose，CPU 可跑） | P1 |
-| `skating_ml/features/` | 特征抽取：关键点序列 → 滞空时间/转速/跳跃高度等 → `capability_evidence` | P1 |
-| `skating_ml/llm/` | LLM 辅助：方案解释、自述文本抽取（**不参与求解**，人在环确认） | P1 |
+| `skating_ml/vision/understanding.py` | 受授权视频片段或照片 → 语义观察、时间段、不确定性 | 必需；记录实际输入范围，关键结论待人工确认 |
+| `skating_ml/pose/estimator.py` | 视频 → 关键点和相对运动线索 | 可选，质量不足则拒绝测量，不是唯一感知路径 |
+| `skating_ml/features/capability_extractor.py` | 运动工具结果 → 带来源的候选特征 | 不将置信度当成功率，不自动改写画像 |
+| `skating_ml/llm/assistant.py` | 自述 → 事实、偏好、冲突与待确认项 | 只做输入适配，总控与个性化规划位于 agent 包 |
 
-## 边界声明（与 PRD §9.3 一致）
+后续通过 `agent_tool_call`、`agent_llm_output` 和 `agent_evidence` 记录调用、输出和引用；运动测量继续使用 `ml_task`、`ml_task_result`、`pose_frame_feature`。确认后建立能力证据、画像与采用关系。接口边界见 [技术设计](../docs/technical-design.md)。
 
-- 核心编排由约束优化（CP-SAT）完成，本包产物只作为**带置信度的能力证据**；
-- MVP 阶段能力数据以"表单录入 + 人工标注"占位，流水线接入后平滑替换；
-- LLM 仅做解释与抽取辅助，任何自动结果需人工确认才入库生效。
-
-## 实现入口（TODO）
-
-1. `pose/estimator.py`：MediaPipe Pose 实现，输出写入 `pose_frame_feature`；
-2. `features/capability_extractor.py`：从关键点序列估计 metric_key（air_time / spin_speed / jump_height）；
-3. 与 backend 的 `ml_task` 状态机对接（Celery worker 调用）。
+开发可执行 `python3 -m pip install -e ./ml` 安装空依赖骨架。模型适配器使用环境中的部署别名；没有模型配置时提示不可用，不能把人工标注伪装为自动理解。

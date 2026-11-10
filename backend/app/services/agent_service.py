@@ -1,0 +1,13 @@
+"""后端到智能体的应用服务边界；不实现调用或持久化。
+
+TODO：创建会话、资产授权关联与输入消息，调度 agent/skating_agent/orchestrator.py。
+查询时过滤敏感载荷；确认时核对权限与修订号；把运行结果持久化到 PostgreSQL。
+"""
+from typing import Protocol
+
+
+class AgentService(Protocol):
+    async def create_session(self, actor_user_id: int, request: dict) -> int: ...
+    async def get_session(self, actor_user_id: int, session_id: int) -> dict: ...
+    async def submit_review(self, actor_user_id: int, session_id: int, review: dict) -> dict: ...
+    async def cancel_session(self, actor_user_id: int, session_id: int, revision: int) -> None: ...

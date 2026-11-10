@@ -1,6 +1,6 @@
 -- ============================================================================
--- Skating Coach · PostgreSQL 16 schema (v0.1)
--- 与 docs/database-design.md 一一对应：8 域 32 表。
+-- Skating Coach · PostgreSQL 16 基础结构（v0.2）
+-- 既有 8 域 32 表；003_agent_schema.sql 扩展后为 9 域 44 表。
 -- 执行方式：psql -d skating_coach -f db/schema/001_schema.sql
 -- 注意：正式分值/数量限制以当季 ISU 官方通讯双人核对录入为准。
 -- ============================================================================
@@ -116,6 +116,7 @@ CREATE TRIGGER trg_element_updated BEFORE UPDATE ON element
 CREATE TABLE ruleset_version (
     id                    BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     season_code           TEXT        NOT NULL,
+    revision_no           INTEGER     NOT NULL DEFAULT 1 CHECK (revision_no >= 1),
     discipline            TEXT        NOT NULL,
     name                  TEXT        NOT NULL,
     isu_communication_no  TEXT,
@@ -125,12 +126,12 @@ CREATE TABLE ruleset_version (
     status                TEXT        NOT NULL DEFAULT 'draft',
     created_at            TIMESTAMPTZ NOT NULL DEFAULT now(),
     updated_at            TIMESTAMPTZ NOT NULL DEFAULT now(),
-    CONSTRAINT uq_ruleset_season_discipline UNIQUE (season_code, discipline),
+    CONSTRAINT uq_ruleset_season_discipline UNIQUE (season_code, discipline, revision_no),
     CONSTRAINT ck_ruleset_discipline CHECK (discipline IN ('singles', 'pairs', 'ice_dance')),
     CONSTRAINT ck_ruleset_status     CHECK (status IN ('draft', 'active', 'retired')),
     CONSTRAINT ck_ruleset_period     CHECK (effective_to IS NULL OR effective_to >= effective_from)
 );
-COMMENT ON TABLE ruleset_version IS '规则集版本：赛季×项目，规则数据化的锚点';
+COMMENT ON TABLE ruleset_version IS '规则集版本：赛季×项目×修订；发布后由应用权限禁止原地改写';
 
 -- 同一 discipline 至多一个 active 规则集
 CREATE UNIQUE INDEX uq_ruleset_active ON ruleset_version (discipline) WHERE status = 'active';
@@ -207,7 +208,7 @@ CREATE TABLE well_balanced_rule (
     CONSTRAINT ck_wbr_skater_category CHECK (
         skater_category IS NULL OR skater_category IN ('novice', 'junior', 'senior'))
 );
-COMMENT ON TABLE well_balanced_rule IS '均衡节目条款（结构规则数据化）：优化器直接读取生成为求解约束';
+COMMENT ON TABLE well_balanced_rule IS '结构化条款：由白名单规则编译器读取；未知条款必须报告未覆盖';
 COMMENT ON COLUMN well_balanced_rule.rule_key IS '机器可读条款键：element_total/jump_element/combo_jump/triple_combo/same_jump_repeat/...';
 
 CREATE INDEX ix_wbr_lookup ON well_balanced_rule (ruleset_version_id, program_type_id);
@@ -323,7 +324,7 @@ CREATE TABLE injury_record (
         OR (status <> 'recovered' AND recovered_on IS NULL)),
     CONSTRAINT ck_inj_period CHECK (recovered_on IS NULL OR recovered_on >= occurred_on)
 );
-COMMENT ON TABLE  injury_record IS '伤病记录；risk_tags 直接被优化器消费为元素禁忌/限制';
+COMMENT ON TABLE  injury_record IS '伤病记录；risk_tags 经有权限人员确认后作为编排限制';
 COMMENT ON COLUMN injury_record.risk_tags IS '如 {avoid_layback, limit_quads_late}';
 
 CREATE INDEX ix_inj_skater_status ON injury_record (skater_id, status);
@@ -377,7 +378,7 @@ CREATE TABLE asset_annotation (
     CONSTRAINT ck_ann_type CHECK (annotation_type IN ('time_span', 'element_tag', 'keypoint_set', 'text_note')),
     CONSTRAINT ck_ann_time CHECK (t_end IS NULL OR t_start IS NULL OR t_end >= t_start)
 );
-COMMENT ON TABLE asset_annotation IS '资产标注：时间段元素标签/关键点/文本备注（P0 人工标注主战场）';
+COMMENT ON TABLE asset_annotation IS '资产标注：时间段元素标签、关键点与文本备注；支持人工复核';
 
 CREATE INDEX ix_ann_asset ON asset_annotation (asset_id);
 
@@ -482,7 +483,7 @@ CREATE TABLE element_skill_stat (
     CONSTRAINT ck_ess_rate CHECK (success_rate BETWEEN 0 AND 1),
     CONSTRAINT ck_ess_count CHECK (attempt_count >= 0)
 );
-COMMENT ON TABLE element_skill_stat IS '元素统计快照（时间版本化，追加不更新）：优化器直接输入；std_goe 表示稳定性/抖动';
+COMMENT ON TABLE element_skill_stat IS '元素统计快照：画像与工具输入；追加策略由应用权限执行';
 
 CREATE INDEX ix_ess_lookup ON element_skill_stat (skater_id, element_id, stat_window, computed_at DESC);
 
@@ -608,8 +609,9 @@ CREATE TABLE program_plan (
     program_type_id        BIGINT      NOT NULL,
     ruleset_version_id     BIGINT      NOT NULL,
     parent_plan_id         BIGINT,
+    capability_snapshot_id BIGINT REFERENCES capability_snapshot (id),
     version_no             INTEGER     NOT NULL DEFAULT 1,
-    origin                 TEXT        NOT NULL DEFAULT 'solver',
+    origin                 TEXT        NOT NULL DEFAULT 'agent',
     status                 TEXT        NOT NULL DEFAULT 'generated',
     solver_config          JSONB       NOT NULL DEFAULT '{}'::jsonb,
     objective_value        NUMERIC(8,2),
@@ -627,7 +629,7 @@ CREATE TABLE program_plan (
     CONSTRAINT fk_plan_ruleset FOREIGN KEY (ruleset_version_id) REFERENCES ruleset_version (id),
     CONSTRAINT fk_plan_parent FOREIGN KEY (parent_plan_id) REFERENCES program_plan (id),
     CONSTRAINT fk_plan_creator FOREIGN KEY (created_by) REFERENCES app_user (id),
-    CONSTRAINT ck_plan_origin CHECK (origin IN ('solver', 'manual', 'hybrid')),
+    CONSTRAINT ck_plan_origin CHECK (origin IN ('agent', 'solver', 'manual', 'hybrid')),
     CONSTRAINT ck_plan_status CHECK (status IN ('draft', 'generated', 'coach_review', 'finalized', 'archived')),
     CONSTRAINT ck_plan_version_no CHECK (version_no >= 1)
 );
@@ -676,15 +678,24 @@ CREATE TABLE program_score_breakdown (
     tes_goe_expected    NUMERIC(7,2) NOT NULL,
     tes_expected        NUMERIC(7,2) NOT NULL,
     pcs_expected        NUMERIC(7,2) NOT NULL,
-    pcs_components      JSONB        NOT NULL DEFAULT '{}'::jsonb,
+    pcs_components      JSONB        NOT NULL,
     deduction_expected  NUMERIC(7,2) NOT NULL DEFAULT 0,
     total_expected      NUMERIC(7,2) NOT NULL,
     engine_version      TEXT,
     computed_at         TIMESTAMPTZ  NOT NULL DEFAULT now(),
+    CONSTRAINT ck_psb_pcs CHECK (
+        jsonb_typeof(pcs_components) = 'object'
+        AND pcs_components ?& ARRAY['composition', 'presentation', 'skating_skills']
+        AND (pcs_components - ARRAY['composition', 'presentation', 'skating_skills']) = '{}'::jsonb
+        AND jsonb_typeof(pcs_components->'composition') = 'number'
+        AND jsonb_typeof(pcs_components->'presentation') = 'number'
+        AND jsonb_typeof(pcs_components->'skating_skills') = 'number'
+    ),
+    CONSTRAINT ck_psb_total CHECK (total_expected = tes_expected + pcs_expected - deduction_expected),
     CONSTRAINT uq_psb_plan UNIQUE (plan_id),
     CONSTRAINT fk_psb_plan FOREIGN KEY (plan_id) REFERENCES program_plan (id) ON DELETE CASCADE
 );
-COMMENT ON TABLE program_score_breakdown IS '方案得分拆解（1:1）：期望 TES/PCS/总分与三分项 PCS（键名建议 composition/presentation/skating_skills，2022/23 赛季起 ISU 为三项）';
+COMMENT ON TABLE program_score_breakdown IS '方案得分拆解：PCS 必须为 composition/presentation/skating_skills 三项，2022/23 起由五项改为三项';
 
 CREATE TABLE program_constraint_check (
     id                   BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,

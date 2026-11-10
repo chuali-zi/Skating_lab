@@ -1,15 +1,16 @@
-# Core web framework
+# Web 框架
 fastapi
 uvicorn[standard]
 
-# Database
+# 数据库
 sqlalchemy>=2.0
 psycopg[binary]
 alembic
 
-# Settings & validation
+# 配置与校验
 pydantic-settings
 
-# ---- 以下为后期阶段依赖，按里程碑再安装 ----
-# Task queue (P1): celery, redis
-# Optimization solver (MVP 后半程): ortools
+# ---- 以下为后续实现依赖，骨架暂不安装 ----
+# 异步调度：celery, redis
+# 约束工具：ortools
+# 首版必需：按 ModelGateway 选择模型适配器，保持厂商中立

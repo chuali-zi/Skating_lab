@@ -1,13 +1,12 @@
-"""Capability feature extractor (placeholder).
+"""运动特征抽取占位；结果先由 Agent 作为候选证据保存。
 
-职责：PoseResult / 人工标注 → metric（air_time / spin_speed / jump_height ...）
-     → capability_evidence（带 confidence，source_type='ml_task'）。
+TODO：保留 task_id、资产与片段、工具版本、质量及不确定性；
+关键观察人工确认后才能进入能力快照，不自动覆盖长期统计。
 """
-
 from typing import Protocol
 
 
 class CapabilityExtractor(Protocol):
-    # TODO: 从关键点时间序列估计特征并生成证据记录
     def extract(self, pose_result: object, skater_id: int, task_id: int) -> list[dict]:
-        """返回待写入 capability_evidence 的记录列表。"""
+        """返回测量及来源，不能将模型置信度视为动作成功率。"""
+        ...

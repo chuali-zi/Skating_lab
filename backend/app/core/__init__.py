@@ -1,1 +1,1 @@
-"""Core utilities (config, logging, security). Placeholder."""
+"""配置、日志与权限工具占位。"""

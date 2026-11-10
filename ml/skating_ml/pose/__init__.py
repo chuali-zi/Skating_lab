@@ -1,1 +1,1 @@
-"""Pose estimation subpackage."""
+"""辅助姿态估计接口。"""

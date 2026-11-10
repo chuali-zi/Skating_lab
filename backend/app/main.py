@@ -1,4 +1,4 @@
-"""FastAPI application entry (placeholder).
+"""FastAPI 应用入口占位。
 
 TODO: app factory、CORS、异常处理、鉴权中间件、路由挂载完善。
 """
@@ -13,7 +13,7 @@ app = FastAPI(
     version="0.1.0",
 )
 
-app.include_router(api_router, prefix="/api")
+app.include_router(api_router, prefix="/api/v1")
 
 
 @app.get("/api/health")

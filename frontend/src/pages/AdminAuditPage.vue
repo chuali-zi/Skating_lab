@@ -1,5 +1,6 @@
 <script setup lang="ts">
-// TODO: 管理后台——用户与角色、审计日志(audit_log)、数据字典(dict_entry)
+// TODO：有权限人员查看会话、工具调用、模型输出摘要、证据与复核日志。
+// 屏蔽敏感载荷，模拟输出与真实运行记录分别标识。
 </script>
 
 <template>

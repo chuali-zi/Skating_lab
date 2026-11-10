@@ -1,1 +1,1 @@
-"""LLM assistant subpackage."""
+"""自述理解适配接口。"""

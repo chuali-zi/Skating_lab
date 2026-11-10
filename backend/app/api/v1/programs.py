@@ -1,4 +1,4 @@
-"""Program plan endpoints (placeholder).
+"""方案查询与人工微调接口占位。
 
 TODO: 方案与元素序列查询、得分拆解（program_score_breakdown）、
       约束检查报告（program_constraint_check）、人工微调 + 实时复检、

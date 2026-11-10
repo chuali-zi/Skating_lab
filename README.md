@@ -1,61 +1,79 @@
-# Skating Coach · 花样滑冰 AI 教练 / 个性化动作编排系统
+# Skating Coach：花样滑冰 AI 教练与个性化动作编排
 
-输入选手的极端多模态数据（训练视频、照片、表单/自述），结合其真实能力与目标赛事规则，通过**可解释的约束优化（CP-SAT）**生成期望得分最大化的花样滑冰编排（元素选择 + 顺序），并给出得分拆解、风险与备选方案。
+选手可以交视频、照片、表单和自述，说明自己的能力、偏好与目标赛事；智能教练整理资料、澄清疑问，提出贴合个人情况的编排，并解释“为什么这样排”。教练能够确认关键事实、比较取舍、微调和定稿，历史方案保留当时的依据。
 
-- 目标赛事：校赛「计算机数据库设计大赛」→ 国赛「中国大学生计算机设计大赛」
-- 核心文档：[docs/PRD.md](docs/PRD.md) · [docs/database-design.md](docs/database-design.md)
+产品同时面向校赛“计算机数据库设计大赛”和国赛“中国大学生计算机设计大赛”：前者展示数据管理与可追溯证据链，后者展示多模态理解、智能体规划和可解释的人机协作。
 
-## 核心理念
+**当前为文档与骨架阶段。** 可初始化数据库，后端有健康检查，前端有页面占位；尚无真实模型接入、智能体运行时、评分或求解实现。设计中的验收目标不等于已取得的效果。
 
-1. **规则即数据**：ISU Base Value / GOE 参数 / well-balanced 条款全部存库（`ruleset_version` 等表），赛季更新 = 插入新数据行，不改代码；
-2. **可解释优化**：编排由约束规划求解（决策变量 = 槽位×候选元素，硬约束 = 规则库条款 + 伤病禁忌，目标 = 期望 TES + PCS − λ·风险），每个方案附逐条约束检查报告，而非黑盒生成；
-3. **证据链可追溯**：视频 → 姿态特征 → 能力证据 → 统计快照 → 编排决策，一条 SQL 可追溯。
+## 文档入口
 
-## 目录结构
+- [产品需求](docs/PRD.md)：用户、场景、产品能力、优先级与验收边界，保持纯产品表述。
+- [技术设计](docs/technical-design.md)：必需的 LLM Agent 总控、多模态、工具、人工确认、成本及评估；总体技术内容集中于此。
+- [数据库设计](docs/database-design.md)：保留既有八域，扩展为九域四十四表，含数据字典、ER、约束分工和查询。
+- [数据库初始化](db/README.md)：可执行结构、示意种子及血缘查询。
 
-```
+Markdown 是本次评审的有效版本；旧 PDF 已移除，避免与新的产品边界和架构冲突。后续如需 PDF，应从当前 Markdown 统一导出。
+
+## 目录说明
+
+```text
 skating-coach/
-├── docs/                 # PRD 与数据库设计文档
+├── docs/                 # 产品需求、技术设计、数据库设计
 ├── db/
-│   ├── README.md
-│   └── schema/           # PostgreSQL DDL（001 全量结构 / 002 最小种子数据）
-├── backend/              # FastAPI 占位骨架（skaters/assets/rules/optimizer/programs）
-├── frontend/             # Vue 3 占位骨架（档案/上传/生成/对比/规则库/后台）
-└── ml/                   # 多模态流水线占位包（pose / features / llm）
+│   ├── schema/           # 001 基础结构、002 基础种子、003 Agent 扩展、004 合成血缘种子
+│   └── examples/         # 可执行追溯查询
+├── agent/                # 总控、子角色、工具、模型与记忆接口
+├── backend/              # API 与事务、规则校验、评分、约束工具骨架
+├── frontend/             # 档案、资料、会话确认、生成、对比、规则和审计占位
+└── ml/                   # 必需视觉语言理解与可选姿态工具接口
 ```
 
-当前仓库为**骨架阶段**：文档完整、SQL 可执行，应用代码只有占位接口与 TODO。
+LLM Agent 负责理解、个性化构思、工具选择与解释。评分以规则库和工具为准，CP-SAT 或同类工具负责已编码约束的合法性；PostgreSQL 保存会话、调用、模型输出、确认及证据采用关系。实现细节和限制详见技术设计，模型通过部署别名配置，不绑定厂商或具体模型 ID。
 
-## 本地开发如何开始
+## 本地启动要点
 
-环境要求：Python 3.11+、Node 18+、PostgreSQL 16（Docker 即可）。
+准备 Python 3.11+、兼容现有前端依赖的 Node LTS 与 npm、PostgreSQL 16+。以下命令从仓库根目录执行；前后端分别使用终端。当前没有一键启动完整产品的容器配置，也不需要启动模型、队列或对象存储来查看骨架。
+
+数据库连接由本地 PostgreSQL 账号配置；如果使用已有实例，只创建独立开发数据库，不在已有业务库执行初始化。脚本按顺序执行一次，遇错立即停止：
 
 ```bash
-# 1) 数据库
-docker run -d --name skating-pg -e POSTGRES_PASSWORD=skating -e POSTGRES_DB=skating_coach -p 5432:5432 postgres:16
-psql -d skating_coach -h localhost -U postgres -f db/schema/001_schema.sql
-psql -d skating_coach -h localhost -U postgres -f db/schema/002_seed_minimal.sql
-
-# 2) 后端
-cd backend && python -m venv .venv && source .venv/bin/activate
-pip install -r requirements.txt && cp .env.example .env
-uvicorn app.main:app --reload          # http://127.0.0.1:8000/docs
-
-# 3) 前端
-cd frontend && npm install && npm run dev   # http://127.0.0.1:5173
+createdb skating_coach
+psql -v ON_ERROR_STOP=1 -d skating_coach -f db/schema/001_schema.sql
+psql -v ON_ERROR_STOP=1 -d skating_coach -f db/schema/002_seed_minimal.sql
+psql -v ON_ERROR_STOP=1 -d skating_coach -f db/schema/003_agent_schema.sql
+psql -v ON_ERROR_STOP=1 -d skating_coach -f db/schema/004_seed_agent_demo.sql
+psql -v ON_ERROR_STOP=1 -d skating_coach -f db/examples/trace_queries.sql
 ```
 
-## 推送到你自己的 Gitee 仓库
+规则种子为 `draft`，分值与数量是未核对的测试数据。可选的 004 使用合成选手、占位媒体和模拟输出，不提供真实媒体、完整节目或正式评分，不能用作推荐依据。初始化快照不具备幂等性，也不是旧业务库迁移脚本。
 
-远端仓库尚未创建。你先在 Gitee 上新建空仓库（不要勾选初始化 README），然后把下面占位地址替换为你的真实地址：
+后端：
 
 ```bash
-git remote add origin https://gitee.com/<your-namespace>/skating-coach.git
-git push -u origin main
+python3 -m venv .venv
+.venv/bin/python -m pip install -r backend/requirements.txt
+cp backend/.env.example backend/.env
+cd backend
+../.venv/bin/python -m uvicorn app.main:app --reload
 ```
 
-> 把 `<your-namespace>` 换成你的 Gitee 用户名/组织名即可。若仓库需私有，推送时按提示输入 Gitee 账号或配置 SSH key。
+访问 `http://127.0.0.1:8000/api/health` 检查进程，`http://127.0.0.1:8000/docs` 查看当前接口。健康检查不检测数据库或模型。业务路径规划为 `/api/v1`，目前只有路由模块占位；复制配置后按本机数据库连接调整，模型适配器尚未实现。
 
-## 里程碑速览
+前端另开终端，从仓库根目录执行：
 
-阶段 0 设计定稿 → 阶段 1 MVP（校赛：库表 + 规则引擎 + CP-SAT 编排 + 方案对比）→ 阶段 2 校赛冲刺 → 阶段 3 多模态（姿态估计接入）→ 阶段 4 国赛完善（LLM 助手 + 产品打磨）。详见 [PRD §13](docs/PRD.md)。
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+打开 `http://127.0.0.1:5173`；`npm run build` 检查类型并构建静态资源。Agent 和多模态包没有必装运行依赖，可在根目录用 `.venv/bin/python -m pip install -e ./agent -e ./ml` 安装接口包。
+
+## Gitee remote 说明
+
+Gitee 仓库地址占位为 `https://gitee.com/<your-namespace>/skating-coach.git`，使用时将 `<your-namespace>` 替换为自己的用户名或组织名。本次检查时仓库在 `main` 分支，`git remote -v` 未列出远端；本次未添加或修改 remote，也未提交、推送。可用 `git remote -v` 查看本地已有配置；日后自行关联远端时先核对已有地址，避免覆盖已有配置。
+
+## 后续交付顺序
+
+先评审一个目标组别、核对规则与示例，再实现带人工确认的智能理解和编排闭环；随后完成校赛证据链演示，国赛阶段扩展资料覆盖与真实效果评估。首版包含 LLM 与视觉理解，不能把它们降为后期解释插件。具体产品里程碑见 PRD，工程门禁见技术设计。

@@ -1,1 +1,1 @@
-"""Feature extraction subpackage."""
+"""运动特征抽取接口。"""

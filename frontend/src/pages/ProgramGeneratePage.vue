@@ -1,6 +1,6 @@
 <script setup lang="ts">
-// TODO: 编排生成——选择选手 + 目标赛事组别 + 节目类型(SP/FS) + 风险档位(λ)，
-//       提交 POST /api/v1/optimizer/jobs 并展示任务进度与 Top-K 结果入口
+// TODO：选择选手、目标赛事、节目类型、偏好与已授权资料。
+// 调用 POST /api/v1/agent/sessions，显示理解、待确认、规划与检查状态。
 </script>
 
 <template>

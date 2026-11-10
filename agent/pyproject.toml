@@ -1,0 +1,10 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "skating-agent"
+version = "0.2.0"
+description = "花样滑冰智能体的总控、工具和记忆接口骨架"
+requires-python = ">=3.11"
+dependencies = []

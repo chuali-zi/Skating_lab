@@ -1,1 +1,1 @@
-"""Domain services (scoring, optimization)."""
+"""应用服务与确定性工具接口。"""

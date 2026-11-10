@@ -1,32 +1,17 @@
-# db —— 数据库 Schema 与种子数据
+# db：数据库结构与演示数据
 
-本目录是数据库设计的"可执行快照"，与 [docs/database-design.md](../docs/database-design.md) 一一对应。
+对应 [数据库设计](../docs/database-design.md)，完整初始化后共九域四十四表。保留八域三十二表，新增规则原文一表、画像血缘两表和智能体域九表。模型输出、工具结果和公开决策摘要入库；不采集隐藏思维链。
 
-## 文件清单
-
-| 文件 | 说明 |
+| 文件 | 用途 |
 | --- | --- |
-| `schema/001_schema.sql` | 全量 DDL：8 个业务域 32 张表（PK/FK/CHECK/索引/触发器/COMMENT） |
-| `schema/002_seed_minimal.sql` | 最小种子数据（角色、元素字典、示意规则集与 well-balanced 条款） |
+| `schema/001_schema.sql` | 八域基础结构，包含修订后的规则版本、冻结画像引用和三项 PCS 约束 |
+| `schema/002_seed_minimal.sql` | 基础字典与未核对的示意规则，规则状态为 `draft` |
+| `schema/003_agent_schema.sql` | 十二张扩展表及方案会话复合外键 |
+| `schema/004_seed_agent_demo.sql` | 可选合成演示：资料入会话、工具和模型输出、确认与实际采用关系 |
+| `examples/trace_queries.sql` | 八组查询：冻结能力、方案比较、视频影响与调用追溯 |
 
-> ⚠ 种子数据中的 Base Value / 参数 / 数量限制均为**演示示意值**，正式数据以当季 ISU 官方通讯为准，需双人核对录入。
+空白 PostgreSQL 16+ 开发库按 001、002、003、004 顺序执行，命令见 [根目录说明](../README.md)。每条命令使用 `psql -v ON_ERROR_STOP=1`；脚本不幂等，不用于覆盖已有业务数据。003 依赖本次修订的 001，不能单独升级旧版本部署；后续正式应用须另外维护增量迁移。
 
-## 本地初始化（PostgreSQL 16）
+004 不包含真实媒体、不提供真实登录用户、不运行模型或求解器，全部输出明确标记合成。合成方案为草稿，评分查询为空是预期结果。种子规则未发布，正式推荐前必须核对来源、适用范围、覆盖与计算逻辑。
 
-```bash
-createdb skating_coach
-psql -d skating_coach -f db/schema/001_schema.sql
-psql -d skating_coach -f db/schema/002_seed_minimal.sql
-```
-
-或使用 Docker：
-
-```bash
-docker run -d --name skating-pg -e POSTGRES_PASSWORD=skating -e POSTGRES_DB=skating_coach -p 5432:5432 postgres:16
-```
-
-## 后续演进约定
-
-- 开发期使用 Alembic（见 `backend/`）管理增量迁移；
-- `db/schema/` 始终保持"当前全量快照"角色：每次结构变更后同步更新本目录与设计文档；
-- 大表（`pose_frame_feature` / `audit_log` / `element_attempt_log`）的分区策略在物理设计章节说明，MVP 暂不分区。
+DDL 保证类型、来源互斥、参照关系和部分上下文一致性；权限、状态转换、规则不可变、人工确认和定稿门禁属于后续应用事务，不能把存在外键误当作完成了产品验证。各项分工见数据库设计。

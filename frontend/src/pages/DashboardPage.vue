@@ -1,5 +1,5 @@
 <script setup lang="ts">
-// TODO: 总览看板——选手数、近期方案、ML 任务状态、规则集版本提示
+// TODO：选手、近期方案、会话进度和待确认事项；未完成工作不显示为成功。
 </script>
 
 <template>

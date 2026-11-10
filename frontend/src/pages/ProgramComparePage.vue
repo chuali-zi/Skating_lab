@@ -1,6 +1,6 @@
 <script setup lang="ts">
-// TODO: 方案对比——多方案并排：期望 TES/PCS/总分、风险分、逐元素拆解、
-//       约束检查报告(program_constraint_check)、版本链(parent_plan_id)导航
+// TODO：对比动作取舍、工具预估、规则出处与实际采用的证据。
+// 微调生成新版本并重新检查；覆盖不完整或未确认不得定稿。
 </script>
 
 <template>

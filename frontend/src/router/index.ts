@@ -6,6 +6,7 @@ const router = createRouter({
   routes: [
     { path: "/", name: "dashboard", component: () => import("../pages/DashboardPage.vue") },
     { path: "/skaters/:id", name: "skater-profile", component: () => import("../pages/SkaterProfilePage.vue") },
+    { path: "/sessions/:id", name: "agent-session", component: () => import("../pages/AgentSessionPage.vue") },
     { path: "/assets", name: "assets", component: () => import("../pages/AssetUploadPage.vue") },
     { path: "/programs/generate", name: "program-generate", component: () => import("../pages/ProgramGeneratePage.vue") },
     { path: "/programs/compare", name: "program-compare", component: () => import("../pages/ProgramComparePage.vue") },

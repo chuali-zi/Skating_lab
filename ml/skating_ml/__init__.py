@@ -1,1 +1,1 @@
-"""Skating Coach multimodal ML package (placeholder)."""
+"""花样滑冰多模态工具骨架。"""

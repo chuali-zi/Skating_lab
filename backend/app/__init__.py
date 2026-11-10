@@ -1,1 +1,1 @@
-"""Skating Coach backend package (placeholder)."""
+"""花样滑冰后端骨架。"""
