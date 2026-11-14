@@ -11,7 +11,7 @@
 - [手绘需求原图](docs/requirements-sketch-2026-11-14.jpg)：本次产品整理使用的原始截图。
 - [计算与建议引擎技术调研](docs/engine-research-2026-11-14.md)：花滑模型、视频理解、个性化决策、技术候选与验证计划。
 
-**当前产品以 2026-11-14 的手绘需求、后续用户修正和 PRD v0.7 为准。首版用户端已确定为原生 Android。** 已排除 Web 前端、网页套壳和 Python 后端；现有 Web 前端已移除。建议采用 Kotlin + Jetpack Compose、Java 和 PostgreSQL，后端及计算与建议引擎仍在技术评审；允许调用云端模型，训练视频能力进入预研。
+**当前产品以 2026-11-14 的手绘需求、后续用户修正和 PRD v0.8 为准。首版用户端已确定为原生 Android，仅接收服务并承担交互。** 已排除 Web 前端、网页套壳、Python 后端和端侧推理。建议引擎采用云端 LLM + 花滑知识库/RAG + 个人长期档案；当前不训练、不微调模型，不采购训练 GPU。建议使用 Kotlin + Jetpack Compose、Java 和 PostgreSQL/pgvector；具体后端及云端模型继续评审，视频由服务端调用云端模型分析。
 
 已有 Python 后端、Agent 和 ML 文件仅为旧方案骨架，不代表当前技术路线，也未完成新版产品实现。
 
