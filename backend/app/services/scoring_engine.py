@@ -2,7 +2,7 @@
 
 TODO：GOE 等级先转换为分值；场景概率求期望；总分中只扣一次跌倒扣分。
 PCS 只含 composition、presentation、skating_skills，数值须有教练基线或校准来源。
-缺失规则或能力输入时返回不可评分，不让 LLM 补分；详见 technical-design.md。
+缺失规则或能力输入时返回不可评分，不让 LLM 补分。
 """
 from typing import Protocol
 

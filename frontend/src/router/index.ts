@@ -1,6 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
 
-// 占位路由：与 frontend/README.md 页面清单一一对应
 const router = createRouter({
   history: createWebHistory(),
   routes: [
