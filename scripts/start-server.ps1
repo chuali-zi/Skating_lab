@@ -12,6 +12,15 @@ try {
         & .\mvnw.cmd -B --no-transfer-progress package
         if ($LASTEXITCODE -ne 0) { throw 'Build/tests failed; server was not started.' }
     }
-    & (Join-Path $env:JAVA_HOME 'bin/java.exe') -jar target/skating-coach-server-0.1.0-SNAPSHOT.jar
+    # Windows locks a running JAR. Keep Maven's target artifact free for rebuilds
+    # by running an immutable, content-addressed copy in the ignored tmp folder.
+    $builtJar = Join-Path $projectRoot 'server/target/skating-coach-server-0.1.0-SNAPSHOT.jar'
+    if (-not (Test-Path -LiteralPath $builtJar)) { throw 'Packaged server JAR not found; run without -SkipBuild first.' }
+    $runtimeDirectory = Join-Path $projectRoot 'tmp/runtime'
+    New-Item -ItemType Directory -Force -Path $runtimeDirectory | Out-Null
+    $jarHash = (Get-FileHash -LiteralPath $builtJar -Algorithm SHA256).Hash.ToLowerInvariant()
+    $runtimeJar = Join-Path $runtimeDirectory "skating-coach-$jarHash.jar"
+    if (-not (Test-Path -LiteralPath $runtimeJar)) { Copy-Item -LiteralPath $builtJar -Destination $runtimeJar }
+    & (Join-Path $env:JAVA_HOME 'bin/java.exe') -jar $runtimeJar
     if ($LASTEXITCODE -ne 0) { throw 'Server exited with an error.' }
 } finally { Pop-Location }

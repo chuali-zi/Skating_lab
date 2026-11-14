@@ -20,6 +20,7 @@ import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import java.io.IOException
+import java.net.SocketTimeoutException
 import java.util.concurrent.TimeUnit
 
 class ApiException(val status: Int, val code: String?, override val message: String) : IOException(message)
@@ -43,7 +44,7 @@ class CoachApi(
         val request = Request.Builder().url(url).header("Accept", "application/json")
         token?.let { request.header("Authorization", "Bearer $it") }
         request.method(method, body)
-        client.newCall(request.build()).execute().use { response ->
+        try { client.newCall(request.build()).execute().use { response ->
             val responseText = response.body?.string().orEmpty()
             if (!response.isSuccessful) {
                 val problem = runCatching { json.parseToJsonElement(responseText).jsonObject }.getOrNull()
@@ -59,7 +60,9 @@ class CoachApi(
                 throw ApiException(response.code, code, message)
             }
             responseText.ifBlank { "{}" }
-        }
+        } } catch (e: ApiException) { throw e }
+        catch (e: SocketTimeoutException) { throw IOException("服务响应超时，请稍后重试。当前输入已保留。", e) }
+        catch (e: IOException) { throw IOException("暂时无法连接服务，请检查网络和服务地址后重试。当前输入已保留。", e) }
     }
 
     suspend fun upload(title: String, fileName: String, mimeType: String, fileBody: RequestBody, competition: String, requestId: String): KnowledgeItem {

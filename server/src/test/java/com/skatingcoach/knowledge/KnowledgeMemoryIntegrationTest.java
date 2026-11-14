@@ -122,6 +122,28 @@ class KnowledgeMemoryIntegrationTest {
         assertThat(knowledge.search(bob,"后半程疲劳",null,10).items()).isEmpty();
         assertThat(result.items().get(0).locator()).contains("text;part=");
     }
+    @Test void blankCompetitionDocumentsRemainGlobalAcrossSearchAndCoachContext() {
+        var source=document(alice,"稳定落冰训练反馈", " \t ");
+        assertThat(source.competitionKey()).isNull();
+        assertThat(source.sourceKind()).isEqualTo("user_document");
+        document(alice,"另一个赛事的稳定落冰条款", "event-other");
+        for(String scope:Arrays.asList(null,""," \t ","event-current")) {
+            assertThat(knowledge.search(alice,"稳定落冰",scope,10).items()).extracting(Evidence::sourceId).containsExactly(source.id());
+        }
+        assertThat(contexts.build(alice,"稳定落冰",null,null).text()).contains("稳定落冰训练反馈").doesNotContain("另一个赛事");
+        assertThat(knowledge.search(bob,"稳定落冰",null,10).items()).isEmpty();
+        // Compatibility with rows written before blank scopes were normalized.
+        tenant.write(alice,()->{jdbc.update("update knowledge_source set competition_key='',source_kind='private_rule' where id=?",source.id());return null;});
+        assertThat(knowledge.search(alice,"稳定落冰",null,10).items()).singleElement().satisfies(e->assertThat(e.sourceKind()).isEqualTo("user_document"));
+        assertThat(knowledge.detail(alice,source.id()).source().competitionKey()).isNull();
+    }
+    @Test void blankUploadScopeIsGlobalAndItsPendingStatusReachesTheCoach() throws Exception {
+        var source=knowledge.upload(alice,"blank scope upload","text/plain","  ",UUID.randomUUID().toString(),new ByteArrayInputStream("training evidence".getBytes(StandardCharsets.UTF_8)));
+        assertThat(source.competitionKey()).isNull();
+        assertThat(source.sourceKind()).isEqualTo("user_document");
+        assertThat(knowledge.unresolved(alice,null)).contains("blank scope upload：queued");
+        assertThat(knowledge.unresolved(bob,null)).isEmpty();
+    }
     @Test void explicitNaturalCorrectionSupersedesAndForgettingTraversesItsSources() {
         var old=memory.create(alice,new MemoryModels.Create("3Lz was unstable","capability","jump:3Lz","global",null,"old"));
         when(model.available()).thenReturn(true);
@@ -174,6 +196,20 @@ class KnowledgeMemoryIntegrationTest {
         when(embeddings.embed(anyList())).thenReturn(List.of(new double[]{1,0,0}));
         var result=knowledge.search(alice,"semantic paraphrase",null,10);
         assertThat(result.mode()).isEqualTo("hybrid");assertThat(result.items()).hasSize(1);
+    }
+    @Test void mislabeledVideoWaitsForVisualAnalysisAndCannotEnterRetrieval()throws Exception {
+        var source=knowledge.upload(alice,"mislabeled training.txt","text/plain",null,UUID.randomUUID().toString(),
+                new ByteArrayInputStream(DocumentParserTest.syntheticVideo()));
+        jdbc.update("update knowledge_job set status='done' where source_id<>?",source.id());
+        new KnowledgeWorker(jdbc,tenant,storage,parser,knowledge,embeddings).tick();
+        var detail=knowledge.detail(alice,source.id());
+        assertThat(detail.source().status()).isEqualTo("awaiting_visual");
+        assertThat(detail.source().errorCode()).isEqualTo("VISUAL_PROVIDER_REQUIRED");
+        assertThat(detail.blocks()).isEmpty();
+        assertThat(knowledge.search(alice,"Synthetic MCP upload test",null,10).items()).isEmpty();
+        assertThat(contexts.build(alice,"training",null,null).text()).contains("awaiting_visual");
+        verify(embeddings,never()).embed(anyList());
+        knowledge.delete(alice,source.id());
     }
     @Test void uploadIsDurableAndWorkerParsesActualBytes()throws Exception {
         var source=knowledge.upload(alice,"training.txt","text/plain",null,UUID.randomUUID().toString(),

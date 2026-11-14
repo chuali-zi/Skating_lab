@@ -50,6 +50,7 @@ fun CoachApp(vm: CoachViewModel) {
     BackHandler(enabled = state.destination != Destination.PREPARE) { vm.destination(Destination.PREPARE) }
     LaunchedEffect(state.notice) { state.notice?.let { snackbar.showSnackbar(it); vm.clearNotice() } }
     Scaffold(
+        modifier = Modifier.imePadding(),
         topBar = {
             TopAppBar(title = { Text("SKATING LAB", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold) }, actions = {
                 TextButton(onClick = { showConnection = true }) {
@@ -118,7 +119,11 @@ fun CoachApp(vm: CoachViewModel) {
                 items(detail.blocks, key = { it.id }) { block ->
                     Column(verticalArrangement = Arrangement.spacedBy(6.dp)) { Text(block.locator, style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.primary); Text(block.text, style = MaterialTheme.typography.bodyLarge) }
                 }
-                if (detail.blocks.isEmpty()) item { Text("资料仍在处理中，稍后刷新可查看原文内容。") }
+                if (detail.blocks.isEmpty()) item { Text(when (detail.status.lowercase()) {
+                    "awaiting_visual" -> "文件已保存，画面或音频分析尚未接入。目前不能据此判断动作、能力或规则内容。"
+                    "failed" -> "这份资料暂时未能完成处理，可稍后刷新查看进度。"
+                    else -> "资料仍在处理中，稍后刷新可查看原文内容。"
+                }) }
             }
         }
     }
@@ -164,7 +169,7 @@ private fun PrepareScreen(state: CoachUiState, vm: CoachViewModel, onConnect: ()
 
 @Composable
 private fun PlanScreen(state: CoachUiState, vm: CoachViewModel) {
-    var recovery by rememberSaveable { mutableStateOf(false) }
+    val recovery = state.recoveryMode
     var showScenario by rememberSaveable { mutableStateOf(false) }
     val rows = if (recovery) state.recoveryBody?.elements.orEmpty() else state.draft.elements
     val evaluation = if (recovery) state.recoveryEvaluation else state.evaluation
@@ -174,15 +179,15 @@ private fun PlanScreen(state: CoachUiState, vm: CoachViewModel) {
         item { ScreenHeading("02 / PROGRAM", "主编排与失误预案", "每一行都可以修改。计划时间用于判断后半程，分值由服务端核算。") }
         item {
             SingleChoiceSegmentedButtonRow(Modifier.fillMaxWidth()) {
-                SegmentedButton(selected = !recovery, onClick = { recovery = false }, shape = SegmentedButtonDefaults.itemShape(0, 2)) { Text("主编排") }
-                SegmentedButton(selected = recovery, onClick = { recovery = true }, shape = SegmentedButtonDefaults.itemShape(1, 2)) { Text("失误预案") }
+                SegmentedButton(selected = !recovery, onClick = { vm.showRecovery(false) }, shape = SegmentedButtonDefaults.itemShape(0, 2)) { Text("主编排") }
+                SegmentedButton(selected = recovery, onClick = { vm.showRecovery(true) }, shape = SegmentedButtonDefaults.itemShape(1, 2)) { Text("失误预案") }
             }
         }
         if (!recovery) item { OutlinedTextField(state.draft.title, vm::updateTitle, Modifier.fillMaxWidth(), label = { Text("方案名称") }, singleLine = true) }
         if ((!recovery && state.draft.contextInvalidated) || (recovery && state.recoverySaved?.contextInvalidated == true)) item { Column { Text("这份方案引用的部分资料已更新或撤回，请重新核对后使用。", color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodyMedium); if (!recovery) TextButton(onClick = vm::reloadPlan, enabled = state.busy == null) { Text("重新打开已清理的最新方案") } } }
         item { ScoreSummary(evaluation, state.evaluating) }
         if (state.explanation.isNotBlank()) item { OutlinedCard { Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) { Text("建议依据", style = MaterialTheme.typography.titleMedium); Text(state.explanation) } } }
-        items(state.candidates) { candidate -> OutlinedCard { Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) { Text(candidate.title, style = MaterialTheme.typography.titleMedium); Text(candidate.body.elements.joinToString(" → ") { it.jumps.joinToString("+") }); if (candidate.rationale.isNotBlank()) Text(candidate.rationale, style = MaterialTheme.typography.bodyMedium); OutlinedButton(onClick = { vm.useCandidate(candidate); recovery = candidate.kind == "RECOVERY" }) { Text(if (candidate.kind == "RECOVERY") "使用这份预案" else "使用这份方案") } } } }
+        items(state.candidates) { candidate -> OutlinedCard { Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) { Text(candidate.title, style = MaterialTheme.typography.titleMedium); Text(candidate.body.elements.joinToString(" → ") { it.jumps.joinToString("+") }); if (candidate.rationale.isNotBlank()) Text(candidate.rationale, style = MaterialTheme.typography.bodyMedium); OutlinedButton(onClick = { vm.useCandidate(candidate) }) { Text(if (candidate.kind == "RECOVERY") "使用这份预案" else "使用这份方案") } } } }
         if (state.recommendationEvidence.isNotEmpty()) item { SectionTitle("本次使用的资料", "可打开原文核对") }
         items(state.recommendationEvidence, key = { it.id }) { evidence -> TextButton(onClick = { vm.readKnowledge(evidence.sourceId) }) { Icon(Icons.Outlined.Description, null, Modifier.size(18.dp)); Spacer(Modifier.width(8.dp)); Text("${evidence.title} · ${evidence.locator}") } }
         if (state.runId != null) item { TextButton(onClick = vm::resumeRun, enabled = state.busy == null) { Text("查看最近一次分析") } }
@@ -205,13 +210,13 @@ private fun PlanScreen(state: CoachUiState, vm: CoachViewModel) {
         item {
             FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 if (!recovery) TextButton(onClick = vm::undo) { Icon(Icons.AutoMirrored.Outlined.Undo, null); Spacer(Modifier.width(4.dp)); Text("撤销修改") }
-                OutlinedButton(onClick = { if (recovery || !state.connected) { showScenario = true } else { recovery = true; vm.defaultRecovery { showScenario = true } } }, enabled = state.draft.elements.isNotEmpty() && state.busy == null) { Text(if (recovery) "修改失误情景" else "准备失误预案") }
+                OutlinedButton(onClick = { if (recovery || !state.connected) { showScenario = true } else { vm.showRecovery(true); vm.defaultRecovery { showScenario = true } } }, enabled = state.draft.elements.isNotEmpty() && state.busy == null) { Text(if (recovery) "修改失误情景" else "准备失误预案") }
                 if (recovery && state.recoveryBody != null) OutlinedButton(onClick = { vm.recommend(true) }, enabled = state.busy == null) { Text("分析后续安排") }
             }
         }
         item { Button(onClick = { vm.savePlan(recovery) }, enabled = state.busy == null && rows.isNotEmpty(), modifier = Modifier.fillMaxWidth().heightIn(min = 52.dp)) { Text(if (recovery) "保存失误预案" else "保存主编排") } }
     }
-    if (showScenario) ScenarioDialog(state.draft.elements, { showScenario = false }) { index, actual, description -> vm.createRecovery(index, actual, description); recovery = true; showScenario = false }
+    if (showScenario) ScenarioDialog(state.draft.elements, { showScenario = false }) { index, actual, description -> vm.createRecovery(index, actual, description); showScenario = false }
 }
 
 @Composable
@@ -390,4 +395,4 @@ private fun EmptyPanel(title: String, description: String) {
 private fun formatBv(value: Double): String = String.format(Locale.ROOT, "%.2f", value)
 private fun scopeLabel(scope: String): String = when (scope.lowercase()) { "session" -> "本次情境"; "competition" -> "本场比赛"; else -> "长期记录" }
 private fun sourceLabel(kind: String): String = when (kind.lowercase()) { "user_report" -> "本人描述"; "coach_report" -> "教练记录"; "video_observation" -> "视频观察"; "inference" -> "待核实推测"; else -> "有来源的记录" }
-private fun statusLabel(status: String): String = when (status.lowercase()) { "ready", "available" -> "可使用"; "active" -> "当前有效"; "candidate" -> "待澄清"; "partial", "partial_ready" -> "部分可用"; "processing", "queued", "pending", "received" -> "处理中"; "failed" -> "处理待重试"; "disputed" -> "存在不同描述"; "expired" -> "已过适用期"; "superseded" -> "已被更正"; "retracted", "forgotten" -> "已停止使用"; else -> status.ifBlank { "已接收" } }
+private fun statusLabel(status: String): String = when (status.lowercase()) { "ready", "available" -> "可使用"; "active" -> "当前有效"; "candidate" -> "待澄清"; "partial", "partial_ready" -> "部分可用"; "processing", "queued", "pending", "received" -> "处理中"; "awaiting_visual" -> "已保存 · 待画面或音频分析"; "failed" -> "处理待重试"; "disputed" -> "存在不同描述"; "expired" -> "已过适用期"; "superseded" -> "已被更正"; "retracted", "forgotten" -> "已停止使用"; else -> status.ifBlank { "已接收" } }

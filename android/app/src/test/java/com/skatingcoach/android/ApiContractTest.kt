@@ -4,12 +4,40 @@ import com.skatingcoach.android.data.*
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.jsonObject
+import kotlinx.serialization.json.jsonArray
+import kotlinx.serialization.json.jsonPrimitive
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import org.junit.Assert.*
 import org.junit.Test
+import java.io.IOException
 
 class ApiContractTest {
+    @Test fun disconnectedServiceHasAnActionableMessageWithoutLosingTheCause() = runBlocking {
+        val server = MockWebServer()
+        server.start()
+        val api = CoachApi(server.url("/").toString())
+        server.shutdown()
+        try {
+            api.get<MemoryEnvelope>("/api/v1/memory")
+            fail("Expected connection failure")
+        } catch (e: IOException) {
+            assertTrue(e.message.orEmpty().contains("暂时无法连接服务"))
+            assertTrue(e.message.orEmpty().contains("当前输入已保留"))
+            assertNotNull(e.cause)
+        }
+    }
+
+    @Test fun singleJumpTypeIsSentEvenWhenItIsTheKotlinDefault() {
+        val element = PlanElement("single-1", jumps = listOf("3S"))
+        val encoded = Json.parseToJsonElement(Json.encodeToString(element)).jsonObject
+        assertEquals("SINGLE", encoded.getValue("type").jsonPrimitive.content)
+        val api = CoachApi("http://127.0.0.1:8080")
+        val body = api.encodePlanBody(PlanBody(elements = listOf(element))).jsonObject
+        assertEquals("SINGLE", body.getValue("elements").jsonArray.single().jsonObject.getValue("type").jsonPrimitive.content)
+    }
+
     @Test fun knowledgeDetailReadsNestedSourceAndOriginalLocator() {
         val detail = Json.decodeFromString<KnowledgeDetail>("""{"source":{"id":"source-1","title":"比赛补充通知","status":"partial","revision":2},"blocks":[{"id":"block-1","text":"条款原文","locator":"第2页"}]}""")
         assertEquals("比赛补充通知", detail.title)

@@ -12,7 +12,8 @@ data class Conversation(val id: String, val revision: Long = 0)
 @Serializable
 data class JumpOption(val code: String, val label: String, val revolutions: Int)
 @Serializable
-data class PlanElement(val id: String, val type: String = "SINGLE", val jumps: List<String> = emptyList(), val plannedStartSeconds: Double? = null)
+@OptIn(kotlinx.serialization.ExperimentalSerializationApi::class)
+data class PlanElement(val id: String, @kotlinx.serialization.EncodeDefault val type: String = "SINGLE", val jumps: List<String> = emptyList(), val plannedStartSeconds: Double? = null)
 @Serializable
 data class PlanBody(val elements: List<PlanElement> = emptyList(), val ruleSet: JsonElement? = null, val notes: String = "", val completedPrefix: List<PlanElement> = emptyList(), val sourcePlanId: String? = null, val failureDescription: String? = null, val selection: Selection? = null)
 @Serializable

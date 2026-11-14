@@ -26,6 +26,7 @@ enum class Destination(val label: String) { PREPARE("准备"), PLAN("编排"), K
 data class Candidate(val title: String, val body: PlanBody, val kind: String = "MAIN", val rationale: String = "")
 data class CoachUiState(
     val destination: Destination = Destination.PREPARE,
+    val recoveryMode: Boolean = false,
     val baseUrl: String = "http://127.0.0.1:8080",
     val connected: Boolean = false,
     val displayName: String = "",
@@ -68,6 +69,7 @@ class CoachViewModel(application: Application) : AndroidViewModel(application) {
     private var privacyEpoch: Long? = null
 
     fun destination(value: Destination) { mutableState.update { it.copy(destination = value) } }
+    fun showRecovery(value: Boolean) { mutableState.update { it.copy(recoveryMode = value) } }
     fun clearNotice() { mutableState.update { it.copy(notice = null) } }
     fun clearError() { mutableState.update { it.copy(error = null) } }
     fun closeKnowledgeDetail() { mutableState.update { it.copy(knowledgeDetail = null) } }
@@ -97,7 +99,7 @@ class CoachViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun undo() { undoDraft?.let { previous -> changeDraft { previous }; mutableState.update { it.copy(notice = "已撤销最近一次修改") } } }
-    fun newPlan() { changeDraft { it.copy(title = "新的编排", elements = emptyList(), planId = null, planRevision = null, ruleSet = null, contextInvalidated = false) }; mutableState.update { it.copy(recoveryBody = null, explanation = "", candidates = emptyList(), destination = Destination.PLAN) } }
+    fun newPlan() { changeDraft { it.copy(title = "新的编排", elements = emptyList(), planId = null, planRevision = null, ruleSet = null, contextInvalidated = false) }; mutableState.update { it.copy(recoveryMode = false, recoveryBody = null, recoverySaved = null, explanation = "", candidates = emptyList(), destination = Destination.PLAN) } }
     fun addElement() = changeDraft { it.copy(elements = it.elements + PlanElement(UUID.randomUUID().toString())) }
     fun removeElement(id: String) = changeDraft { it.copy(elements = it.elements.filterNot { row -> row.id == id }) }
     fun updateElement(id: String, jumps: String, time: String) {
@@ -112,12 +114,16 @@ class CoachViewModel(application: Application) : AndroidViewModel(application) {
     }
     fun openPlan(plan: PlanView) {
         if (plan.kind == "RECOVERY") {
-            mutableState.update { it.copy(recoveryBody = plan.body, recoverySaved = plan, recoveryFrozenCount = plan.body.completedPrefix.size, recoveryDescription = plan.body.failureDescription.orEmpty(), destination = Destination.PLAN) }
+            // A saved recovery belongs to its source plan, not whichever draft
+            // happened to be open before navigation.
+            state.value.plans.firstOrNull { it.id == plan.body.sourcePlanId && it.kind == "MAIN" }?.let(::openPlan)
+            localEditVersion++
+            mutableState.update { it.copy(recoveryMode = true, recoveryBody = plan.body, recoverySaved = plan, recoveryFrozenCount = plan.body.completedPrefix.size, recoveryDescription = plan.body.failureDescription.orEmpty(), recoveryEvaluation = null, destination = Destination.PLAN) }
         } else {
             val wasInvalidated = state.value.draft.contextInvalidated
             changeDraft { it.copy(title = plan.title, elements = plan.body.elements, situation = plan.body.notes, planId = plan.id, planRevision = plan.revision, ruleSet = plan.body.ruleSet, contextInvalidated = plan.contextInvalidated, selectedSingles = plan.body.selection?.selectedSingles?.toSet() ?: it.selectedSingles, selectedCombinations = plan.body.selection?.selectedCombinations?.toSet() ?: it.selectedCombinations) }
             if (wasInvalidated || plan.contextInvalidated) undoDraft = null
-            mutableState.update { it.copy(destination = Destination.PLAN, explanation = plan.body.notes, recoveryBody = null, recoverySaved = null) }
+            mutableState.update { it.copy(destination = Destination.PLAN, recoveryMode = false, explanation = plan.body.notes, recoveryBody = null, recoverySaved = null) }
         }
         evaluate(plan.kind == "RECOVERY")
     }
@@ -202,7 +208,7 @@ class CoachViewModel(application: Application) : AndroidViewModel(application) {
         val existingId = if (recovery) snapshot.recoverySaved?.id else snapshot.draft.planId
         val revision = if (recovery) snapshot.recoverySaved?.revision else snapshot.draft.planRevision
         val payload = buildJsonObject {
-            put("title", if (recovery) "${snapshot.draft.title} · 失误预案" else snapshot.draft.title)
+            put("title", if (recovery) snapshot.recoverySaved?.title ?: "${snapshot.draft.title} · 失误预案" else snapshot.draft.title)
             put("kind", if (recovery) "RECOVERY" else "MAIN")
             put("body", client.encodePlanBody(planBody))
             revision?.let { put("expectedRevision", it) }
@@ -293,9 +299,10 @@ class CoachViewModel(application: Application) : AndroidViewModel(application) {
             val prefix = candidate.body.completedPrefix.ifEmpty { state.value.recoveryBody?.completedPrefix.orEmpty() }
             val recovered = candidate.body.copy(completedPrefix = prefix, sourcePlanId = candidate.body.sourcePlanId ?: state.value.draft.planId, failureDescription = candidate.body.failureDescription ?: state.value.recoveryDescription)
             localEditVersion++
-            mutableState.update { it.copy(recoveryBody = recovered, recoveryFrozenCount = prefix.size, recoverySaved = null, recoveryEvaluation = null) }
+            mutableState.update { it.copy(recoveryMode = true, recoveryBody = recovered, recoveryFrozenCount = prefix.size, recoverySaved = null, recoveryEvaluation = null) }
             evaluate(true)
         } else {
+            showRecovery(false)
             changeDraft { it.copy(title = candidate.title, elements = candidate.body.elements, ruleSet = candidate.body.ruleSet, planId = null, planRevision = null, contextInvalidated = false) }
             evaluate()
         }
@@ -308,7 +315,7 @@ class CoachViewModel(application: Application) : AndroidViewModel(application) {
         val performed = draft.elements[index].copy(jumps = codes, type = if (codes.size > 1) "COMBINATION" else "SINGLE")
         val elements = draft.elements.take(index) + performed + draft.elements.drop(index + 1)
         localEditVersion++
-        mutableState.update { it.copy(recoveryBody = PlanBody(elements, draft.ruleSet, description, completedPrefix = elements.take(index + 1), sourcePlanId = draft.planId, failureDescription = description, selection = selection()), recoveryFrozenCount = index + 1, recoveryDescription = description, recoverySaved = null, recoveryEvaluation = null) }
+        mutableState.update { it.copy(recoveryMode = true, recoveryBody = PlanBody(elements, draft.ruleSet, description, completedPrefix = elements.take(index + 1), sourcePlanId = draft.planId, failureDescription = description, selection = selection()), recoveryFrozenCount = index + 1, recoveryDescription = description, recoverySaved = null, recoveryEvaluation = null) }
         evaluate(true)
     }
     fun defaultRecovery(onChooseScenario: () -> Unit) = operation("正在确定默认失误情景") {
@@ -320,7 +327,7 @@ class CoachViewModel(application: Application) : AndroidViewModel(application) {
             })
             localEditVersion++
             val recovery = PlanBody(elements = scenario.completedPrefix + scenario.unchangedSuffix, ruleSet = draft.ruleSet, completedPrefix = scenario.completedPrefix, sourcePlanId = draft.planId, failureDescription = scenario.description, selection = selection())
-            mutableState.update { it.copy(recoveryBody = recovery, recoveryFrozenCount = scenario.completedPrefix.size, recoveryDescription = scenario.description, recoverySaved = null, recoveryEvaluation = null) }
+            mutableState.update { it.copy(recoveryMode = true, recoveryBody = recovery, recoveryFrozenCount = scenario.completedPrefix.size, recoveryDescription = scenario.description, recoverySaved = null, recoveryEvaluation = null) }
             evaluate(true)
         } catch (e: ApiException) {
             if (e.status != 404) throw e

@@ -24,6 +24,7 @@
 
 - [Java 服务](server/README.md)：Java 17、Spring Boot、Maven Wrapper；身份范围、方案、推荐任务、计算、记忆与知识 API。
 - [Android 客户端](docs/android-development.md)：Kotlin/Compose、构建 APK、连接本机服务与设备验证说明。
+- [Android 设备自测](docs/android-device-testing.md)：专用模拟器、Mobile MCP 连接、原生界面回归与缺陷修复记录。
 - [计算模块](docs/scoring-implementation.md)：确定性 BV、时间条件、选择范围和冻结前缀。
 - [专业知识来源](docs/knowledge-sources-2026-11-14.md)：8 个已核对来源入口、研究线索及实际资料入库验证。
 
