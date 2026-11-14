@@ -33,6 +33,8 @@ Thumbs.db
 
 # ---- 数据与模型（不入库；schema SQL 除外）----
 data/
+!android/app/src/main/java/com/skatingcoach/android/data/
+!android/app/src/main/java/com/skatingcoach/android/data/**
 storage/
 uploads/
 # ML 权重目录（仅限仓库根与 ml/ 下，避免误伤 backend/app/models/ 等 ORM 包）
@@ -52,3 +54,14 @@ ml/models/
 # ---- 日志与临时 ----
 *.log
 tmp/
+
+# ---- Local Java / Android tooling and generated artifacts ----
+/.tools/
+**/.gradle/
+**/.tools/
+**/target/
+**/local.properties
+*.apk
+*.aab
+*.jks
+*.keystore

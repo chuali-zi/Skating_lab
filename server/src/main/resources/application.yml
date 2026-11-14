@@ -1,0 +1,36 @@
+server:
+  address: ${SERVER_ADDRESS:127.0.0.1}
+  port: ${SERVER_PORT:8080}
+  error:
+    include-message: never
+    include-stacktrace: never
+spring:
+  application:
+    name: skating-coach
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://127.0.0.1:15432/skating_coach}
+    username: ${DB_USERNAME:skating_app}
+    password: ${DB_PASSWORD:}
+    hikari:
+      maximum-pool-size: 8
+      connection-timeout: 5000
+  flyway:
+    enabled: true
+    url: ${DB_URL:jdbc:postgresql://127.0.0.1:15432/skating_coach}
+    user: ${DB_MIGRATION_USERNAME:skating_migrator}
+    password: ${DB_MIGRATION_PASSWORD:}
+    locations: classpath:db/migration
+  servlet:
+    multipart:
+      max-file-size: ${UPLOAD_MAX_FILE_SIZE:256MB}
+      max-request-size: ${UPLOAD_MAX_REQUEST_SIZE:256MB}
+skating:
+  dev-login-enabled: false
+  llm:
+    endpoint: ${LLM_ENDPOINT:}
+    api-key: ${LLM_API_KEY:}
+    model: ${LLM_MODEL:}
+    timeout-seconds: ${LLM_TIMEOUT_SECONDS:90}
+logging:
+  level:
+    org.springframework.web: INFO

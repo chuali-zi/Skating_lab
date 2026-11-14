@@ -16,9 +16,29 @@
 
 **当前产品以 2026-11-14 的手绘需求、后续用户修正和 PRD v0.8 为准。首版用户端已确定为原生 Android，仅接收服务并承担交互。** 已排除 Web 前端、网页套壳、Python 后端和端侧推理。建议引擎采用云端 LLM + 花滑知识库/RAG + 个人长期档案；当前不训练、不微调模型，不采购训练 GPU。本轮架构基线采用 Kotlin + Jetpack Compose、Java + Spring Boot、PostgreSQL/pgvector 与对象存储；具体云端模型和依赖版本通过后续验证选定，视频由服务端调用云端模型分析。
 
-三份架构文档当前为 v0.1 设计，供审核记忆与知识处理逻辑，不表示相关功能已经实现。产品仍以主编排编辑和失误预案为核心，LLM 在服务端提供个性化建议。
+三份架构文档当前为 v0.1 目标设计。Android、Java 服务、计算、数据库和知识处理已建立首个可构建的工程闭环，实际完成范围与验证见[本轮实现记录](docs/implementation-status-2026-11-14.md)。产品仍以主编排编辑和失误预案为核心，LLM 在服务端提供个性化建议。
 
 已有 Python 后端、Agent 和 ML 文件仅为旧方案骨架，不代表当前技术路线，也未完成新版产品实现。
+
+## 当前工程与本机启动
+
+- [Java 服务](server/README.md)：Java 17、Spring Boot、Maven Wrapper；身份范围、方案、推荐任务、计算、记忆与知识 API。
+- [Android 客户端](docs/android-development.md)：Kotlin/Compose、构建 APK、连接本机服务与设备验证说明。
+- [计算模块](docs/scoring-implementation.md)：确定性 BV、时间条件、选择范围和冻结前缀。
+- [专业知识来源](docs/knowledge-sources-2026-11-14.md)：8 个已核对来源入口、研究线索及实际资料入库验证。
+
+Windows PowerShell 7、Docker Desktop 和完整 JDK 17 就绪后：
+
+```powershell
+.\scripts\init-local.ps1
+.\scripts\start-server.ps1
+```
+
+初始化脚本创建忽略入库的 `.env` 和独立随机数据库密码，并启动绑定本机 `15432` 端口的 PostgreSQL/pgvector。服务启动在 `127.0.0.1:8080`，默认本机配置显式启用开发会话。正式配置没有开发登录；生产身份接入尚待实现。
+
+在 `.env` 配置实际 `LLM_ENDPOINT`、`LLM_API_KEY`、`LLM_MODEL` 后，服务才能调用云端教练。Embedding 有独立配置；未配置时检索明确降级为关键词模式。当前使用实际 HTTP 模型适配器，Spring AI 运行依赖尚未接入。
+
+`scripts/smoke-api.ps1` 可验证记忆操作、明确测试规则下的 BV 和方案保存；其中测试规则标明为开发样例，不是正式赛事规则。上传资料可保留原件并解析文本；自动视觉理解、完整规则包构建和真实教练效果仍在后续实施范围。
 
 ## 核心流程
 

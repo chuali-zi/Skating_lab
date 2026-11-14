@@ -1,6 +1,6 @@
 # 知识库、文档阅读与 RAG 管理设计
 
-版本：v0.1，2026-11-14。状态：供审核的设计，尚未实现。关联：[总体架构](architecture.md)、[个人记忆](personal-memory-design.md)、[引擎技术调研](engine-research-2026-11-14.md)。
+版本：v0.1，2026-11-14。状态：目标设计，已开始实现；完成与未完成项见[实现记录](implementation-status-2026-11-14.md)。关联：[总体架构](architecture.md)、[个人记忆](personal-memory-design.md)、[引擎技术调研](engine-research-2026-11-14.md)。
 
 本设计把“数据库检索、RAG、直接读文档”组合到一条有来源和版本的处理链上。RAG 是给模型寻找和提供依据的过程；原始文档、结构化规则与检索索引是同一知识体系的不同表示，不能分别维护成互相矛盾的事实库。
 
