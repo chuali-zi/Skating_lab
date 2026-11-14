@@ -12,3 +12,6 @@ foreach ($configLine in Get-Content -LiteralPath $configPath) {
     }
     [Environment]::SetEnvironmentVariable($configName,$configLine.Substring($equalsIndex+1).Trim(),'Process')
 }
+if ($env:KNOWLEDGE_STORAGE_PATH -and -not [IO.Path]::IsPathRooted($env:KNOWLEDGE_STORAGE_PATH)) {
+    $env:KNOWLEDGE_STORAGE_PATH = [IO.Path]::GetFullPath((Join-Path $projectRoot $env:KNOWLEDGE_STORAGE_PATH))
+}
