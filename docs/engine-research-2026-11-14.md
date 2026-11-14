@@ -6,6 +6,8 @@
 
 本轮核对了论文、官方仓库、模型卡与厂商文档，没有执行模型推理或训练。花滑专用模型调研保留为参考，不是当前实施清单。用户视频、API 访问能力与教练评估样本尚未在本轮建立；下一步验证 RAG 是否改善知识使用和个人建议，不开展模型训练。
 
+后续架构细化已形成 v0.1 设计：[整体架构](architecture.md)、[个性化记忆](personal-memory-design.md)、[知识库与混合检索](knowledge-rag-design.md)。这些文档给出模块、生命周期、来源版本和验收场景；研究候选仍不等于已经接入或验证。
+
 ## 决策范围
 
 | 状态 | 内容 |
@@ -13,7 +15,7 @@
 | 已确认 | 原生 Android 仅接收服务；不采用 Web 或网页套壳；后端不使用 Python；云端 LLM 与知识检索为主线；自由资料由系统处理 |
 | 已确认 | 当前不训练、不微调、不采购训练 GPU；不进行端侧推理，视频分析也在服务端 |
 | 已确认 | 推荐考虑选手能力、稳定性、疲劳和偏好，不以理论 BV 或固定人工加权作为唯一决策 |
-| 当前建议 | Kotlin + Jetpack Compose；Java 模块化后端；PostgreSQL/pgvector 与对象存储；托管 LLM、Embedding 及按需重排接口 |
+| 本轮架构基线 | Kotlin + Jetpack Compose；Java/Spring Boot 模块化后端；PostgreSQL/pgvector 与对象存储；托管 LLM、Embedding 及按需重排接口 |
 | 需要验证 | 知识检索是否完整且适用；个人档案是否正确参与建议；云端视频理解；成本和延迟 |
 | 产品预研 | 用户训练视频作为能力证据，不默认承诺精确判刃、欠周和自动裁判能力 |
 
@@ -136,7 +138,7 @@ RAG 在每次回答时检索相关资料并加入模型上下文，不需要训�
 | 部分 | 建议 | 理由与边界 |
 | --- | --- | --- |
 | Android | Kotlin + Jetpack Compose | 仅做原生输入、上传、编辑、展示；不部署推理或分析服务，[官方说明](https://developer.android.com/compose) |
-| 业务与 Agent 后端 | Java + Spring Boot，先做模块化单体 | 用 HTTP/SDK 调用托管 LLM、Embedding 和按需重排接口；[Spring AI](https://docs.spring.io/spring-ai/reference/api/tools.html)为可选适配，不让框架绑定业务状态 |
+| 业务与 Agent 后端 | Java + Spring Boot，先做模块化单体 | 用 HTTP/SDK 调用托管 LLM、Embedding 和按需重排接口；架构采用 [Spring AI](https://docs.spring.io/spring-ai/reference/api/tools.html)适配并允许必要的厂商 HTTP 适配，不让框架绑定业务状态 |
 | 计算工具 | Java 服务端计分与明确条件检查；局部搜索按需增加 | 为 LLM 提供可靠结果，不以固定权重决定个人推荐；OR-Tools 不是首版前置依赖 |
 | 视频任务 | Java 任务协调与独立媒体处理 worker，调用 FFmpeg 等工具 | 长任务保存进度、失败原因与结果引用；原视频分析可复用，不因拖动一行反复上传处理 |
 | 数据与检索 | PostgreSQL + pgvector + 对象存储 | 业务事实、规则与知识版本、个人档案、向量及视频引用；精确或关键词与语义检索结合 |

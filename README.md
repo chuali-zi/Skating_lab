@@ -10,8 +10,13 @@
 - [截图需求对照](docs/requirements-map.md)：逐项对应手绘界面，并列出为完整体验补齐的行为。
 - [手绘需求原图](docs/requirements-sketch-2026-11-14.jpg)：本次产品整理使用的原始截图。
 - [计算与建议引擎技术调研](docs/engine-research-2026-11-14.md)：花滑模型、视频理解、个性化决策、技术候选与验证计划。
+- [整体架构设计](docs/architecture.md)：Android、Java 模块、模型与计算职责、推荐链路、数据契约及实施顺序。
+- [个性化记忆设计](docs/personal-memory-design.md)：每位选手的长期档案、当前情境、来源、自动更新、冲突、纠正与遗忘。
+- [知识库与混合检索设计](docs/knowledge-rag-design.md)：文档入库、规则版本、结构化查询、RAG、原文展开、引用与知识管理。
 
-**当前产品以 2026-11-14 的手绘需求、后续用户修正和 PRD v0.8 为准。首版用户端已确定为原生 Android，仅接收服务并承担交互。** 已排除 Web 前端、网页套壳、Python 后端和端侧推理。建议引擎采用云端 LLM + 花滑知识库/RAG + 个人长期档案；当前不训练、不微调模型，不采购训练 GPU。建议使用 Kotlin + Jetpack Compose、Java 和 PostgreSQL/pgvector；具体后端及云端模型继续评审，视频由服务端调用云端模型分析。
+**当前产品以 2026-11-14 的手绘需求、后续用户修正和 PRD v0.8 为准。首版用户端已确定为原生 Android，仅接收服务并承担交互。** 已排除 Web 前端、网页套壳、Python 后端和端侧推理。建议引擎采用云端 LLM + 花滑知识库/RAG + 个人长期档案；当前不训练、不微调模型，不采购训练 GPU。本轮架构基线采用 Kotlin + Jetpack Compose、Java + Spring Boot、PostgreSQL/pgvector 与对象存储；具体云端模型和依赖版本通过后续验证选定，视频由服务端调用云端模型分析。
+
+三份架构文档当前为 v0.1 设计，供审核记忆与知识处理逻辑，不表示相关功能已经实现。产品仍以主编排编辑和失误预案为核心，LLM 在服务端提供个性化建议。
 
 已有 Python 后端、Agent 和 ML 文件仅为旧方案骨架，不代表当前技术路线，也未完成新版产品实现。
 
