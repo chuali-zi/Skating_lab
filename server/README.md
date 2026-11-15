@@ -22,9 +22,27 @@ Spring Boot 从进程环境读取以下变量，**不会自动读取仓库根目
 | `DB_MIGRATION_USERNAME` / `DB_MIGRATION_PASSWORD` | Flyway 独立迁移连接 |
 | `SPRING_PROFILES_ACTIVE=dev` | 显式启用仅本机可调用的开发会话入口 |
 | `SERVER_ADDRESS` / `SERVER_PORT` | 默认只监听 `127.0.0.1:8080` |
+| `LLM_JSON_MODE` | 默认 false；支持时发送 `response_format: json_object`，GLM 开发开关启用 |
+| `LLM_MAX_OUTPUT_TOKENS` | 默认 0 表示不发送 `max_tokens`；GLM 开发开关设为 32768，输出截断明确报错 |
 | `LLM_ENDPOINT` | 完整 chat-completions 请求 URL，远端必须 HTTPS |
 | `LLM_API_KEY` / `LLM_MODEL` | 仅服务端保存的提供商配置 |
 | `LLM_TIMEOUT_SECONDS` | 单次模型调用超时，默认 90 秒 |
+
+Windows 本机使用已存在的 `GLM_API_KEY` 做 GLM Coding Plan 开发联调时，在仓库根目录运行：
+
+```powershell
+.\scripts\start-server.ps1 -GlmCodingPlan
+# 已完成构建时可以加 -SkipBuild；模型默认 glm-5.3，可用 -GlmModel 显式选择。
+# 已有服务占用 8080 时，可加 -Port 8081 启动独立验证实例。
+```
+
+脚本先完成构建，再按 Process → User → Machine 顺序读取密钥，仅注入当前服务进程；不会回显、写入 `.env` 或修改 Windows 持久环境。端点为 `https://open.bigmodel.cn/api/coding/paas/v4/chat/completions`，单次请求超时 180 秒。服务退出后恢复原进程的 LLM 环境。没有该开关时，仍遵循原有 `LLM_*` 配置。
+
+官方说明 Coding Plan 限定支持的工具和产品环境，自建产品应使用标准 API 服务；这里的显式开关用于本机开发联调，不作为生产服务默认配置。[套餐适用说明](https://docs.bigmodel.cn/cn/coding-plan/faq)、[端点说明](https://docs.bigmodel.cn/cn/coding-plan/tool/others)
+
+真实模型联调在服务启动后执行 `node tools/live-model-smoke.mjs`，会产生实际云端调用和合成开发数据；报告在 Git 忽略的 `tmp/glm-live/`。测试通过本机服务访问模型，不读取密钥。不要与其他修改同一开发选手资料的测试并行执行，以免正确触发上下文过期。
+
+测试另一个本机端口时，先设置 `$env:LIVE_API_BASE='http://127.0.0.1:8081/api/v1'`。Android 实测脚本为 `node tools/mobile-testing/live-coach.mjs`，使用相同变量，并需先建立对应端口的 `adb reverse tcp:8081 tcp:8081`。
 
 环境准备好后运行：
 
@@ -66,12 +84,14 @@ Spring Boot 从进程环境读取以下变量，**不会自动读取仓库根目
 
 没有模型配置时，输入仍保存，任务明确返回 `PROVIDER_UNAVAILABLE`。没有可执行比赛规则快照时，模型可依据已读原文提出带未知项的候选，但精确评分保持未知。模型自行输出的规则、评分和未经授权的引用不会作为权威结果。
 
-LLM 输出候选目前使用一次有界的格式修复重试；并未实现任意工具循环、多模态视频教练或自动生成可执行新规则。HTTP 适配层对标准 chat-completions 格式进行真实请求，通过 `LanguageModelGateway` 隔离业务。本轮尚未引入 Spring AI 运行依赖；原架构中采用 Spring AI 的适配方案仍待集成，当前不能宣称 Spring AI 已经接入。后续可增加 Spring AI 或其他厂商适配，而无需改动个人记忆和业务接口。
+LLM 输出候选目前使用一次有界的修复重试：把结构、证据引用、选择范围或冻结前缀的具体错误反馈给模型，仍须通过同一套服务端检查。成功结果记录 validationAttempts 和 repairReasons，失败只公开固定错误码，不回显被拒绝的原始输出；并未实现任意工具循环、多模态视频教练或自动生成可执行新规则。HTTP 适配层对标准 chat-completions 格式进行真实请求，通过 `LanguageModelGateway` 隔离业务。本轮尚未引入 Spring AI 运行依赖；原架构中采用 Spring AI 的适配方案仍待集成，当前不能宣称 Spring AI 已经接入。后续可增加 Spring AI 或其他厂商适配，而无需改动个人记忆和业务接口。
 
 用户更正、撤回或遗忘导致版本失效时，旧任务不能重新发布；已生成结果再次读取也检查上下文版本。保存的历史方案通过 `contextInvalidated` 提醒来源发生变化，并阻止直接作为推荐或预案基线；读取清理后的新版本、明确重新保存当前编排后才能继续。方案 JSON 通过类型投影去除未知嵌套字段，避免产生不受来源管理的私人证据副本。恢复方案的已发生前缀在保存后冻结，纠正实际情景应创建新预案。
 
 ## 验证范围
 
 单元测试覆盖身份隔离、开发入口、token 到期、真实 HTTP 协议适配、无模型配置、模型引用与实际前缀校验，以及独立计分模块。HTTP 模型测试使用本机 fixture，不需要云端密钥，也不表示真实模型教练效果已经验证。
+
+云端开发联调独立于上述 fixture 测试：2026-11-15 使用真实 GLM 接口检查个人资料更正、知识范围、冻结前缀、自由输入提取、来源撤回及 Android 操作。实际结果和边界见 [GLM 联调记录](../docs/glm-live-validation-2026-11-15.md)。新增数据库集成测试还验证具体错误反馈能修复虚构引用、被拒绝的原文不进入最终结果、连续失败在一次修复后终止。
 
 数据库集成测试验证 PostgreSQL/Flyway/RLS 及资料生命周期；以实际测试报告判断是否执行。Android 的实际画面、正式账号、外部云端模型效果和长视频理解需要相应环境与真实样本继续验证。

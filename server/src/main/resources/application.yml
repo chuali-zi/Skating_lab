@@ -31,6 +31,8 @@ skating:
     api-key: ${LLM_API_KEY:}
     model: ${LLM_MODEL:}
     timeout-seconds: ${LLM_TIMEOUT_SECONDS:90}
+    json-mode: ${LLM_JSON_MODE:false}
+    max-output-tokens: ${LLM_MAX_OUTPUT_TOKENS:0}
 logging:
   level:
     org.springframework.web: INFO

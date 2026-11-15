@@ -159,6 +159,7 @@ private fun PrepareScreen(state: CoachUiState, vm: CoachViewModel, onConnect: ()
         item { OutlinedTextField(state.draft.situation, vm::updateSituation, Modifier.fillMaxWidth(), minLines = 4, label = { Text("说说你的状态与想法") }, placeholder = { Text("例如：3S 比较稳，后半程容易累，这场先求稳。") }, supportingText = { Text("可以说偏好、训练经历、临时状态，不需要填写成功率。") }) }
         item { OutlinedTextField(state.draft.competition, vm::updateCompetition, Modifier.fillMaxWidth(), label = { Text("比赛或训练情境") }, placeholder = { Text("比赛名称、组别，或直接描述这次练习") }, supportingText = { Text("规则文件和截图可在「资料」中上传。") }) }
         item { Button(onClick = { vm.recommend() }, enabled = state.busy == null, modifier = Modifier.fillMaxWidth().heightIn(min = 52.dp)) { Text("结合我的情况生成编排") } }
+        if (state.runId != null) item { OutlinedButton(onClick = vm::resumeRun, enabled = state.busy == null, modifier = Modifier.fillMaxWidth()) { Text("查看最近一次分析") } }
         item { TextButton(onClick = vm::newPlan) { Text("从空白方案开始编写") } }
         if (state.plans.isNotEmpty()) {
             item { SectionTitle("已保存方案", "继续上次编排") }

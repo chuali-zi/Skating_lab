@@ -96,11 +96,20 @@ export async function deviceUi(device = process.env.MOBILE_DEVICE || 'skating_ap
       }
       throw new Error(`Could not scroll to: ${text}`);
     },
-    async capture(name) {
+    async capture(name, { mcpScreenshot = true } = {}) {
       if (!/^[a-z0-9_-]+$/i.test(name)) throw new Error('Invalid artifact name');
       const screenshot = path.join(artifactDir, `${name}.png`);
-      await call('mobile_save_screenshot', { saveTo: path.join(artifactDir, `${name}-mcp.png`) });
       await writeFile(screenshot, execFileSync(adbPath, ['-s', adbSerial, 'exec-out', 'screencap', '-p'], { windowsHide: true, maxBuffer: 16 * 1024 * 1024 }));
+      // Keep the actual full-screen ADB capture even if Mobile CLI's secondary
+      // app-only screenshot fails. UI inspection/actions still use the MCP.
+      try {
+        if (mcpScreenshot) {
+          await call('mobile_save_screenshot', { saveTo: path.join(artifactDir, `${name}-mcp.png`) });
+        }
+      } catch (error) {
+        await writeFile(path.join(artifactDir, `${name}-mcp-error.txt`), String(error.message));
+        console.warn(`Mobile MCP screenshot unavailable for ${name}; full-screen ADB evidence saved`);
+      }
       await writeFile(path.join(artifactDir, `${name}.json`), JSON.stringify(await ui.read(), null, 2));
       return screenshot;
     },

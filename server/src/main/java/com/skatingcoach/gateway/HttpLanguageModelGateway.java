@@ -22,17 +22,23 @@ public class HttpLanguageModelGateway implements LanguageModelGateway {
     private final String apiKey;
     private final String model;
     private final Duration timeout;
+    private final boolean jsonMode;
+    private final int maxOutputTokens;
 
     public HttpLanguageModelGateway(ObjectMapper mapper,
             @Value("${skating.llm.endpoint:}") String endpoint,
             @Value("${skating.llm.api-key:}") String apiKey,
             @Value("${skating.llm.model:}") String model,
-            @Value("${skating.llm.timeout-seconds:90}") long timeoutSeconds) {
+            @Value("${skating.llm.timeout-seconds:90}") long timeoutSeconds,
+            @Value("${skating.llm.json-mode:false}") boolean jsonMode,
+            @Value("${skating.llm.max-output-tokens:0}") int maxOutputTokens) {
         this.mapper = mapper;
         this.endpoint = endpoint.strip();
         this.apiKey = apiKey.strip();
         this.model = model.strip();
         this.timeout = Duration.ofSeconds(Math.max(1, timeoutSeconds));
+        this.jsonMode = jsonMode;
+        this.maxOutputTokens = maxOutputTokens;
         this.client = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(15))
                 .followRedirects(HttpClient.Redirect.NEVER).build();
         if (!this.endpoint.isEmpty()) {
@@ -55,9 +61,12 @@ public class HttpLanguageModelGateway implements LanguageModelGateway {
     public ModelReply generate(String systemInstruction, String userInput) {
         if (!available()) throw new ModelGatewayException("PROVIDER_UNAVAILABLE", "尚未配置云端模型。");
         try {
-            String body = mapper.writeValueAsString(Map.of("model", model, "messages", List.of(
+            Map<String,Object> payload = new java.util.LinkedHashMap<>(Map.of("model", model, "messages", List.of(
                     Map.of("role", "system", "content", systemInstruction),
                     Map.of("role", "user", "content", userInput))));
+            if (jsonMode) payload.put("response_format", Map.of("type", "json_object"));
+            if (maxOutputTokens > 0) payload.put("max_tokens", maxOutputTokens);
+            String body = mapper.writeValueAsString(payload);
             HttpRequest request = HttpRequest.newBuilder(URI.create(endpoint)).timeout(timeout)
                     .header("Content-Type", "application/json")
                     .header("Authorization", "Bearer " + apiKey)
@@ -67,6 +76,9 @@ public class HttpLanguageModelGateway implements LanguageModelGateway {
                 throw new ModelGatewayException("PROVIDER_ERROR", "云端模型暂时无法处理请求。");
             }
             JsonNode parsed = mapper.readTree(response.body());
+            if ("length".equals(parsed.path("choices").path(0).path("finish_reason").asText())) {
+                throw new ModelGatewayException("PROVIDER_OUTPUT_TRUNCATED", "云端输出达到长度上限，未发布不完整结果。请调整服务端输出配置后重试。");
+            }
             JsonNode content = parsed.path("choices").path(0).path("message").path("content");
             if (!content.isTextual() || content.asText().isBlank()) {
                 throw new ModelGatewayException("INVALID_PROVIDER_RESPONSE", "云端模型没有返回可用内容。");

@@ -39,6 +39,10 @@ Windows PowerShell 7、Docker Desktop 和完整 JDK 17 就绪后：
 
 在 `.env` 配置实际 `LLM_ENDPOINT`、`LLM_API_KEY`、`LLM_MODEL` 后，服务才能调用云端教练。Embedding 有独立配置；未配置时检索明确降级为关键词模式。当前使用实际 HTTP 模型适配器，Spring AI 运行依赖尚未接入。
 
+Windows 已设置 `GLM_API_KEY` 时，可用 `scripts/start-server.ps1 -GlmCodingPlan` 启动本机真实模型开发联调；密钥仅从环境读取，具体行为和适用范围见[服务端说明](server/README.md)。
+
+2026-11-15 的 GLM 实际调用、个人记忆/知识验证和 Android 端到端结果见 [真实模型联调记录](docs/glm-live-validation-2026-11-15.md)。它验证开发链路，不代替教练盲评或真实运动员效果评估。
+
 `scripts/smoke-api.ps1` 可验证记忆操作、明确测试规则下的 BV 和方案保存；其中测试规则标明为开发样例，不是正式赛事规则。上传资料可保留原件并解析文本；自动视觉理解、完整规则包构建和真实教练效果仍在后续实施范围。
 
 ## 核心流程

@@ -7,7 +7,8 @@
     "test:plan": "node smoke.mjs",
     "test:profile": "node knowledge-memory.mjs",
     "test:resilience": "node resilience.mjs",
-    "test:upload": "node upload.mjs"
+    "test:upload": "node upload.mjs",
+    "test:live-coach": "node live-coach.mjs"
   },
   "engines": { "node": ">=20" },
   "dependencies": {

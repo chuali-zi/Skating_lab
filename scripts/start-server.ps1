@@ -1,4 +1,9 @@
-param([switch]$SkipBuild)
+param(
+    [switch]$SkipBuild,
+    [switch]$GlmCodingPlan,
+    [string]$GlmModel = 'glm-5.3',
+    [ValidateRange(0,65535)][int]$Port = 0
+)
 $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'load-local-env.ps1')
 if (-not $env:JAVA_HOME) {
@@ -7,6 +12,7 @@ if (-not $env:JAVA_HOME) {
     else { throw 'Set JAVA_HOME to a full JDK 17 or later supported by the server.' }
 }
 Push-Location (Join-Path $projectRoot 'server')
+$previousModelEnvironment = @{}
 try {
     if (-not $SkipBuild) {
         & .\mvnw.cmd -B --no-transfer-progress package
@@ -21,6 +27,42 @@ try {
     $jarHash = (Get-FileHash -LiteralPath $builtJar -Algorithm SHA256).Hash.ToLowerInvariant()
     $runtimeJar = Join-Path $runtimeDirectory "skating-coach-$jarHash.jar"
     if (-not (Test-Path -LiteralPath $runtimeJar)) { Copy-Item -LiteralPath $builtJar -Destination $runtimeJar }
+    if ($Port -ne 0) {
+        $previousModelEnvironment['SERVER_PORT'] = [Environment]::GetEnvironmentVariable('SERVER_PORT', 'Process')
+        $env:SERVER_PORT = [string]$Port
+    }
+    if ($GlmCodingPlan) {
+        # Read the Windows store too: an already-running terminal may not have
+        # inherited a variable added through System Properties. Never print or
+        # persist the key, and only expose it after Maven/tests have finished.
+        $glmKey = $null
+        foreach ($scope in @('Process', 'User', 'Machine')) {
+            $glmKey = [Environment]::GetEnvironmentVariable('GLM_API_KEY', $scope)
+            if (-not [string]::IsNullOrWhiteSpace($glmKey)) { break }
+        }
+        if ([string]::IsNullOrWhiteSpace($glmKey)) { throw 'GLM_API_KEY was not found in Process, User or Machine environment.' }
+        if ([string]::IsNullOrWhiteSpace($GlmModel)) { throw 'Specify a GLM model ID.' }
+        $modelEnvironment = @{
+            LLM_ENDPOINT = 'https://open.bigmodel.cn/api/coding/paas/v4/chat/completions'
+            LLM_API_KEY = $glmKey
+            LLM_MODEL = $GlmModel
+            LLM_TIMEOUT_SECONDS = '180'
+            LLM_JSON_MODE = 'true'
+            LLM_MAX_OUTPUT_TOKENS = '32768'
+        }
+        foreach ($name in $modelEnvironment.Keys) {
+            $previousModelEnvironment[$name] = [Environment]::GetEnvironmentVariable($name, 'Process')
+            [Environment]::SetEnvironmentVariable($name, $modelEnvironment[$name], 'Process')
+        }
+        $glmKey = $null
+        $modelEnvironment.Clear()
+        Write-Output "GLM Coding Plan development connection configured: $GlmModel (key not displayed or saved)."
+    }
     & (Join-Path $env:JAVA_HOME 'bin/java.exe') -jar $runtimeJar
     if ($LASTEXITCODE -ne 0) { throw 'Server exited with an error.' }
-} finally { Pop-Location }
+} finally {
+    foreach ($name in $previousModelEnvironment.Keys) {
+        [Environment]::SetEnvironmentVariable($name, $previousModelEnvironment[$name], 'Process')
+    }
+    Pop-Location
+}

@@ -43,6 +43,8 @@ class KnowledgeMemoryIntegrationTest {
     @Autowired MemoryService memory; @Autowired KnowledgeService knowledge;
     @Autowired CoachContextService contexts; @Autowired TenantJdbc tenant;
     @Autowired JdbcTemplate jdbc; @Autowired DocumentParser parser; @Autowired SourceStorage storage;
+    @Autowired com.skatingcoach.coach.RecommendationService recommendations;
+    @Autowired com.skatingcoach.conversation.ConversationService conversations;
     @MockitoBean LanguageModelGateway model; @MockitoBean EmbeddingGateway embeddings;
     CurrentActor alice,bob;
 
@@ -60,6 +62,59 @@ class KnowledgeMemoryIntegrationTest {
     }
     KnowledgeModels.Source document(CurrentActor actor,String text,String competition) {
         return knowledge.createText(actor,new KnowledgeModels.TextInput("Test source",text,null,competition,UUID.randomUUID().toString(),null));
+    }
+
+    @Test void rejectedCitationIsRepairedWithFeedbackAndNotPublishedAsEvidence() throws Exception {
+        var payloads=new java.util.concurrent.CopyOnWriteArrayList<String>();
+        when(model.available()).thenReturn(true);
+        String valid="""
+                {"explanation":"Training fixture","candidates":[{"title":"Plan","body":{"elements":[
+                {"id":"e1","type":"SINGLE","jumps":["2A"],"plannedStartSeconds":20}]},"evidenceIds":[]}]}
+                """;
+        String rejected=valid.replace("\"evidenceIds\":[]","\"evidenceIds\":[\"fabricated-private-source\"]");
+        when(model.generate(anyString(),anyString())).thenAnswer(call->{
+            if(((String)call.getArgument(0)).startsWith("Extract only")) return new ModelReply("{\"items\":[]}","fixture",0,0);
+            payloads.add(call.getArgument(1));
+            return new ModelReply(payloads.size()==1?rejected:valid,"fixture",0,0);
+        });
+        var run=runRecommendation();
+        assertThat(run.status()).isEqualTo("SUCCEEDED");
+        assertThat(payloads).hasSize(2);
+        var json=new com.fasterxml.jackson.databind.ObjectMapper();
+        assertThat(json.readTree(payloads.get(0)).has("rejectedAttempt")).isFalse();
+        assertThat(json.readTree(payloads.get(1)).path("rejectedAttempt").asText()).isEqualTo(rejected);
+        assertThat(json.readTree(payloads.get(1)).path("validationFeedback").asText()).contains("完整id");
+        assertThat(run.result().path("validationAttempts").asInt()).isEqualTo(2);
+        assertThat(run.result().path("repairReasons").get(0).asText()).isEqualTo("EVIDENCE_NOT_ALLOWED");
+        assertThat(run.result().toString()).doesNotContain("fabricated-private-source","rejectedAttempt");
+    }
+
+    @Test void repeatedInvalidOutputStopsAfterOneRepairWithSafeReason() throws Exception {
+        var attempts=new java.util.concurrent.atomic.AtomicInteger();
+        when(model.available()).thenReturn(true);
+        when(model.generate(anyString(),anyString())).thenAnswer(call->{
+            if(((String)call.getArgument(0)).startsWith("Extract only")) return new ModelReply("{\"items\":[]}","fixture",0,0);
+            attempts.incrementAndGet();
+            return new ModelReply("private-invalid-response","fixture",0,0);
+        });
+        var run=runRecommendation();
+        assertThat(run.status()).isEqualTo("FAILED");
+        assertThat(run.errorCode()).isEqualTo("INVALID_MODEL_OUTPUT_JSON_SYNTAX");
+        assertThat(run.result()).isNull();
+        assertThat(attempts.get()).isEqualTo(2);
+    }
+
+    private com.skatingcoach.coach.RecommendationModels.RunView runRecommendation() throws Exception {
+        var session=conversations.create(alice);
+        var run=recommendations.submit(alice,new com.skatingcoach.coach.RecommendationModels.RecommendationInput(
+                UUID.randomUUID().toString(),session.id(),"Give me a training plan",null,null,null,null,null));
+        long deadline=System.nanoTime()+java.util.concurrent.TimeUnit.SECONDS.toNanos(10);
+        while(Set.of("QUEUED","RUNNING").contains(run.status())&&System.nanoTime()<deadline) {
+            Thread.sleep(25);
+            run=recommendations.get(alice,run.id());
+        }
+        assertThat(run.status()).isNotIn("QUEUED","RUNNING");
+        return run;
     }
 
     @Test void actualDatabaseRoleEnforcesIsolationAndPoolScopeDoesNotLeak() {
