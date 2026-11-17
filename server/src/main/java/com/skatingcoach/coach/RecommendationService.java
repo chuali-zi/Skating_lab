@@ -119,7 +119,7 @@ public class RecommendationService {
             }
             UUID id = UUID.randomUUID();
             String status = gateway.available() ? "QUEUED" : "PROVIDER_UNAVAILABLE";
-            String errorCode = gateway.available() ? null : "PROVIDER_UNAVAILABLE";
+            String errorCode = "QUEUED".equals(status) ? null : "PROVIDER_NOT_CONFIGURED";
             return jdbc.queryForObject("""
                     INSERT INTO recommendation_run(id,athlete_id,session_id,status,request_id,request,result,error_code,created_at,updated_at)
                     VALUES (?,?,?,?,?,?::jsonb,NULL,?,now(),now()) RETURNING *

@@ -26,6 +26,8 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalUriHandler
@@ -34,6 +36,7 @@ import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
@@ -171,6 +174,7 @@ private fun PrepareScreen(state: CoachUiState, vm: CoachViewModel, onConnect: ()
 @Composable
 private fun PlanScreen(state: CoachUiState, vm: CoachViewModel) {
     val recovery = state.recoveryMode
+    val focusManager = LocalFocusManager.current
     var showScenario by rememberSaveable { mutableStateOf(false) }
     val rows = if (recovery) state.recoveryBody?.elements.orEmpty() else state.draft.elements
     val evaluation = if (recovery) state.recoveryEvaluation else state.evaluation
@@ -185,6 +189,11 @@ private fun PlanScreen(state: CoachUiState, vm: CoachViewModel) {
             }
         }
         if (!recovery) item { OutlinedTextField(state.draft.title, vm::updateTitle, Modifier.fillMaxWidth(), label = { Text("方案名称") }, singleLine = true) }
+        val savedRecovery = state.recoverySaved
+        val source = state.plans.firstOrNull { it.id == savedRecovery?.body?.sourcePlanId }
+        if (recovery && savedRecovery != null && source != null && savedRecovery.body.sourcePlanRevision != source.revision) {
+            item { Text("这份预案基于旧版或未记录版本的主编排。请核对失误位置与时间，必要时建立新预案。", color = MaterialTheme.colorScheme.error) }
+        }
         if ((!recovery && state.draft.contextInvalidated) || (recovery && state.recoverySaved?.contextInvalidated == true)) item { Column { Text("这份方案引用的部分资料已更新或撤回，请重新核对后使用。", color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodyMedium); if (!recovery) TextButton(onClick = vm::reloadPlan, enabled = state.busy == null) { Text("重新打开已清理的最新方案") } } }
         item { ScoreSummary(evaluation, state.evaluating) }
         if (state.explanation.isNotBlank()) item { OutlinedCard { Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) { Text("建议依据", style = MaterialTheme.typography.titleMedium); Text(state.explanation) } } }
@@ -210,7 +219,7 @@ private fun PlanScreen(state: CoachUiState, vm: CoachViewModel) {
         evaluation?.checks?.filter { it.elementId == null && it.status != "SATISFIED" }?.let { checks -> items(checks) { CheckLabel(it) } }
         item {
             FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                if (!recovery) TextButton(onClick = vm::undo) { Icon(Icons.AutoMirrored.Outlined.Undo, null); Spacer(Modifier.width(4.dp)); Text("撤销修改") }
+                if (!recovery) TextButton(onClick = { focusManager.clearFocus(); vm.undo() }) { Icon(Icons.AutoMirrored.Outlined.Undo, null); Spacer(Modifier.width(4.dp)); Text("撤销修改") }
                 OutlinedButton(onClick = { if (recovery || !state.connected) { showScenario = true } else { vm.showRecovery(true); vm.defaultRecovery { showScenario = true } } }, enabled = state.draft.elements.isNotEmpty() && state.busy == null) { Text(if (recovery) "修改失误情景" else "准备失误预案") }
                 if (recovery && state.recoveryBody != null) OutlinedButton(onClick = { vm.recommend(true) }, enabled = state.busy == null) { Text("分析后续安排") }
             }
@@ -220,12 +229,18 @@ private fun PlanScreen(state: CoachUiState, vm: CoachViewModel) {
     if (showScenario) ScenarioDialog(state.draft.elements, { showScenario = false }) { index, actual, description -> vm.createRecovery(index, actual, description); showScenario = false }
 }
 
+private fun planTimeText(seconds: Double?): String =
+    seconds?.takeIf { it.isFinite() }?.let { java.math.BigDecimal.valueOf(it).stripTrailingZeros().toPlainString() }.orEmpty()
+
 @Composable
 private fun ElementCard(element: PlanElement, index: Int, score: ElementScore?, frozen: Boolean, onChange: (String, String) -> Unit, onDelete: (() -> Unit)?, onMoveUp: (() -> Unit)?, onMoveDown: (() -> Unit)?) {
     var jumps by remember(element.id, element.jumps) { mutableStateOf(element.jumps.joinToString("+")) }
-    var time by remember(element.id) { mutableStateOf(element.plannedStartSeconds?.let { if (it % 1 == 0.0) it.toInt().toString() else it.toString() }.orEmpty()) }
-    LaunchedEffect(element.plannedStartSeconds) {
-        if (time.isBlank() || time.toDoubleOrNull() != null) time = element.plannedStartSeconds?.let { if (it % 1 == 0.0) it.toInt().toString() else it.toString() }.orEmpty()
+    var time by rememberSaveable(element.id) { mutableStateOf(planTimeText(element.plannedStartSeconds)) }
+    var timeFocused by remember { mutableStateOf(false) }
+    LaunchedEffect(element.plannedStartSeconds, timeFocused) {
+        if (!timeFocused && parsePlanTime(time) != element.plannedStartSeconds) {
+            time = planTimeText(element.plannedStartSeconds)
+        }
     }
     val dragThreshold = with(LocalDensity.current) { 64.dp.toPx() }
     val latestUp by rememberUpdatedState(onMoveUp)
@@ -248,7 +263,8 @@ private fun ElementCard(element: PlanElement, index: Int, score: ElementScore?, 
                 }
             }
             OutlinedTextField(jumps, { jumps = it; onChange(it, time) }, Modifier.fillMaxWidth(), label = { Text("动作或有序连跳") }, placeholder = { Text("例如 3S+2T") }, readOnly = frozen, singleLine = true)
-            OutlinedTextField(time, { time = it; onChange(jumps, it) }, Modifier.fillMaxWidth(), label = { Text("计划执行时间（秒）") }, supportingText = { Text(if (time.isBlank()) "未填时间时，后半程加成保持待核实。" else if (time.toDoubleOrNull() == null) "时间暂未识别，原输入已保留在编辑框。" else "时间按当前比赛规则核算。") }, keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal), readOnly = frozen, singleLine = true)
+            val invalidTime = time.isNotBlank() && parsePlanTime(time) == null
+            OutlinedTextField(time, { time = it; onChange(jumps, it) }, Modifier.fillMaxWidth().onFocusChanged { timeFocused = it.isFocused }, label = { Text("计划执行时间（秒）") }, supportingText = { Text(if (time.isBlank()) "未填时间时，后半程加成保持待核实。" else if (invalidTime) "请输入有限数字，例如 90.5；当前时间按未填写处理。" else "时间按当前比赛规则核算。") }, isError = invalidTime, keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal), readOnly = frozen, singleLine = true)
             if (score?.bonusApplied == true) AssistChip(onClick = {}, label = { Text("适用后半程加成 ×${score.bonusMultiplier}") }, leadingIcon = { Icon(Icons.Outlined.Schedule, null, Modifier.size(18.dp)) })
             if (!frozen) FlowRow(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
                 onMoveUp?.let { TextButton(onClick = it) { Icon(Icons.Outlined.ArrowUpward, "上移第${index + 1}组", Modifier.size(18.dp)); Text("上移") } }
@@ -324,7 +340,12 @@ private fun MemoryScreen(state: CoachUiState, vm: CoachViewModel) {
         } }
     }
     editing?.let { item -> AlertDialog(onDismissRequest = { editing = null }, title = { Text("纠正这条记忆") }, text = { OutlinedTextField(corrected, { corrected = it }, Modifier.fillMaxWidth(), minLines = 3, label = { Text("应该如何理解") }) }, confirmButton = { TextButton(onClick = { vm.correctMemory(item, corrected); editing = null }, enabled = corrected.isNotBlank()) { Text("保存更正") } }, dismissButton = { TextButton(onClick = { editing = null }) { Text("取消") } }) }
-    forgetting?.let { item -> AlertDialog(onDismissRequest = { forgetting = null }, title = { Text("停止记住这条信息？") }, text = { Text("后续建议将停止使用这条记忆。原始聊天或文件是否删除，由对应资料操作决定。") }, confirmButton = { TextButton(onClick = { vm.forgetMemory(item); forgetting = null }) { Text("忘记这条") } }, dismissButton = { TextButton(onClick = { forgetting = null }) { Text("取消") } }) }
+    forgetting?.let { item -> AlertDialog(onDismissRequest = { forgetting = null }, title = { Text("停止记住这条信息？") }, text = {
+        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            Text(item.statement, maxLines = 4, overflow = TextOverflow.Ellipsis)
+            Text("后续建议将停止使用这条记忆。原始聊天或文件是否删除，由对应资料操作决定。")
+        }
+    }, confirmButton = { TextButton(onClick = { vm.forgetMemory(item); forgetting = null }) { Text("忘记这条") } }, dismissButton = { TextButton(onClick = { forgetting = null }) { Text("取消") } }) }
 }
 
 @Composable

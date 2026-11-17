@@ -5,7 +5,9 @@ import path from 'node:path';
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 
 export const workspace = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
-export const artifactDir = path.join(workspace, 'tmp/mobile-testing');
+export const artifactDir = process.env.MOBILE_ARTIFACT_DIR
+  ? path.resolve(process.env.MOBILE_ARTIFACT_DIR)
+  : path.join(workspace, 'tmp/mobile-testing');
 
 // A real MCP stdio connection, scoped to this test process. No global IDE config,
 // cloud device account, backend credentials, or listening network port is needed.

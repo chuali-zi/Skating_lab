@@ -7,6 +7,15 @@ import com.skatingcoach.gateway.ModelReply;
 import com.skatingcoach.memory.MemoryModels;
 import com.skatingcoach.memory.MemoryService;
 import com.skatingcoach.persistence.TenantJdbc;
+import com.skatingcoach.planning.PlanService;
+import com.skatingcoach.planning.PlanModels.Kind;
+import com.skatingcoach.planning.PlanModels.PlanInput;
+import com.skatingcoach.planning.PlanModels.RecoveryInput;
+import com.skatingcoach.scoring.ScoringModels.Element;
+import com.skatingcoach.scoring.ScoringModels.ElementType;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.io.ByteArrayInputStream;
 import java.util.*;
@@ -42,6 +51,7 @@ class KnowledgeMemoryIntegrationTest {
     }
     @Autowired MemoryService memory; @Autowired KnowledgeService knowledge;
     @Autowired CoachContextService contexts; @Autowired TenantJdbc tenant;
+    @Autowired PlanService plans; @Autowired ObjectMapper mapper;
     @Autowired JdbcTemplate jdbc; @Autowired DocumentParser parser; @Autowired SourceStorage storage;
     @Autowired com.skatingcoach.coach.RecommendationService recommendations;
     @Autowired com.skatingcoach.conversation.ConversationService conversations;
@@ -62,6 +72,29 @@ class KnowledgeMemoryIntegrationTest {
     }
     KnowledgeModels.Source document(CurrentActor actor,String text,String competition) {
         return knowledge.createText(actor,new KnowledgeModels.TextInput("Test source",text,null,competition,UUID.randomUUID().toString(),null));
+    }
+
+    @Test void savedRecoveryCanBeEditedWhenFrozenTimeHasTheSameValue() throws Exception {
+        var main = plans.create(alice, new PlanInput("Main", Kind.MAIN, mapper.readTree("""
+                {"elements":[{"id":"first","type":"COMBINATION","jumps":["3S","2T"],"plannedStartSeconds":30}]}
+                """), null));
+        var first = new Element("first", ElementType.SINGLE, List.of("2S"), new BigDecimal("30"));
+        var recovery = plans.recovery(alice, main.id(), new RecoveryInput(main.revision(), "Recovery",
+                List.of(first), List.of(first), null, null, "降周")).plan();
+        ObjectNode edited = (ObjectNode) mapper.readTree("""
+                {"completedPrefix":[{"id":"first","type":"SINGLE","jumps":["2S"],"plannedStartSeconds":30.0}],
+                 "elements":[{"id":"first","type":"SINGLE","jumps":["2S"],"plannedStartSeconds":30.0},
+                             {"id":"next","type":"SINGLE","jumps":["2A"],"plannedStartSeconds":60}]}
+                """);
+        edited.put("sourcePlanId", main.id().toString());
+        edited.put("sourcePlanRevision", 999);
+        var saved = plans.update(alice, recovery.id(), new PlanInput("Edited", Kind.RECOVERY, edited, recovery.revision()));
+        assertThat(saved.body().path("sourcePlanRevision").asLong()).isEqualTo(main.revision());
+        assertThat(saved.body().path("elements").size()).isEqualTo(2);
+        ((ObjectNode) edited.path("completedPrefix").get(0)).put("plannedStartSeconds", 31);
+        ((ObjectNode) edited.path("elements").get(0)).put("plannedStartSeconds", 31);
+        assertThatThrownBy(() -> plans.update(alice, saved.id(), new PlanInput("Edited", Kind.RECOVERY, edited, saved.revision())))
+                .isInstanceOfSatisfying(ApiException.class, error -> assertThat(error.code()).isEqualTo("ACTUAL_PREFIX_LOCKED"));
     }
 
     @Test void rejectedCitationIsRepairedWithFeedbackAndNotPublishedAsEvidence() throws Exception {

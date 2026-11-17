@@ -59,10 +59,16 @@ public class PlanService {
             PlanView existing = require(actor, id);
             if (existing.revision() != input.expectedRevision()) throw stale();
             if (existing.kind() != input.kind()) throw new ApiException(HttpStatus.CONFLICT, "PLAN_KIND_FIXED", "请为不同类型另建方案。");
-            JsonNode body = validateBody(actor, input.kind(), input.body());
-            if (existing.kind() == Kind.RECOVERY && (!existing.body().path("completedPrefix").equals(body.path("completedPrefix"))
-                    || !existing.body().path("sourcePlanId").equals(body.path("sourcePlanId")))) {
-                throw new ApiException(HttpStatus.CONFLICT, "ACTUAL_PREFIX_LOCKED", "该预案已发生的动作已冻结；修正失误情境请创建新预案。");
+            ObjectNode body = validateBody(actor, input.kind(), input.body());
+            if (existing.kind() == Kind.RECOVERY) {
+                ObjectNode savedBody = projector.project(existing.body());
+                if (!savedBody.path("completedPrefix").equals(body.path("completedPrefix"))
+                        || !savedBody.path("sourcePlanId").equals(body.path("sourcePlanId"))) {
+                    throw new ApiException(HttpStatus.CONFLICT, "ACTUAL_PREFIX_LOCKED", "该预案已发生的动作已冻结；修正失误情境请创建新预案。");
+                }
+                JsonNode version = existing.body().get("sourcePlanRevision");
+                if (version == null) body.remove("sourcePlanRevision");
+                else body.set("sourcePlanRevision", version);
             }
             List<PlanView> updated = jdbc.query("""
                     UPDATE saved_plan SET title=?, body=?::jsonb, revision=revision+1, context_invalidated=false, updated_at=now()
@@ -95,7 +101,7 @@ public class PlanService {
         });
     }
 
-    private JsonNode validateBody(CurrentActor actor, Kind kind, JsonNode proposed) {
+    private ObjectNode validateBody(CurrentActor actor, Kind kind, JsonNode proposed) {
         ObjectNode body = projector.project(proposed);
         if (kind == Kind.RECOVERY) {
             if (!body.has("completedPrefix") && body.has("actualPrefix")) body.set("completedPrefix", body.get("actualPrefix"));

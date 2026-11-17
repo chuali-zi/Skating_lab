@@ -22,6 +22,8 @@ import okio.source
 import java.util.UUID
 import java.security.MessageDigest
 
+internal fun parsePlanTime(input: String): Double? = input.toDoubleOrNull()?.takeIf { it.isFinite() }
+
 enum class Destination(val label: String) { PREPARE("准备"), PLAN("编排"), KNOWLEDGE("资料"), MEMORY("档案") }
 data class Candidate(val title: String, val body: PlanBody, val kind: String = "MAIN", val rationale: String = "")
 data class CoachUiState(
@@ -105,7 +107,7 @@ class CoachViewModel(application: Application) : AndroidViewModel(application) {
     fun updateElement(id: String, jumps: String, time: String) {
         changeDraft { draft -> draft.copy(elements = draft.elements.map { if (it.id == id) {
             val codes = jumps.split('+').map(String::trim).filter(String::isNotBlank)
-            it.copy(jumps = codes, type = if (codes.size > 1) { if (it.type == "SEQUENCE") "SEQUENCE" else "COMBINATION" } else "SINGLE", plannedStartSeconds = time.toDoubleOrNull())
+            it.copy(jumps = codes, type = if (codes.size > 1) { if (it.type == "SEQUENCE") "SEQUENCE" else "COMBINATION" } else "SINGLE", plannedStartSeconds = parsePlanTime(time))
         } else it }) }
     }
     fun moveElement(from: Int, to: Int) {
@@ -152,7 +154,7 @@ class CoachViewModel(application: Application) : AndroidViewModel(application) {
         draftStorageKey = nextDraftKey
         prefs.edit().putString("baseUrl", baseUrl.trim()).putString("lastDraftKey", nextDraftKey).putString(nextDraftKey, json.encodeToString(scopedDraft)).remove("draft.unassigned").apply()
         undoDraft = null; privacyEpoch = null; localEditVersion++
-        mutableState.value = CoachUiState(baseUrl = baseUrl.trim(), connected = true, displayName = identity.displayName, catalog = catalog, draft = scopedDraft, notice = "服务已连接", busy = "正在同步资料")
+        mutableState.value = CoachUiState(baseUrl = baseUrl.trim(), connected = true, displayName = identity.displayName, catalog = catalog, draft = scopedDraft, notice = "服务已连接", busy = "正在同步资料", runId = prefs.getString("$nextDraftKey.recommendation", null))
         refreshAll(client)
     }
 
@@ -265,14 +267,19 @@ class CoachViewModel(application: Application) : AndroidViewModel(application) {
 
     private suspend fun readRun(initial: RecommendationRun) {
         var run = initial
+        prefs.edit().putString("$draftStorageKey.recommendation", run.id).apply()
         mutableState.update { it.copy(runId = run.id) }
         repeat(30) {
             if (run.status !in setOf("PENDING", "RUNNING", "QUEUED")) return@repeat
             delay(1000)
             run = requireApi().get("/api/v1/recommendations/${run.id}")
         }
-        if (run.status == "PROVIDER_UNAVAILABLE") error("服务端尚未配置云端模型，资料和草稿已保留。配置后可以重新生成。")
+        if (run.status == "PROVIDER_UNAVAILABLE") {
+            if (run.errorCode == "PROVIDER_NOT_CONFIGURED") error("服务端尚未配置云端模型，资料和草稿已保留。配置后可以重新生成。")
+            error("本次无法连接云端模型，资料和草稿已保留。请稍后重新生成，或联系管理员检查服务配置。")
+        }
         if (run.status == "REDACTED") {
+            prefs.edit().remove("$draftStorageKey.recommendation").apply()
             mutableState.update { it.copy(explanation = "", candidates = emptyList(), recommendationEvidence = emptyList(), runId = null) }
             error("分析引用的资料已撤回，旧结果已停止使用。请按当前资料重新生成。")
         }
@@ -340,7 +347,7 @@ class CoachViewModel(application: Application) : AndroidViewModel(application) {
         if (body.elements.indexOfFirst { it.id == id } < state.value.recoveryFrozenCount) return
         val codes = jumps.split('+').map(String::trim).filter(String::isNotBlank)
         localEditVersion++
-        mutableState.update { it.copy(recoveryBody = body.copy(elements = body.elements.map { row -> if (row.id == id) row.copy(jumps = codes, type = if (codes.size > 1) { if (row.type == "SEQUENCE") "SEQUENCE" else "COMBINATION" } else "SINGLE", plannedStartSeconds = time.toDoubleOrNull()) else row }), recoveryEvaluation = null) }
+        mutableState.update { it.copy(recoveryBody = body.copy(elements = body.elements.map { row -> if (row.id == id) row.copy(jumps = codes, type = if (codes.size > 1) { if (row.type == "SEQUENCE") "SEQUENCE" else "COMBINATION" } else "SINGLE", plannedStartSeconds = parsePlanTime(time)) else row }), recoveryEvaluation = null) }
     }
     fun addRecoveryElement() = editRecovery { it + PlanElement(UUID.randomUUID().toString()) }
     fun removeRecoveryElement(index: Int) {

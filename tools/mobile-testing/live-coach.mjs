@@ -8,12 +8,14 @@ import { deviceUi } from './ui.mjs';
 // the same development athlete's memory/knowledge while a model request runs.
 const ui = await deviceUi();
 const saveExisting = process.argv.includes('--save-existing');
+const restartPending = process.argv.includes('--restart-pending');
 const previous = saveExisting ? JSON.parse(await readFile(path.join(artifactDir, 'live-coach-report.json'), 'utf8')) : null;
 if (saveExisting) assert.equal(previous.checks[0]?.status, 'passed', 'Resume only an actually verified cloud generation');
 const checks = saveExisting ? [previous.checks[0]] : [], base = process.env.LIVE_API_BASE || 'http://127.0.0.1:8080/api/v1';
 assert.equal(new URL(base).hostname, '127.0.0.1', 'Only a local development service');
 const name = previous?.name || `GLM-Android-${Date.now()}`;
 let resumed = previous?.resumed || false, generationSeconds = previous?.generationSeconds ?? null;
+let restarted = false;
 // Mobile CLI's app-only screenshot can fail on this emulator. Keep UI control
 // through MCP and use ADB's actual full-screen capture for this live flow.
 const capture = name => ui.capture(name, { mcpScreenshot: false });
@@ -71,12 +73,22 @@ try {
       if (!busy) {
         await ui.find('查看最近一次分析');
         await capture('live-coach-pending');
+        if (restartPending && !restarted) {
+          await ui.call('mobile_terminate_app', { packageName: 'com.skatingcoach.android' });
+          await ui.call('mobile_launch_app', { packageName: 'com.skatingcoach.android' });
+          await ui.waitFor('连接服务'); await ui.tap('连接服务', { last: true });
+          await ui.tap('连接'); await ui.waitFor('已连接');
+          await ui.find('查看最近一次分析');
+          await capture('live-coach-restored-after-restart');
+          restarted = true;
+        }
         await ui.tap('查看最近一次分析');
         resumed = true;
       }
       await new Promise(resolve => setTimeout(resolve, 1200));
     }
     assert(completed, 'Cloud coaching did not finish within the test deadline');
+    if (restartPending) assert(restarted, 'The task must be resumed after a real app restart');
     generationSeconds = (Date.now() - generationStarted) / 1000;
     await ui.find('建议依据'); await capture('live-coach-result');
     await ui.find('使用这份方案'); await capture('live-coach-candidate');
@@ -100,6 +112,6 @@ try {
   });
 } catch (error) { console.error(error.message); process.exitCode = 1; }
 finally {
-  await writeFile(path.join(artifactDir, 'live-coach-report.json'), JSON.stringify({ name, resumed, generationSeconds, resumedAfterHarnessFailure: saveExisting, checks, finishedAt: new Date().toISOString() }, null, 2));
+  await writeFile(path.join(artifactDir, 'live-coach-report.json'), JSON.stringify({ name, resumed, restarted, generationSeconds, resumedAfterHarnessFailure: saveExisting, checks, finishedAt: new Date().toISOString() }, null, 2));
   await ui.close();
 }
