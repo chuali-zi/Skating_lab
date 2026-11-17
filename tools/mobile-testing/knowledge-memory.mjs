@@ -5,8 +5,11 @@ import { artifactDir } from './mobile.mjs';
 import { deviceUi } from './ui.mjs';
 
 const ui = await deviceUi();
-const name = `QA-${Date.now().toString(36)}`;
-const knowledgeOnly = process.argv.includes('--knowledge-only');
+const resumeIndex = process.argv.indexOf('--resume-document');
+const resumeName = resumeIndex >= 0 ? process.argv[resumeIndex + 1] : null;
+if (resumeIndex >= 0) assert(/^QA-[a-z0-9]+$/.test(resumeName ?? ''), 'Pass a generated QA document title');
+const name = resumeName || `QA-${Date.now().toString(36)}`;
+const knowledgeOnly = Boolean(resumeName) || process.argv.includes('--knowledge-only');
 const checks = [];
 const base = process.env.EDGE_API_ORIGIN ? `${process.env.EDGE_API_ORIGIN}/api/v1` : 'http://127.0.0.1:8080/api/v1';
 assert.equal(new URL(base).hostname, '127.0.0.1');
@@ -40,6 +43,7 @@ async function memoryAction(statement, action, direction = 'up') {
   throw new Error(`Could not identify ${action} on the generated memory`);
 }
 let memory, document;
+const searchPath = () => '/knowledge/search?' + new URLSearchParams({ q: name, competitionKey: document?.competitionKey ?? '' });
 const original = `${name}：后半程容易疲惫，优先稳定完成。`;
 const corrected = `${name}：最近后半程改善，仍偏好完成质量。`;
 const documentText = `${name} 自测训练笔记\n周三只练习稳定落冰。特殊要求：后半程感到疲惫时，可以放弃尚未完成的高难度连跳。\n这只是测试资料，不是正式比赛规则。`;
@@ -89,22 +93,25 @@ try {
 
   await check('free-form Chinese document ingest, retrieval and source inspection', async () => {
     await ui.tap('资料');
-    await ui.fill('资料标题（可选）', name);
-    await ui.fill('直接粘贴或描述资料', documentText);
-    await ui.find('提交文字资料'); await ui.tap('提交文字资料');
+    if (!resumeName) {
+      await ui.fill('资料标题（可选）', name);
+      await ui.fill('直接粘贴或描述资料', documentText);
+      await ui.find('提交文字资料'); await ui.tap('提交文字资料');
+    }
     document = await poll(async () => (await get('/knowledge')).items.find(item => item.title === name && ['ready', 'partial'].includes(item.status)));
+    const detail = await get(`/knowledge/${document.id}`);
+    assert(detail.blocks.some(block => block.text.includes(`${name} 自测训练笔记`)), 'Use only the document created by this test');
     await ui.find('从资料里查找');
     await ui.fill('从资料里查找', name);
     await ui.find('搜索资料');
     await ui.tap('搜索资料');
     const search = await poll(async () => {
-      const result = await get(`/knowledge/search?q=${encodeURIComponent(name)}`);
+      const result = await get(searchPath());
       return result.items.some(item => item.sourceId === document.id) && result;
     });
     assert(search.items.find(item => item.sourceId === document.id).locator);
     await ui.find(name); await ui.tap(name);
     await ui.waitFor('自测训练笔记');
-    const detail = await get(`/knowledge/${document.id}`);
     assert(detail.blocks.some(block => block.text.includes('高难度连跳')));
     await ui.capture('knowledge-evidence');
     await ui.press('BACK');
@@ -122,7 +129,7 @@ try {
     assert(dialog.some(e => e.text?.includes(name)), 'Never confirm a different document');
     await ui.tap('撤回');
     await poll(async () => !(await get('/knowledge')).items.some(item => item.id === document.id));
-    const search = await get(`/knowledge/search?q=${encodeURIComponent(name)}`);
+    const search = await get(searchPath());
     assert(!search.items.some(item => item.sourceId === document.id));
     await ui.capture('knowledge-withdrawn');
   });
