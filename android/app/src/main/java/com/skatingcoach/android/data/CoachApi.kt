@@ -38,10 +38,14 @@ class CoachApi(
     suspend inline fun <reified T> patch(path: String, body: JsonElement): T = json.decodeFromString(exchange("PATCH", path, body.toString().toRequestBody(JSON_MEDIA)))
     suspend fun delete(path: String) { exchange("DELETE", path) }
 
-    suspend fun exchange(method: String, path: String, body: RequestBody? = null): String = withContext(Dispatchers.IO) {
+    suspend fun exchange(method: String, path: String, body: RequestBody? = null, frameConsent: Boolean = false): String = withContext(Dispatchers.IO) {
         require(path.startsWith("/api/v1/")) { "Unsupported API path" }
         val url = base.resolve(path) ?: throw IOException("服务地址无效")
         val request = Request.Builder().url(url).header("Accept", "application/json")
+        if (frameConsent) {
+            require(path == VIDEO_PATH || path.startsWith("$VIDEO_PATH/from-source/"))
+            request.header("X-Skating-Frame-Consent", "1")
+        }
         token?.let { request.header("Authorization", "Bearer $it") }
         request.method(method, body)
         try { client.newCall(request.build()).execute().use { response ->
@@ -76,5 +80,47 @@ class CoachApi(
 
     fun encodePlanBody(body: PlanBody): JsonElement = json.parseToJsonElement(json.encodeToString(body))
 
-    companion object { val JSON_MEDIA = "application/json; charset=utf-8".toMediaType() }
+    suspend fun submitVideo(resolver: android.content.ContentResolver, uri: android.net.Uri?, source: String?): VideoJob {
+        val path = if (source == null) VIDEO_PATH else "$VIDEO_PATH/from-source/${java.util.UUID.fromString(source)}"
+        val data = if (source != null) ByteArray(0).toRequestBody(null) else object : RequestBody() {
+            override fun contentType() = "video/mp4".toMediaType()
+            override fun isOneShot() = true
+            override fun writeTo(sink: okio.BufferedSink) {
+                val buffer = ByteArray(16384)
+                var total = 0
+                val stream = resolver.openInputStream(requireNotNull(uri)) ?: throw IOException("无法读取视频。")
+                stream.use { input ->
+                    while (true) {
+                        val n = input.read(buffer)
+                        if (n < 0) break
+                        total += n
+                        if (total > 10 * 1024 * 1024) throw IOException("请截取 10 MiB 以内的片段。")
+                        sink.write(buffer, 0, n)
+                    }
+                }
+            }
+        }
+        return json.decodeFromString(exchange("POST",path,data,frameConsent = true))
+    }
+    suspend fun reviewVideo(job: String, index: Int, decision: String, note: String?): VideoReview {
+        val data = buildJsonObject {
+            put("confirmed",true)
+            put("decision",decision)
+            note?.let { put("capability_note",it) }
+        }
+        return json.decodeFromString(exchange("PUT","$VIDEO_PATH/$job/observations/$index/review",data.toString().toRequestBody(JSON_MEDIA)))
+    }
+    suspend fun videoFrame(job: String, index: Int): ByteArray = withContext(Dispatchers.IO) {
+        val url = base.resolve("$VIDEO_PATH/${java.util.UUID.fromString(job)}/frames/$index") ?: throw IOException("无效的帧地址。")
+        val request = Request.Builder().url(url).header("Authorization","Bearer "+requireNotNull(token))
+            .header("Accept","image/jpeg").cacheControl(okhttp3.CacheControl.Builder().noCache().noStore().build()).build()
+        client.newCall(request).execute().use { reply ->
+            if (!reply.isSuccessful || reply.body?.contentType()?.subtype != "jpeg") throw IOException("该帧不可读取，请刷新观察。")
+            reply.body!!.bytes()
+        }
+    }
+    companion object {
+        val JSON_MEDIA = "application/json; charset=utf-8".toMediaType()
+        const val VIDEO_PATH = "/api/v1/assets/video-jobs"
+    }
 }

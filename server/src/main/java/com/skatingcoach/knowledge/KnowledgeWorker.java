@@ -30,7 +30,15 @@ public class KnowledgeWorker {
               order by created_at for update skip locked limit 1)
             returning *
             """);
-        if(jobs.isEmpty())return;
+        if(jobs.isEmpty()) {
+            // Old installations can already have finished jobs from lexical-only or another model.
+            if(embedding.available()) jdbc.update("""
+                update knowledge_job set status='pending',attempts=0,lease_until=null
+                where id in (select id from knowledge_job where status='done' and indexed_model is distinct from ?
+                             order by created_at for update skip locked limit 16)
+                """,embedding.model());
+            return;
+        }
         var job=jobs.get(0);UUID sourceId=(UUID)job.get("source_id");
         CurrentActor actor=new CurrentActor((UUID)job.get("actor_id"),(UUID)job.get("athlete_id"));
         try {
@@ -43,7 +51,7 @@ public class KnowledgeWorker {
                 finish(sourceId,"deleted",null,job.get("lease_until"));return;
             }
             if("superseded".equals(source.get("status"))){finish(sourceId,"superseded",null,job.get("lease_until"));return;}
-            if(source.get("storage_key")!=null && !"ready".equals(source.get("status")) && !"partial".equals(source.get("status"))) {
+            if(source.get("storage_key")!=null && !Set.of("ready","partial","awaiting_visual").contains(source.get("status"))) {
                 List<KnowledgeModels.ParsedPart> parts;
                 try(var input=storage.open((String)source.get("storage_key"))){parts=parser.parse(input);}
                 tenant.write(actor,()-> {
@@ -76,5 +84,8 @@ public class KnowledgeWorker {
             tenant.write(actor,()-> {jdbc.update("update knowledge_source set status=case when status in ('queued','processing') then 'failed' else status end,error_code='PROCESSING_FAILED' where id=? and status not in ('deleted','superseded')",sourceId);return null;});
         }
     }
-    private void finish(UUID source,String status,String code,Object lease){jdbc.update("update knowledge_job set status=?,error_code=?,lease_until=case when ?='cleanup' then now()+interval '1 minute' else null end where source_id=? and lease_until=? and status in ('running','cleanup')",status,code,status,source,lease);}
+    private void finish(UUID source,String status,String code,Object lease){
+        jdbc.update("update knowledge_job set status=?,error_code=?,indexed_model=case when ?='done' then ? else indexed_model end,lease_until=case when ?='cleanup' then now()+interval '1 minute' else null end where source_id=? and lease_until=? and status in ('running','cleanup')",
+                status,code,status,embedding.available()?embedding.model():null,status,source,lease);
+    }
 }

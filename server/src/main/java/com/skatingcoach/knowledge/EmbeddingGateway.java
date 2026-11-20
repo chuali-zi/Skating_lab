@@ -12,14 +12,17 @@ import org.springframework.stereotype.Component;
 @Component
 public class EmbeddingGateway {
     private final String base,key,model; private final ObjectMapper json;
+    private final LocalBge local;
     private final HttpClient http=HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(8)).build();
-    public EmbeddingGateway(ObjectMapper json,@Value("${EMBEDDING_BASE_URL:}")String base,
+    public EmbeddingGateway(ObjectMapper json,LocalBge local,@Value("${EMBEDDING_BASE_URL:}")String base,
             @Value("${EMBEDDING_API_KEY:}")String key,@Value("${EMBEDDING_MODEL:}")String model) {
-        this.json=json;this.base=base;this.key=key;this.model=model;
+        this.json=json;this.local=local;this.base=base;this.key=key;this.model=model;
     }
-    public boolean available(){return !base.isBlank()&&!key.isBlank()&&!model.isBlank();}
-    public String model(){return base.replaceAll("/+$","")+"#"+model;}
+    public boolean available(){return local.configured() || !base.isBlank()&&!key.isBlank()&&!model.isBlank();}
+    public String model(){return local.configured()?LocalBge.MODEL:base.replaceAll("/+$","")+"#"+model;}
+    public double[] query(String text){return local.configured()?local.encode(text,true):embed(List.of(text)).get(0);}
     public List<double[]> embed(List<String> texts) {
+        if (local.configured())return texts.stream().map(text->local.encode(text,false)).toList();
         if(!available())return List.of();
         try {
             URI endpoint=URI.create(base.replaceAll("/+$","")+"/embeddings");

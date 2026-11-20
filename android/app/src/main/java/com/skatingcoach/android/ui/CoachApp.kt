@@ -123,7 +123,7 @@ fun CoachApp(vm: CoachViewModel) {
                     Column(verticalArrangement = Arrangement.spacedBy(6.dp)) { Text(block.locator, style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.primary); Text(block.text, style = MaterialTheme.typography.bodyLarge) }
                 }
                 if (detail.blocks.isEmpty()) item { Text(when (detail.status.lowercase()) {
-                    "awaiting_visual" -> "文件已保存，画面或音频分析尚未接入。目前不能据此判断动作、能力或规则内容。"
+                    "awaiting_visual" -> "文件已保存。视频可在资料页选择「复核视频」并授权采样；其他影像或音频可补充文字记录。"
                     "failed" -> "这份资料暂时未能完成处理，可稍后刷新查看进度。"
                     else -> "资料仍在处理中，稍后刷新可查看原文内容。"
                 }) }
@@ -161,6 +161,7 @@ private fun PrepareScreen(state: CoachUiState, vm: CoachViewModel, onConnect: ()
         }
         item { OutlinedTextField(state.draft.situation, vm::updateSituation, Modifier.fillMaxWidth(), minLines = 4, label = { Text("说说你的状态与想法") }, placeholder = { Text("例如：3S 比较稳，后半程容易累，这场先求稳。") }, supportingText = { Text("可以说偏好、训练经历、临时状态，不需要填写成功率。") }) }
         item { OutlinedTextField(state.draft.competition, vm::updateCompetition, Modifier.fillMaxWidth(), label = { Text("比赛或训练情境") }, placeholder = { Text("比赛名称、组别，或直接描述这次练习") }, supportingText = { Text("规则文件和截图可在「资料」中上传。") }) }
+        item { FilterChip(selected = state.draft.competition == ISU_SCOPE_LABEL, onClick = { vm.updateCompetition(if (state.draft.competition == ISU_SCOPE_LABEL) "" else ISU_SCOPE_LABEL) }, label = { Text(ISU_SCOPE_LABEL) }) }
         item { Button(onClick = { vm.recommend() }, enabled = state.busy == null, modifier = Modifier.fillMaxWidth().heightIn(min = 52.dp)) { Text("结合我的情况生成编排") } }
         if (state.runId != null) item { OutlinedButton(onClick = vm::resumeRun, enabled = state.busy == null, modifier = Modifier.fillMaxWidth()) { Text("查看最近一次分析") } }
         item { TextButton(onClick = vm::newPlan) { Text("从空白方案开始编写") } }
@@ -197,9 +198,17 @@ private fun PlanScreen(state: CoachUiState, vm: CoachViewModel) {
         if ((!recovery && state.draft.contextInvalidated) || (recovery && state.recoverySaved?.contextInvalidated == true)) item { Column { Text("这份方案引用的部分资料已更新或撤回，请重新核对后使用。", color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodyMedium); if (!recovery) TextButton(onClick = vm::reloadPlan, enabled = state.busy == null) { Text("重新打开已清理的最新方案") } } }
         item { ScoreSummary(evaluation, state.evaluating) }
         if (state.explanation.isNotBlank()) item { OutlinedCard { Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) { Text("建议依据", style = MaterialTheme.typography.titleMedium); Text(state.explanation) } } }
-        items(state.candidates) { candidate -> OutlinedCard { Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) { Text(candidate.title, style = MaterialTheme.typography.titleMedium); Text(candidate.body.elements.joinToString(" → ") { it.jumps.joinToString("+") }); if (candidate.rationale.isNotBlank()) Text(candidate.rationale, style = MaterialTheme.typography.bodyMedium); OutlinedButton(onClick = { vm.useCandidate(candidate) }) { Text(if (candidate.kind == "RECOVERY") "使用这份预案" else "使用这份方案") } } } }
-        if (state.recommendationEvidence.isNotEmpty()) item { SectionTitle("本次使用的资料", "可打开原文核对") }
-        items(state.recommendationEvidence, key = { it.id }) { evidence -> TextButton(onClick = { vm.readKnowledge(evidence.sourceId) }) { Icon(Icons.Outlined.Description, null, Modifier.size(18.dp)); Spacer(Modifier.width(8.dp)); Text("${evidence.title} · ${evidence.locator}") } }
+        items(state.candidates) { candidate -> OutlinedCard { Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            Text(candidate.title, style = MaterialTheme.typography.titleMedium)
+            Text(candidate.body.elements.joinToString(" → ") { it.jumps.joinToString("+") })
+            if (candidate.rationale.isNotBlank()) Text(candidate.rationale, style = MaterialTheme.typography.bodyMedium)
+            state.recommendationEvidence.filter { it.id in candidate.evidenceIds }.forEach { EvidenceButton(it,vm) }
+            OutlinedButton(onClick = { vm.useCandidate(candidate) }) { Text(if (candidate.kind == "RECOVERY") "使用这份预案" else "使用这份方案") }
+        } } }
+        if(state.candidates.all { it.evidenceIds.isEmpty() } && state.recommendationEvidence.isNotEmpty()) {
+            item { SectionTitle("本次查阅的资料", "可打开原文核对") }
+            items(state.recommendationEvidence,key={it.id}) { EvidenceButton(it,vm) }
+        }
         if (state.runId != null) item { TextButton(onClick = vm::resumeRun, enabled = state.busy == null) { Text("查看最近一次分析") } }
         if (recovery && state.recoveryBody == null) item { EmptyPanel("先定义实际发生了什么", "选择失误位置和实际完成动作，已发生的部分会固定保留。") }
         if (recovery && state.recoveryBody != null) item { Text(state.recoveryDescription, style = MaterialTheme.typography.bodyLarge); Text("前 ${state.recoveryFrozenCount} 组为已完成内容，仅通过修改情景变更。", style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.primary) }
@@ -226,7 +235,20 @@ private fun PlanScreen(state: CoachUiState, vm: CoachViewModel) {
         }
         item { Button(onClick = { vm.savePlan(recovery) }, enabled = state.busy == null && rows.isNotEmpty(), modifier = Modifier.fillMaxWidth().heightIn(min = 52.dp)) { Text(if (recovery) "保存失误预案" else "保存主编排") } }
     }
-    if (showScenario) ScenarioDialog(state.draft.elements, { showScenario = false }) { index, actual, description -> vm.createRecovery(index, actual, description); showScenario = false }
+    if (showScenario || state.pendingVideoReview != null) ScenarioDialog(state.draft.elements, state.pendingVideoReview?.capability_note, { showScenario = false; vm.clearPendingReview() }) { index, actual, description -> vm.createRecovery(index, actual, description); showScenario = false }
+}
+
+@Composable
+private fun EvidenceButton(evidence: SearchHit,vm: CoachViewModel) {
+    val links=LocalUriHandler.current
+    TextButton(onClick = {
+        when {
+            evidence.sourceKind in setOf("official_rule","coaching_research") && evidence.sourceUrl?.startsWith("https://") == true -> links.openUri(evidence.sourceUrl)
+            evidence.sourceKind == "reviewed_video" -> vm.openVideo(evidence.sourceId)
+            evidence.sourceKind.startsWith("personal_") -> vm.readMemorySource(evidence.id)
+            else -> vm.readKnowledge(evidence.sourceId)
+        }
+    }) { Icon(Icons.Outlined.Description,null,Modifier.size(18.dp)); Spacer(Modifier.width(8.dp)); Text("${evidence.title} · ${evidence.locator}") }
 }
 
 private fun planTimeText(seconds: Double?): String =
@@ -277,6 +299,18 @@ private fun ElementCard(element: PlanElement, index: Int, score: ElementScore?, 
 
 @Composable
 private fun KnowledgeScreen(state: CoachUiState, vm: CoachViewModel) {
+    val client=vm.connectedApi
+    var tool by remember(client) { mutableStateOf("") }
+    var source by remember(client) { mutableStateOf<KnowledgeItem?>(null) }
+    if (client!=null && (tool.isNotEmpty() || state.videoJobToOpen!=null)) {
+        val back = { tool=""; source=null; vm.closeVideo() }
+        BackHandler(onBack=back)
+        key(client,tool,state.videoJobToOpen,source?.id) {
+            if(tool=="expert") ExpertScreen(client,state.draft.competition,back)
+            else VideoEvidenceScreen(client,source,state.videoJobToOpen,back,vm::attachVideo)
+        }
+        return
+    }
     var title by rememberSaveable { mutableStateOf("") }
     var text by rememberSaveable { mutableStateOf("") }
     var query by rememberSaveable { mutableStateOf("") }
@@ -286,6 +320,10 @@ private fun KnowledgeScreen(state: CoachUiState, vm: CoachViewModel) {
     val upload = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri -> uri?.let(vm::uploadKnowledge) }
     LazyColumn(contentPadding = PaddingValues(20.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
         item { ScreenHeading("03 / EVIDENCE", "比赛与训练资料", "规则、截图、教练笔记或训练视频，都可以从这里交给系统处理。") }
+        item { FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            Button(onClick={ tool="expert" },enabled=client!=null) { Text("问滑冰教练") }
+            OutlinedButton(onClick={ source=null; tool="video" },enabled=client!=null) { Text("视频观察与复核") }
+        } }
         item { OutlinedTextField(title, { title = it }, Modifier.fillMaxWidth(), label = { Text("资料标题（可选）") }) }
         item { OutlinedTextField(text, { text = it }, Modifier.fillMaxWidth(), label = { Text("直接粘贴或描述资料") }, minLines = 5, placeholder = { Text("零散条款、特殊要求和你的补充说明都可以。") }) }
         item { FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) { Button(onClick = { vm.addKnowledge(title, text) }, enabled = state.busy == null && text.isNotBlank()) { Text("提交文字资料") }; OutlinedButton(onClick = { upload.launch(arrayOf("*/*")) }, enabled = state.busy == null) { Icon(Icons.Outlined.AttachFile, null); Text("选择文件") } } }
@@ -294,6 +332,7 @@ private fun KnowledgeScreen(state: CoachUiState, vm: CoachViewModel) {
         items(state.knowledge, key = { it.id }) { item -> OutlinedCard {
             Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
                 Text(item.title, style = MaterialTheme.typography.titleMedium)
+                if(item.status=="awaiting_visual") TextButton(onClick={ source=item; tool="video" },enabled=client!=null) { Text("复核视频") }
                 Text("${statusLabel(item.status)} · 版本 ${item.revision}", color = MaterialTheme.colorScheme.primary, style = MaterialTheme.typography.labelLarge)
                 FlowRow { TextButton(onClick = { vm.readKnowledge(item.id) }) { Text("查看内容与来源") }; TextButton(onClick = { deleting = item }) { Text("撤回", color = MaterialTheme.colorScheme.error) } }
             }
@@ -363,12 +402,13 @@ private fun ConnectionDialog(state: CoachUiState, onDismiss: () -> Unit, onConne
 }
 
 @Composable
-private fun ScenarioDialog(elements: List<PlanElement>, onDismiss: () -> Unit, onCreate: (Int, String, String) -> Unit) {
+private fun ScenarioDialog(elements: List<PlanElement>, videoNote: String?, onDismiss: () -> Unit, onCreate: (Int, String, String) -> Unit) {
     var index by rememberSaveable { mutableIntStateOf(0) }
     var actual by rememberSaveable { mutableStateOf(elements.firstOrNull()?.jumps?.firstOrNull().orEmpty()) }
     var description by rememberSaveable { mutableStateOf("第一跳完成，后续连跳未接上") }
     AlertDialog(onDismissRequest = onDismiss, title = { Text("这次实际发生了什么") }, text = {
         Column(Modifier.verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+            videoNote?.let { Text("本次预案选用的人工复核备注\n$it") }
             Text("选择失误位置")
             FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) { elements.forEachIndexed { row, element -> FilterChip(selected = row == index, onClick = { index = row; actual = element.jumps.firstOrNull().orEmpty() }, label = { Text("${row + 1}. ${element.jumps.joinToString("+")}") }) } }
             OutlinedTextField(actual, { actual = it }, label = { Text("这一组实际完成的动作") }, supportingText = { Text("例如 3T，或降周后的 2T。") })

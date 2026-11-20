@@ -87,6 +87,7 @@ public class KnowledgeService {
             if("deleted".equals(rows.get(0).get("status")))return (String)rows.get(0).get("storage_key");
             jdbc.update("update knowledge_source set raw_text=null,status='deleted',updated_at=now() where id=?",id);
             jdbc.update("delete from knowledge_block where source_id=?",id);
+            jdbc.update("delete from video_dispatch where source_id=? and athlete_id=?",id,actor.athleteId());
             // Durable cleanup task reuses the source key without exposing document content.
             jdbc.update("update knowledge_job set status='cleanup',lease_until=null,attempts=0 where source_id=?",id);
             bump(actor);memory.invalidatePrivateDerivatives(actor);
@@ -107,7 +108,7 @@ public class KnowledgeService {
         int limit=Math.max(1,Math.min(requestedLimit,30));String q=query==null?"":query;
         double[] vector=null;List<String> warnings=new ArrayList<>();
         if(embeddings.available()) {
-            try {vector=embeddings.embed(List.of(q)).get(0);}catch(RuntimeException e){warnings.add("语义检索暂不可用，已使用关键词和精确来源检索。");}
+            try {vector=embeddings.query(q);}catch(RuntimeException e){warnings.add("语义检索暂不可用，已使用关键词和精确来源检索。");}
         } else warnings.add("尚未配置 Embedding，当前使用关键词检索；没有生成模拟向量。");
         final double[] queryVector=vector;
         List<Evidence> result=tenant.read(actor,()-> {
@@ -138,6 +139,12 @@ public class KnowledgeService {
         if(scope==null)return List.of();
         return tenant.read(actor,()->jdbc.query(evidenceSql()+" where s.competition_key=? and s.status in ('ready','partial') order by s.id,b.ordinal",
                 KnowledgeService::mapEvidence,scope));
+    }
+    public List<Evidence> neighbors(CurrentActor actor,UUID block,String competition) {
+        return tenant.read(actor,()->jdbc.query(evidenceSql()+" "+"""
+             join knowledge_block hit on hit.id=? and hit.source_id=b.source_id
+             where abs(b.ordinal-hit.ordinal)=1 and s.status in ('ready','partial') and
+             """+COMPETITION_FILTER+" order by b.ordinal",KnowledgeService::mapEvidence,block,competitionKey(competition)));
     }
     public List<String> unresolved(CurrentActor actor,String competition) {
         return tenant.read(actor,()->jdbc.query("select title,status from knowledge_source s where status in ('queued','processing','awaiting_visual','failed') and "+COMPETITION_FILTER,

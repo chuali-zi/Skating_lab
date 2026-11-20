@@ -9,6 +9,7 @@ import com.skatingcoach.api.ApiException;
 import com.skatingcoach.persistence.TenantJdbc;
 import com.skatingcoach.scoring.ScoringModels;
 import com.skatingcoach.scoring.ScoringService;
+import com.skatingcoach.video.VideoJobs;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
@@ -26,11 +27,13 @@ public class PlanService {
     private final PlanBodyProjector projector;
     private final ScoringService scoring = new ScoringService();
 
-    public PlanService(JdbcTemplate jdbc, TenantJdbc tenant, ObjectMapper mapper, PlanBodyProjector projector) {
+    private final VideoJobs videos;
+    public PlanService(JdbcTemplate jdbc, TenantJdbc tenant, ObjectMapper mapper, PlanBodyProjector projector, VideoJobs videos) {
         this.jdbc = jdbc;
         this.tenant = tenant;
         this.mapper = mapper;
         this.projector = projector;
+        this.videos = videos;
     }
 
     public List<PlanView> list(CurrentActor actor) {
@@ -93,6 +96,7 @@ public class PlanService {
             body.set("ruleSet", mapper.valueToTree(input.ruleSet()));
             body.set("selection", mapper.valueToTree(input.selection()));
             body.put("sourcePlanId", id.toString());
+            if(input.videoReview()!=null) body.set("videoReview",mapper.valueToTree(input.videoReview()));
             body.put("sourcePlanRevision", original.revision());
             body.put("failureDescription", input.failureDescription() == null ? "" : input.failureDescription());
             String title = input.title() == null || input.title().isBlank() ? original.title() + " · 失误预案" : input.title();
@@ -103,6 +107,7 @@ public class PlanService {
 
     private ObjectNode validateBody(CurrentActor actor, Kind kind, JsonNode proposed) {
         ObjectNode body = projector.project(proposed);
+        if(body.has("videoReview")) videos.reviewedEvidence(actor,mapper.convertValue(body.get("videoReview"),VideoJobs.ReviewRef.class));
         if (kind == Kind.RECOVERY) {
             if (!body.has("completedPrefix") && body.has("actualPrefix")) body.set("completedPrefix", body.get("actualPrefix"));
             if (!body.path("completedPrefix").isArray() || !body.path("elements").isArray() || !body.path("sourcePlanId").isTextual()) {

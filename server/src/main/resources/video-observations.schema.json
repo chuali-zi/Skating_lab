@@ -1,0 +1,27 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["observations", "pending_review"],
+  "properties": {
+    "observations": {
+      "type": "array",
+      "maxItems": 4,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["frame_indices", "confidence", "visible_evidence"],
+        "properties": {
+          "frame_indices": {"type": "array", "minItems": 1, "maxItems": 4, "items": {"type": "integer", "minimum": 0}},
+          "confidence": {"type": "string", "enum": ["low", "medium", "high"]},
+          "visible_evidence": {"type": "string", "enum": [
+            "画面中的人物位置有变化。", "画面中的人物姿态有变化。", "可见人物屈膝。", "可见人物伸展双臂。",
+            "可见人物收拢双臂。", "画面中的物体位置有变化。", "画面中的物体向左移动。", "画面中的物体向右移动。"
+          ]}
+        }
+      }
+    },
+    "pending_review": {"type": "array", "minItems": 1, "maxItems": 4, "items": {"type": "string", "enum": [
+      "可见画面不足，技术待核。", "主体被遮挡或画面不清，技术待核。", "帧间动作与事件时刻待核。", "未见滑冰者，技术待核。"
+    ]}}
+  }
+}

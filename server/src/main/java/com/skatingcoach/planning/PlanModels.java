@@ -7,6 +7,7 @@ import jakarta.validation.constraints.NotNull;
 import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
+import com.skatingcoach.video.VideoJobs.ReviewRef;
 
 public final class PlanModels {
     private PlanModels() {}
@@ -16,6 +17,11 @@ public final class PlanModels {
                            boolean contextInvalidated) {}
     public record RecoveryInput(long expectedRevision, String title, List<ScoringModels.Element> completedPrefix,
                                 List<ScoringModels.Element> proposedElements, ScoringModels.RuleSet ruleSet,
-                                ScoringModels.SelectionPolicy selection, String failureDescription) {}
+                                ScoringModels.SelectionPolicy selection, String failureDescription, ReviewRef videoReview) {
+        public RecoveryInput(long expectedRevision,String title,List<ScoringModels.Element> completedPrefix,List<ScoringModels.Element> proposedElements,
+                ScoringModels.RuleSet ruleSet,ScoringModels.SelectionPolicy selection,String failureDescription) {
+            this(expectedRevision,title,completedPrefix,proposedElements,ruleSet,selection,failureDescription,null);
+        }
+    }
     public record RecoveryView(PlanView plan, ScoringModels.Evaluation evaluation) {}
 }

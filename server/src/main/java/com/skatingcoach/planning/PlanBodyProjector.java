@@ -33,6 +33,7 @@ public class PlanBodyProjector {
             }
             if (proposed.path("sourcePlanId").isTextual()) clean.put("sourcePlanId", UUID.fromString(proposed.path("sourcePlanId").asText()).toString());
             if (proposed.path("sourcePlanRevision").isIntegralNumber()) clean.put("sourcePlanRevision", proposed.path("sourcePlanRevision").asLong());
+            if (proposed.hasNonNull("videoReview")) clean.set("videoReview",mapper.valueToTree(mapper.convertValue(proposed.get("videoReview"),com.skatingcoach.video.VideoJobs.ReviewRef.class)));
             return clean;
         } catch (IllegalArgumentException error) { throw invalid(); }
     }

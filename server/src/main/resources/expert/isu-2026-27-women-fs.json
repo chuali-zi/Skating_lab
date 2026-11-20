@@ -1,0 +1,3609 @@
+{
+  "scope": {
+    "season": "2026-27",
+    "revision": "r1-20260601_r2-20260715_r3-2786-20260602_r6-qa3-202610_m2-5s",
+    "discipline": "singles",
+    "level": "senior",
+    "category": "women",
+    "segment": "FS"
+  },
+  "bundleSha256": "1af448e7e163df2ec596d009558ca1f3e4c832f81b9bd57d8f59626cd8a07db8",
+  "sources": {
+    "R1": {
+      "title": "Sports Rules – Single & Pair Skating and Ice Dance",
+      "url": "https://isu-d8g8b4b7ece7aphs.a03.azurefd.net/isudamcontainer/CMS/Corporate-Site/Governance/Isu-Regulations/2026-FS---Pair-Sports-Rules-FINAL-20260513-1778685370-9916.pdf",
+      "sha256": "ed8fdf773f352d01dbc02afd0f894d6144d9a502355d9e48ac3ad19865e23172",
+      "revision": "2026-06-01"
+    },
+    "R2": {
+      "title": "Technical Panel Handbook – Single Skating 2026–2027",
+      "url": "https://isu-d8g8b4b7ece7aphs.a03.azurefd.net/isudamcontainer/CMS/Corporate-Site/Sports-Rules/Figure-Skating-Rules/Handbooks-Single-%26-Pair-Skating/TP-HandbookSingles-26-27-15-July-2026-1784641784-3364.pdf",
+      "sha256": "ba0036cb34f17daabc7b83671e883e6c6e3484a3bb5a6dd53486920c461678a4",
+      "revision": "2026-07-15"
+    },
+    "R3": {
+      "title": "Communication No. 2786 – Scale of Values and Program Components Factors",
+      "url": "https://isu-d8g8b4b7ece7aphs.a03.azurefd.net/isudamcontainer/CMS/Corporate-Site/Governance/Transparency/ISU-Communications/2786-SinglesPairs-SOV-Update-260602-1780481099-6311.pdf",
+      "sha256": "980ca3f689c280196f1fe4e32843e97010116c8b624eb7871c9f8850561613b7",
+      "revision": "2026-06-02"
+    },
+    "R6": {
+      "title": "2026/27 Clarification from Technical Committee – Question and Answer N° 3",
+      "url": "https://isu-d8g8b4b7ece7aphs.a03.azurefd.net/isudamcontainer/uploads/isunewrevamp/document/original/f0e21d6e25df4e42395cb70a6c06b269b590597e823034cbd94476e1ea6dd502.pdf",
+      "sha256": "f0e21d6e25df4e42395cb70a6c06b269b590597e823034cbd94476e1ea6dd502",
+      "revision": "2026-10"
+    }
+  },
+  "locators": {
+    "R1.353": {
+      "source": "R1",
+      "pages": [
+        9
+      ],
+      "section": "Rule 353 §1(h)(i)–(iii)"
+    },
+    "R1.612.senior_women": {
+      "source": "R1",
+      "pages": [
+        70
+      ],
+      "section": "Rule 612, Senior Well Balanced Program / Women and §2"
+    },
+    "R1.612.remarks": {
+      "source": "R1",
+      "pages": [
+        71
+      ],
+      "section": "Rule 612 §2, Remarks"
+    },
+    "R2.call": {
+      "source": "R2",
+      "pages": [
+        2
+      ],
+      "section": "Calling procedure"
+    },
+    "R2.repetition": {
+      "source": "R2",
+      "pages": [
+        27
+      ],
+      "section": "Jump Elements / Solo jump / Free Skating"
+    },
+    "R2.combinations": {
+      "source": "R2",
+      "pages": [
+        28,
+        29
+      ],
+      "section": "Jump combination / General and Free Skating"
+    },
+    "R2.sequence": {
+      "source": "R2",
+      "pages": [
+        29
+      ],
+      "section": "Jump Sequence / Free Skating and General"
+    },
+    "R2.markings": {
+      "source": "R2",
+      "pages": [
+        29,
+        30,
+        31
+      ],
+      "section": "Clarifications and Principles of Calling"
+    },
+    "R2.repeat_outcome": {
+      "source": "R2",
+      "pages": [
+        32
+      ],
+      "section": "Free Skating / Second/third repetition; Second jump combo or sequence with 3 jumps"
+    },
+    "R2.third_combo": {
+      "source": "R2",
+      "pages": [
+        33
+      ],
+      "section": "In total more than two Jump combinations/sequences allowed"
+    },
+    "R2.interrupted": {
+      "source": "R2",
+      "pages": [
+        33
+      ],
+      "section": "Executions of jump not counted in Jump combination or sequence"
+    },
+    "R2.axel": {
+      "source": "R2",
+      "pages": [
+        33
+      ],
+      "section": "No Axel type jump in Free Skating"
+    },
+    "R2.summary": {
+      "source": "R2",
+      "pages": [
+        34
+      ],
+      "section": "Elements with no value or maximum Level B/1/2/3 in SINGLES SP & FS"
+    },
+    "R3.jump_table": {
+      "source": "R3",
+      "pages": [
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "section": "Scale of Values / Jumps (p.6 starts the Spins section)"
+    },
+    "R3.rep": {
+      "source": "R3",
+      "pages": [
+        14
+      ],
+      "section": "Remarks 5–6 (+Rep); remarks 5–6 also verified against PDF rendering"
+    },
+    "R6.qa2": {
+      "source": "R6",
+      "pages": [
+        1
+      ],
+      "section": "Q2"
+    },
+    "R6.qa3": {
+      "source": "R6",
+      "pages": [
+        1
+      ],
+      "section": "Q3"
+    },
+    "R3.base.2T": {
+      "source": "R3",
+      "pages": [
+        2
+      ],
+      "section": "Scale of Values / Jumps / 2T, BASE column"
+    },
+    "R3.base.2Lo": {
+      "source": "R3",
+      "pages": [
+        2
+      ],
+      "section": "Scale of Values / Jumps / 2Lo, BASE column"
+    },
+    "R3.base.2F": {
+      "source": "R3",
+      "pages": [
+        2
+      ],
+      "section": "Scale of Values / Jumps / 2F, BASE column"
+    },
+    "R3.base.2Lz": {
+      "source": "R3",
+      "pages": [
+        2
+      ],
+      "section": "Scale of Values / Jumps / 2Lz, BASE column"
+    },
+    "R3.base.2A": {
+      "source": "R3",
+      "pages": [
+        3
+      ],
+      "section": "Scale of Values / Jumps / 2A, BASE column"
+    },
+    "R3.base.3T": {
+      "source": "R3",
+      "pages": [
+        3
+      ],
+      "section": "Scale of Values / Jumps / 3T, BASE column"
+    },
+    "R3.base.3S": {
+      "source": "R3",
+      "pages": [
+        3
+      ],
+      "section": "Scale of Values / Jumps / 3S, BASE column"
+    },
+    "R2.high_rep": {
+      "source": "R2",
+      "pages": [
+        32
+      ],
+      "section": "Free Skating / First repetition of a triple/quad/quint jump"
+    },
+    "R2.group_exceptions": {
+      "source": "R2",
+      "pages": [
+        33
+      ],
+      "section": "More than one sequence; Euler and sequence; repeated Euler"
+    },
+    "R2.no_second": {
+      "source": "R2",
+      "pages": [
+        32
+      ],
+      "section": "Short Program / No second jump in a jump combination"
+    },
+    "R2.touchdown": {
+      "source": "R2",
+      "pages": [
+        31
+      ],
+      "section": "Touch down without weight transfer in jump combination or sequence"
+    },
+    "R2.nonlisted": {
+      "source": "R2",
+      "pages": [
+        30,
+        31
+      ],
+      "section": "Non-listed jumps; arrangement of non-listed and one listed jump"
+    },
+    "R1.interruption": {
+      "source": "R1",
+      "pages": [
+        9,
+        10
+      ],
+      "section": "Rule 353 §1(h)(iii), interruption exceptions"
+    },
+    "R2.quint": {
+      "source": "R2",
+      "pages": [
+        27
+      ],
+      "section": "Free Skating / Solo jump"
+    },
+    "R3.base.Eu": {
+      "source": "R3",
+      "pages": [
+        2
+      ],
+      "section": "Scale of Values / Jumps / Eu, BASE column"
+    },
+    "R3.base.1T": {
+      "source": "R3",
+      "pages": [
+        2
+      ],
+      "section": "Scale of Values / Jumps / 1T, BASE column"
+    },
+    "R3.base.1S": {
+      "source": "R3",
+      "pages": [
+        2
+      ],
+      "section": "Scale of Values / Jumps / 1S, BASE column"
+    },
+    "R3.base.1Lo": {
+      "source": "R3",
+      "pages": [
+        2
+      ],
+      "section": "Scale of Values / Jumps / 1Lo, BASE column"
+    },
+    "R3.base.1F": {
+      "source": "R3",
+      "pages": [
+        2
+      ],
+      "section": "Scale of Values / Jumps / 1F, BASE column"
+    },
+    "R3.base.1Lz": {
+      "source": "R3",
+      "pages": [
+        2
+      ],
+      "section": "Scale of Values / Jumps / 1Lz, BASE column"
+    },
+    "R3.base.1Tq": {
+      "source": "R3",
+      "pages": [
+        2
+      ],
+      "section": "Scale of Values / Jumps / 1Tq, BASE column"
+    },
+    "R3.base.1Sq": {
+      "source": "R3",
+      "pages": [
+        2
+      ],
+      "section": "Scale of Values / Jumps / 1Sq, BASE column"
+    },
+    "R3.base.1Loq": {
+      "source": "R3",
+      "pages": [
+        2
+      ],
+      "section": "Scale of Values / Jumps / 1Loq, BASE column"
+    },
+    "R3.base.1Fq": {
+      "source": "R3",
+      "pages": [
+        2
+      ],
+      "section": "Scale of Values / Jumps / 1Fq, BASE column"
+    },
+    "R3.base.1Lzq": {
+      "source": "R3",
+      "pages": [
+        2
+      ],
+      "section": "Scale of Values / Jumps / 1Lzq, BASE column"
+    },
+    "R3.base.1T<": {
+      "source": "R3",
+      "pages": [
+        2
+      ],
+      "section": "Scale of Values / Jumps / 1T<, BASE column"
+    },
+    "R3.base.1S<": {
+      "source": "R3",
+      "pages": [
+        2
+      ],
+      "section": "Scale of Values / Jumps / 1S<, BASE column"
+    },
+    "R3.base.1Lo<": {
+      "source": "R3",
+      "pages": [
+        2
+      ],
+      "section": "Scale of Values / Jumps / 1Lo<, BASE column"
+    },
+    "R3.base.1F<": {
+      "source": "R3",
+      "pages": [
+        2
+      ],
+      "section": "Scale of Values / Jumps / 1F<, BASE column"
+    },
+    "R3.base.1Lz<": {
+      "source": "R3",
+      "pages": [
+        2
+      ],
+      "section": "Scale of Values / Jumps / 1Lz<, BASE column"
+    },
+    "R3.base.1T<<": {
+      "source": "R3",
+      "pages": [
+        2
+      ],
+      "section": "Scale of Values / Jumps / 1T<<, BASE column"
+    },
+    "R3.base.1S<<": {
+      "source": "R3",
+      "pages": [
+        2
+      ],
+      "section": "Scale of Values / Jumps / 1S<<, BASE column"
+    },
+    "R3.base.1Lo<<": {
+      "source": "R3",
+      "pages": [
+        2
+      ],
+      "section": "Scale of Values / Jumps / 1Lo<<, BASE column"
+    },
+    "R3.base.1F<<": {
+      "source": "R3",
+      "pages": [
+        2
+      ],
+      "section": "Scale of Values / Jumps / 1F<<, BASE column"
+    },
+    "R3.base.1Lz<<": {
+      "source": "R3",
+      "pages": [
+        2
+      ],
+      "section": "Scale of Values / Jumps / 1Lz<<, BASE column"
+    },
+    "R3.base.1Fe": {
+      "source": "R3",
+      "pages": [
+        2
+      ],
+      "section": "Scale of Values / Jumps / 1Fe, BASE column"
+    },
+    "R3.base.1Feq": {
+      "source": "R3",
+      "pages": [
+        2
+      ],
+      "section": "Scale of Values / Jumps / 1Feq, BASE column"
+    },
+    "R3.base.1Fe<": {
+      "source": "R3",
+      "pages": [
+        2
+      ],
+      "section": "Scale of Values / Jumps / 1Fe<, BASE column"
+    },
+    "R3.base.1Fe<<": {
+      "source": "R3",
+      "pages": [
+        2
+      ],
+      "section": "Scale of Values / Jumps / 1Fe<<, BASE column"
+    },
+    "R3.base.1Lze": {
+      "source": "R3",
+      "pages": [
+        2
+      ],
+      "section": "Scale of Values / Jumps / 1Lze, BASE column"
+    },
+    "R3.base.1Lzeq": {
+      "source": "R3",
+      "pages": [
+        2
+      ],
+      "section": "Scale of Values / Jumps / 1Lzeq, BASE column"
+    },
+    "R3.base.1Lze<": {
+      "source": "R3",
+      "pages": [
+        2
+      ],
+      "section": "Scale of Values / Jumps / 1Lze<, BASE column"
+    },
+    "R3.base.1Lze<<": {
+      "source": "R3",
+      "pages": [
+        2
+      ],
+      "section": "Scale of Values / Jumps / 1Lze<<, BASE column"
+    },
+    "R3.base.1F!": {
+      "source": "R3",
+      "pages": [
+        2
+      ],
+      "section": "Scale of Values / Jumps / 1F!, BASE column"
+    },
+    "R3.base.1F!q": {
+      "source": "R3",
+      "pages": [
+        2
+      ],
+      "section": "Scale of Values / Jumps / 1F!q, BASE column"
+    },
+    "R3.base.1F!<": {
+      "source": "R3",
+      "pages": [
+        2
+      ],
+      "section": "Scale of Values / Jumps / 1F!<, BASE column"
+    },
+    "R3.base.1F!<<": {
+      "source": "R3",
+      "pages": [
+        2
+      ],
+      "section": "Scale of Values / Jumps / 1F!<<, BASE column"
+    },
+    "R3.base.1Lz!": {
+      "source": "R3",
+      "pages": [
+        2
+      ],
+      "section": "Scale of Values / Jumps / 1Lz!, BASE column"
+    },
+    "R3.base.1Lz!q": {
+      "source": "R3",
+      "pages": [
+        2
+      ],
+      "section": "Scale of Values / Jumps / 1Lz!q, BASE column"
+    },
+    "R3.base.1Lz!<": {
+      "source": "R3",
+      "pages": [
+        2
+      ],
+      "section": "Scale of Values / Jumps / 1Lz!<, BASE column"
+    },
+    "R3.base.1Lz!<<": {
+      "source": "R3",
+      "pages": [
+        2
+      ],
+      "section": "Scale of Values / Jumps / 1Lz!<<, BASE column"
+    },
+    "R3.base.1A": {
+      "source": "R3",
+      "pages": [
+        2
+      ],
+      "section": "Scale of Values / Jumps / 1A, BASE column"
+    },
+    "R3.base.2S": {
+      "source": "R3",
+      "pages": [
+        2
+      ],
+      "section": "Scale of Values / Jumps / 2S, BASE column"
+    },
+    "R3.base.1Aq": {
+      "source": "R3",
+      "pages": [
+        2
+      ],
+      "section": "Scale of Values / Jumps / 1Aq, BASE column"
+    },
+    "R3.base.2Tq": {
+      "source": "R3",
+      "pages": [
+        2
+      ],
+      "section": "Scale of Values / Jumps / 2Tq, BASE column"
+    },
+    "R3.base.2Sq": {
+      "source": "R3",
+      "pages": [
+        2
+      ],
+      "section": "Scale of Values / Jumps / 2Sq, BASE column"
+    },
+    "R3.base.2Loq": {
+      "source": "R3",
+      "pages": [
+        2
+      ],
+      "section": "Scale of Values / Jumps / 2Loq, BASE column"
+    },
+    "R3.base.2Fq": {
+      "source": "R3",
+      "pages": [
+        2
+      ],
+      "section": "Scale of Values / Jumps / 2Fq, BASE column"
+    },
+    "R3.base.2Lzq": {
+      "source": "R3",
+      "pages": [
+        2
+      ],
+      "section": "Scale of Values / Jumps / 2Lzq, BASE column"
+    },
+    "R3.base.1A<": {
+      "source": "R3",
+      "pages": [
+        2
+      ],
+      "section": "Scale of Values / Jumps / 1A<, BASE column"
+    },
+    "R3.base.2T<": {
+      "source": "R3",
+      "pages": [
+        2
+      ],
+      "section": "Scale of Values / Jumps / 2T<, BASE column"
+    },
+    "R3.base.2S<": {
+      "source": "R3",
+      "pages": [
+        2
+      ],
+      "section": "Scale of Values / Jumps / 2S<, BASE column"
+    },
+    "R3.base.2Lo<": {
+      "source": "R3",
+      "pages": [
+        2
+      ],
+      "section": "Scale of Values / Jumps / 2Lo<, BASE column"
+    },
+    "R3.base.2F<": {
+      "source": "R3",
+      "pages": [
+        2
+      ],
+      "section": "Scale of Values / Jumps / 2F<, BASE column"
+    },
+    "R3.base.2Lz<": {
+      "source": "R3",
+      "pages": [
+        2
+      ],
+      "section": "Scale of Values / Jumps / 2Lz<, BASE column"
+    },
+    "R3.base.1A<<": {
+      "source": "R3",
+      "pages": [
+        3
+      ],
+      "section": "Scale of Values / Jumps / 1A<<, BASE column"
+    },
+    "R3.base.2T<<": {
+      "source": "R3",
+      "pages": [
+        3
+      ],
+      "section": "Scale of Values / Jumps / 2T<<, BASE column"
+    },
+    "R3.base.2S<<": {
+      "source": "R3",
+      "pages": [
+        3
+      ],
+      "section": "Scale of Values / Jumps / 2S<<, BASE column"
+    },
+    "R3.base.2Lo<<": {
+      "source": "R3",
+      "pages": [
+        3
+      ],
+      "section": "Scale of Values / Jumps / 2Lo<<, BASE column"
+    },
+    "R3.base.2F<<": {
+      "source": "R3",
+      "pages": [
+        3
+      ],
+      "section": "Scale of Values / Jumps / 2F<<, BASE column"
+    },
+    "R3.base.2Lz<<": {
+      "source": "R3",
+      "pages": [
+        3
+      ],
+      "section": "Scale of Values / Jumps / 2Lz<<, BASE column"
+    },
+    "R3.base.2Fe": {
+      "source": "R3",
+      "pages": [
+        3
+      ],
+      "section": "Scale of Values / Jumps / 2Fe, BASE column"
+    },
+    "R3.base.2Feq": {
+      "source": "R3",
+      "pages": [
+        3
+      ],
+      "section": "Scale of Values / Jumps / 2Feq, BASE column"
+    },
+    "R3.base.2Fe<": {
+      "source": "R3",
+      "pages": [
+        3
+      ],
+      "section": "Scale of Values / Jumps / 2Fe<, BASE column"
+    },
+    "R3.base.2Fe<<": {
+      "source": "R3",
+      "pages": [
+        3
+      ],
+      "section": "Scale of Values / Jumps / 2Fe<<, BASE column"
+    },
+    "R3.base.2Lze": {
+      "source": "R3",
+      "pages": [
+        3
+      ],
+      "section": "Scale of Values / Jumps / 2Lze, BASE column"
+    },
+    "R3.base.2Lzeq": {
+      "source": "R3",
+      "pages": [
+        3
+      ],
+      "section": "Scale of Values / Jumps / 2Lzeq, BASE column"
+    },
+    "R3.base.2Lze<": {
+      "source": "R3",
+      "pages": [
+        3
+      ],
+      "section": "Scale of Values / Jumps / 2Lze<, BASE column"
+    },
+    "R3.base.2Lze<<": {
+      "source": "R3",
+      "pages": [
+        3
+      ],
+      "section": "Scale of Values / Jumps / 2Lze<<, BASE column"
+    },
+    "R3.base.2F!": {
+      "source": "R3",
+      "pages": [
+        3
+      ],
+      "section": "Scale of Values / Jumps / 2F!, BASE column"
+    },
+    "R3.base.2F!q": {
+      "source": "R3",
+      "pages": [
+        3
+      ],
+      "section": "Scale of Values / Jumps / 2F!q, BASE column"
+    },
+    "R3.base.2F!<": {
+      "source": "R3",
+      "pages": [
+        3
+      ],
+      "section": "Scale of Values / Jumps / 2F!<, BASE column"
+    },
+    "R3.base.2F!<<": {
+      "source": "R3",
+      "pages": [
+        3
+      ],
+      "section": "Scale of Values / Jumps / 2F!<<, BASE column"
+    },
+    "R3.base.2Lz!": {
+      "source": "R3",
+      "pages": [
+        3
+      ],
+      "section": "Scale of Values / Jumps / 2Lz!, BASE column"
+    },
+    "R3.base.2Lz!q": {
+      "source": "R3",
+      "pages": [
+        3
+      ],
+      "section": "Scale of Values / Jumps / 2Lz!q, BASE column"
+    },
+    "R3.base.2Lz!<": {
+      "source": "R3",
+      "pages": [
+        3
+      ],
+      "section": "Scale of Values / Jumps / 2Lz!<, BASE column"
+    },
+    "R3.base.2Lz!<<": {
+      "source": "R3",
+      "pages": [
+        3
+      ],
+      "section": "Scale of Values / Jumps / 2Lz!<<, BASE column"
+    },
+    "R3.base.3Lo": {
+      "source": "R3",
+      "pages": [
+        3
+      ],
+      "section": "Scale of Values / Jumps / 3Lo, BASE column"
+    },
+    "R3.base.3F": {
+      "source": "R3",
+      "pages": [
+        3
+      ],
+      "section": "Scale of Values / Jumps / 3F, BASE column"
+    },
+    "R3.base.3Lz": {
+      "source": "R3",
+      "pages": [
+        3
+      ],
+      "section": "Scale of Values / Jumps / 3Lz, BASE column"
+    },
+    "R3.base.2Aq": {
+      "source": "R3",
+      "pages": [
+        3
+      ],
+      "section": "Scale of Values / Jumps / 2Aq, BASE column"
+    },
+    "R3.base.3Tq": {
+      "source": "R3",
+      "pages": [
+        3
+      ],
+      "section": "Scale of Values / Jumps / 3Tq, BASE column"
+    },
+    "R3.base.3Sq": {
+      "source": "R3",
+      "pages": [
+        3
+      ],
+      "section": "Scale of Values / Jumps / 3Sq, BASE column"
+    },
+    "R3.base.3Loq": {
+      "source": "R3",
+      "pages": [
+        3
+      ],
+      "section": "Scale of Values / Jumps / 3Loq, BASE column"
+    },
+    "R3.base.3Fq": {
+      "source": "R3",
+      "pages": [
+        3
+      ],
+      "section": "Scale of Values / Jumps / 3Fq, BASE column"
+    },
+    "R3.base.3Lzq": {
+      "source": "R3",
+      "pages": [
+        3
+      ],
+      "section": "Scale of Values / Jumps / 3Lzq, BASE column"
+    },
+    "R3.base.2A<": {
+      "source": "R3",
+      "pages": [
+        3
+      ],
+      "section": "Scale of Values / Jumps / 2A<, BASE column"
+    },
+    "R3.base.3T<": {
+      "source": "R3",
+      "pages": [
+        3
+      ],
+      "section": "Scale of Values / Jumps / 3T<, BASE column"
+    },
+    "R3.base.3S<": {
+      "source": "R3",
+      "pages": [
+        3
+      ],
+      "section": "Scale of Values / Jumps / 3S<, BASE column"
+    },
+    "R3.base.3Lo<": {
+      "source": "R3",
+      "pages": [
+        3
+      ],
+      "section": "Scale of Values / Jumps / 3Lo<, BASE column"
+    },
+    "R3.base.3F<": {
+      "source": "R3",
+      "pages": [
+        3
+      ],
+      "section": "Scale of Values / Jumps / 3F<, BASE column"
+    },
+    "R3.base.3Lz<": {
+      "source": "R3",
+      "pages": [
+        3
+      ],
+      "section": "Scale of Values / Jumps / 3Lz<, BASE column"
+    },
+    "R3.base.2A<<": {
+      "source": "R3",
+      "pages": [
+        4
+      ],
+      "section": "Scale of Values / Jumps / 2A<<, BASE column"
+    },
+    "R3.base.3T<<": {
+      "source": "R3",
+      "pages": [
+        4
+      ],
+      "section": "Scale of Values / Jumps / 3T<<, BASE column"
+    },
+    "R3.base.3S<<": {
+      "source": "R3",
+      "pages": [
+        4
+      ],
+      "section": "Scale of Values / Jumps / 3S<<, BASE column"
+    },
+    "R3.base.3Lo<<": {
+      "source": "R3",
+      "pages": [
+        4
+      ],
+      "section": "Scale of Values / Jumps / 3Lo<<, BASE column"
+    },
+    "R3.base.3F<<": {
+      "source": "R3",
+      "pages": [
+        4
+      ],
+      "section": "Scale of Values / Jumps / 3F<<, BASE column"
+    },
+    "R3.base.3Lz<<": {
+      "source": "R3",
+      "pages": [
+        4
+      ],
+      "section": "Scale of Values / Jumps / 3Lz<<, BASE column"
+    },
+    "R3.base.3Fe": {
+      "source": "R3",
+      "pages": [
+        4
+      ],
+      "section": "Scale of Values / Jumps / 3Fe, BASE column"
+    },
+    "R3.base.3Feq": {
+      "source": "R3",
+      "pages": [
+        4
+      ],
+      "section": "Scale of Values / Jumps / 3Feq, BASE column"
+    },
+    "R3.base.3Fe<": {
+      "source": "R3",
+      "pages": [
+        4
+      ],
+      "section": "Scale of Values / Jumps / 3Fe<, BASE column"
+    },
+    "R3.base.3Fe<<": {
+      "source": "R3",
+      "pages": [
+        4
+      ],
+      "section": "Scale of Values / Jumps / 3Fe<<, BASE column"
+    },
+    "R3.base.3Lze": {
+      "source": "R3",
+      "pages": [
+        4
+      ],
+      "section": "Scale of Values / Jumps / 3Lze, BASE column"
+    },
+    "R3.base.3Lzeq": {
+      "source": "R3",
+      "pages": [
+        4
+      ],
+      "section": "Scale of Values / Jumps / 3Lzeq, BASE column"
+    },
+    "R3.base.3Lze<": {
+      "source": "R3",
+      "pages": [
+        4
+      ],
+      "section": "Scale of Values / Jumps / 3Lze<, BASE column"
+    },
+    "R3.base.3Lze<<": {
+      "source": "R3",
+      "pages": [
+        4
+      ],
+      "section": "Scale of Values / Jumps / 3Lze<<, BASE column"
+    },
+    "R3.base.3F!": {
+      "source": "R3",
+      "pages": [
+        4
+      ],
+      "section": "Scale of Values / Jumps / 3F!, BASE column"
+    },
+    "R3.base.3F!q": {
+      "source": "R3",
+      "pages": [
+        4
+      ],
+      "section": "Scale of Values / Jumps / 3F!q, BASE column"
+    },
+    "R3.base.3F!<": {
+      "source": "R3",
+      "pages": [
+        4
+      ],
+      "section": "Scale of Values / Jumps / 3F!<, BASE column"
+    },
+    "R3.base.3F!<<": {
+      "source": "R3",
+      "pages": [
+        4
+      ],
+      "section": "Scale of Values / Jumps / 3F!<<, BASE column"
+    },
+    "R3.base.3Lz!": {
+      "source": "R3",
+      "pages": [
+        4
+      ],
+      "section": "Scale of Values / Jumps / 3Lz!, BASE column"
+    },
+    "R3.base.3Lz!q": {
+      "source": "R3",
+      "pages": [
+        4
+      ],
+      "section": "Scale of Values / Jumps / 3Lz!q, BASE column"
+    },
+    "R3.base.3Lz!<": {
+      "source": "R3",
+      "pages": [
+        4
+      ],
+      "section": "Scale of Values / Jumps / 3Lz!<, BASE column"
+    },
+    "R3.base.3Lz!<<": {
+      "source": "R3",
+      "pages": [
+        4
+      ],
+      "section": "Scale of Values / Jumps / 3Lz!<<, BASE column"
+    },
+    "R3.base.4T": {
+      "source": "R3",
+      "pages": [
+        4
+      ],
+      "section": "Scale of Values / Jumps / 4T, BASE column"
+    },
+    "R3.base.4S": {
+      "source": "R3",
+      "pages": [
+        4
+      ],
+      "section": "Scale of Values / Jumps / 4S, BASE column"
+    },
+    "R3.base.4Lo": {
+      "source": "R3",
+      "pages": [
+        4
+      ],
+      "section": "Scale of Values / Jumps / 4Lo, BASE column"
+    },
+    "R3.base.4F": {
+      "source": "R3",
+      "pages": [
+        4
+      ],
+      "section": "Scale of Values / Jumps / 4F, BASE column"
+    },
+    "R3.base.4Lz": {
+      "source": "R3",
+      "pages": [
+        4
+      ],
+      "section": "Scale of Values / Jumps / 4Lz, BASE column"
+    },
+    "R3.base.4A": {
+      "source": "R3",
+      "pages": [
+        4
+      ],
+      "section": "Scale of Values / Jumps / 4A, BASE column"
+    },
+    "R3.base.4Tq": {
+      "source": "R3",
+      "pages": [
+        4
+      ],
+      "section": "Scale of Values / Jumps / 4Tq, BASE column"
+    },
+    "R3.base.4Sq": {
+      "source": "R3",
+      "pages": [
+        4
+      ],
+      "section": "Scale of Values / Jumps / 4Sq, BASE column"
+    },
+    "R3.base.4Loq": {
+      "source": "R3",
+      "pages": [
+        4
+      ],
+      "section": "Scale of Values / Jumps / 4Loq, BASE column"
+    },
+    "R3.base.4Fq": {
+      "source": "R3",
+      "pages": [
+        4
+      ],
+      "section": "Scale of Values / Jumps / 4Fq, BASE column"
+    },
+    "R3.base.4Lzq": {
+      "source": "R3",
+      "pages": [
+        4
+      ],
+      "section": "Scale of Values / Jumps / 4Lzq, BASE column"
+    },
+    "R3.base.4Aq": {
+      "source": "R3",
+      "pages": [
+        4
+      ],
+      "section": "Scale of Values / Jumps / 4Aq, BASE column"
+    },
+    "R3.base.3A<": {
+      "source": "R3",
+      "pages": [
+        4
+      ],
+      "section": "Scale of Values / Jumps / 3A<, BASE column"
+    },
+    "R3.base.4T<": {
+      "source": "R3",
+      "pages": [
+        4
+      ],
+      "section": "Scale of Values / Jumps / 4T<, BASE column"
+    },
+    "R3.base.4S<": {
+      "source": "R3",
+      "pages": [
+        4
+      ],
+      "section": "Scale of Values / Jumps / 4S<, BASE column"
+    },
+    "R3.base.4Lo<": {
+      "source": "R3",
+      "pages": [
+        4
+      ],
+      "section": "Scale of Values / Jumps / 4Lo<, BASE column"
+    },
+    "R3.base.4F<": {
+      "source": "R3",
+      "pages": [
+        4
+      ],
+      "section": "Scale of Values / Jumps / 4F<, BASE column"
+    },
+    "R3.base.4Lz<": {
+      "source": "R3",
+      "pages": [
+        4
+      ],
+      "section": "Scale of Values / Jumps / 4Lz<, BASE column"
+    },
+    "R3.base.3A<<": {
+      "source": "R3",
+      "pages": [
+        4
+      ],
+      "section": "Scale of Values / Jumps / 3A<<, BASE column"
+    },
+    "R3.base.4T<<": {
+      "source": "R3",
+      "pages": [
+        4
+      ],
+      "section": "Scale of Values / Jumps / 4T<<, BASE column"
+    },
+    "R3.base.4S<<": {
+      "source": "R3",
+      "pages": [
+        4
+      ],
+      "section": "Scale of Values / Jumps / 4S<<, BASE column"
+    },
+    "R3.base.4Lo<<": {
+      "source": "R3",
+      "pages": [
+        4
+      ],
+      "section": "Scale of Values / Jumps / 4Lo<<, BASE column"
+    },
+    "R3.base.4F<<": {
+      "source": "R3",
+      "pages": [
+        4
+      ],
+      "section": "Scale of Values / Jumps / 4F<<, BASE column"
+    },
+    "R3.base.4Lz<<": {
+      "source": "R3",
+      "pages": [
+        4
+      ],
+      "section": "Scale of Values / Jumps / 4Lz<<, BASE column"
+    },
+    "R3.base.4Fe": {
+      "source": "R3",
+      "pages": [
+        5
+      ],
+      "section": "Scale of Values / Jumps / 4Fe, BASE column"
+    },
+    "R3.base.4Feq": {
+      "source": "R3",
+      "pages": [
+        5
+      ],
+      "section": "Scale of Values / Jumps / 4Feq, BASE column"
+    },
+    "R3.base.4Fe<": {
+      "source": "R3",
+      "pages": [
+        5
+      ],
+      "section": "Scale of Values / Jumps / 4Fe<, BASE column"
+    },
+    "R3.base.4Fe<<": {
+      "source": "R3",
+      "pages": [
+        5
+      ],
+      "section": "Scale of Values / Jumps / 4Fe<<, BASE column"
+    },
+    "R3.base.4Lze": {
+      "source": "R3",
+      "pages": [
+        5
+      ],
+      "section": "Scale of Values / Jumps / 4Lze, BASE column"
+    },
+    "R3.base.4Lzeq": {
+      "source": "R3",
+      "pages": [
+        5
+      ],
+      "section": "Scale of Values / Jumps / 4Lzeq, BASE column"
+    },
+    "R3.base.4Lze<": {
+      "source": "R3",
+      "pages": [
+        5
+      ],
+      "section": "Scale of Values / Jumps / 4Lze<, BASE column"
+    },
+    "R3.base.4Lze<<": {
+      "source": "R3",
+      "pages": [
+        5
+      ],
+      "section": "Scale of Values / Jumps / 4Lze<<, BASE column"
+    },
+    "R3.base.4F!": {
+      "source": "R3",
+      "pages": [
+        5
+      ],
+      "section": "Scale of Values / Jumps / 4F!, BASE column"
+    },
+    "R3.base.4F!q": {
+      "source": "R3",
+      "pages": [
+        5
+      ],
+      "section": "Scale of Values / Jumps / 4F!q, BASE column"
+    },
+    "R3.base.4F!<": {
+      "source": "R3",
+      "pages": [
+        5
+      ],
+      "section": "Scale of Values / Jumps / 4F!<, BASE column"
+    },
+    "R3.base.4F!<<": {
+      "source": "R3",
+      "pages": [
+        5
+      ],
+      "section": "Scale of Values / Jumps / 4F!<<, BASE column"
+    },
+    "R3.base.4Lz!": {
+      "source": "R3",
+      "pages": [
+        5
+      ],
+      "section": "Scale of Values / Jumps / 4Lz!, BASE column"
+    },
+    "R3.base.4Lz!q": {
+      "source": "R3",
+      "pages": [
+        5
+      ],
+      "section": "Scale of Values / Jumps / 4Lz!q, BASE column"
+    },
+    "R3.base.4Lz!<": {
+      "source": "R3",
+      "pages": [
+        5
+      ],
+      "section": "Scale of Values / Jumps / 4Lz!<, BASE column"
+    },
+    "R3.base.4Lz!<<": {
+      "source": "R3",
+      "pages": [
+        5
+      ],
+      "section": "Scale of Values / Jumps / 4Lz!<<, BASE column"
+    },
+    "R3.base.4A<": {
+      "source": "R3",
+      "pages": [
+        5
+      ],
+      "section": "Scale of Values / Jumps / 4A<, BASE column"
+    },
+    "R3.base.4A<<": {
+      "source": "R3",
+      "pages": [
+        5
+      ],
+      "section": "Scale of Values / Jumps / 4A<<, BASE column"
+    },
+    "R3.base.3A": {
+      "source": "R3",
+      "pages": [
+        4
+      ],
+      "section": "Scale of Values / Jumps / 3A, BASE column (PDF rendering)"
+    },
+    "R3.base.3Aq": {
+      "source": "R3",
+      "pages": [
+        4
+      ],
+      "section": "Scale of Values / Jumps / 3Aq, BASE column (PDF rendering)"
+    },
+    "R1.612.individual": {
+      "source": "R1",
+      "pages": [
+        70
+      ],
+      "section": "Rule 612 §2, Individual Jumps"
+    },
+    "R1.612.quint_group": {
+      "source": "R1",
+      "pages": [
+        71
+      ],
+      "section": "Rule 612 §2, Jump Combinations and Jump Sequences"
+    },
+    "R3.quint": {
+      "source": "R3",
+      "pages": [
+        14
+      ],
+      "section": "Remarks 6, Clarifications on Quint Jumps"
+    },
+    "R3.base.5S": {
+      "source": "R3",
+      "pages": [
+        5
+      ],
+      "section": "Scale of Values / Jumps / 5S, BASE column"
+    },
+    "R3.base.5Sq": {
+      "source": "R3",
+      "pages": [
+        5
+      ],
+      "section": "Scale of Values / Jumps / 5Sq, BASE column"
+    },
+    "R3.base.5S<": {
+      "source": "R3",
+      "pages": [
+        5
+      ],
+      "section": "Scale of Values / Jumps / 5S<, BASE column"
+    },
+    "R3.base.5S<<": {
+      "source": "R3",
+      "pages": [
+        5
+      ],
+      "section": "Scale of Values / Jumps / 5S<<, BASE column"
+    }
+  },
+  "facts": [
+    {
+      "key": "bv.2T",
+      "value": "1.30",
+      "refs": [
+        "R3.base.2T"
+      ]
+    },
+    {
+      "key": "bv.2Lo",
+      "value": "1.70",
+      "refs": [
+        "R3.base.2Lo"
+      ]
+    },
+    {
+      "key": "bv.2F",
+      "value": "1.80",
+      "refs": [
+        "R3.base.2F"
+      ]
+    },
+    {
+      "key": "bv.2Lz",
+      "value": "2.10",
+      "refs": [
+        "R3.base.2Lz"
+      ]
+    },
+    {
+      "key": "bv.2A",
+      "value": "3.30",
+      "refs": [
+        "R3.base.2A"
+      ]
+    },
+    {
+      "key": "bv.3T",
+      "value": "4.20",
+      "refs": [
+        "R3.base.3T"
+      ]
+    },
+    {
+      "key": "bv.3S",
+      "value": "4.30",
+      "refs": [
+        "R3.base.3S"
+      ]
+    },
+    {
+      "key": "element_limit",
+      "value": 6,
+      "refs": [
+        "R1.612.senior_women"
+      ]
+    },
+    {
+      "key": "axel_required",
+      "value": true,
+      "refs": [
+        "R1.612.senior_women",
+        "R2.axel"
+      ]
+    },
+    {
+      "key": "extra_element",
+      "value": "whole_element_zero",
+      "refs": [
+        "R1.612.senior_women",
+        "R1.353"
+      ]
+    },
+    {
+      "key": "missing_axel",
+      "value": "last_jump_box_zero_if_occupied",
+      "refs": [
+        "R2.axel"
+      ]
+    },
+    {
+      "key": "combo_limit",
+      "value": 2,
+      "refs": [
+        "R1.612.remarks",
+        "R2.combinations"
+      ]
+    },
+    {
+      "key": "combo_max_length",
+      "value": 3,
+      "refs": [
+        "R2.combinations"
+      ]
+    },
+    {
+      "key": "combo_long_limit",
+      "value": 1,
+      "refs": [
+        "R1.612.remarks",
+        "R2.repeat_outcome"
+      ]
+    },
+    {
+      "key": "combo_short_length",
+      "value": 2,
+      "refs": [
+        "R2.combinations"
+      ]
+    },
+    {
+      "key": "extra_combo_first_factor",
+      "value": "0.80",
+      "refs": [
+        "R2.third_combo",
+        "R3.rep"
+      ]
+    },
+    {
+      "key": "extra_combo_tail",
+      "value": "subsequent_jumps_zero",
+      "refs": [
+        "R2.third_combo"
+      ]
+    },
+    {
+      "key": "combo_connection",
+      "value": "landing_foot_is_next_takeoff_foot",
+      "refs": [
+        "R2.combinations"
+      ]
+    },
+    {
+      "key": "combo_bv",
+      "value": "sum_counted_jumps",
+      "refs": [
+        "R1.353"
+      ]
+    },
+    {
+      "key": "jump_type_limit",
+      "value": 3,
+      "refs": [
+        "R2.repetition",
+        "R1.612.remarks"
+      ]
+    },
+    {
+      "key": "same_double_limit",
+      "value": 2,
+      "refs": [
+        "R2.repetition"
+      ]
+    },
+    {
+      "key": "extra_jump",
+      "value": "only_nonconforming_jump_zero_in_execution_order",
+      "refs": [
+        "R1.612.remarks",
+        "R2.repeat_outcome",
+        "R2.sequence"
+      ]
+    },
+    {
+      "key": "bonus_factor",
+      "value": "1.10",
+      "refs": [
+        "R1.353"
+      ]
+    },
+    {
+      "key": "bonus_limit",
+      "value": 3,
+      "refs": [
+        "R1.353"
+      ]
+    },
+    {
+      "key": "bv_places",
+      "value": 2,
+      "refs": [
+        "R1.353",
+        "R3.jump_table"
+      ]
+    },
+    {
+      "key": "reference.higher_repetitions",
+      "value": "checked",
+      "refs": [
+        "R2.repetition",
+        "R2.high_rep",
+        "R1.612.remarks",
+        "R3.rep"
+      ]
+    },
+    {
+      "key": "reference.judgments",
+      "value": "confirmed_call_or_conditional",
+      "refs": [
+        "R2.call",
+        "R2.markings",
+        "R2.interrupted",
+        "R2.summary",
+        "R3.jump_table",
+        "R6.qa2",
+        "R6.qa3"
+      ]
+    },
+    {
+      "key": "reference.euler_and_sequence",
+      "value": "checked",
+      "refs": [
+        "R2.combinations",
+        "R2.sequence",
+        "R2.group_exceptions"
+      ]
+    },
+    {
+      "key": "same_high_limit",
+      "value": 2,
+      "refs": [
+        "R2.repetition",
+        "R1.612.remarks"
+      ]
+    },
+    {
+      "key": "high_repeat_limit",
+      "value": 2,
+      "refs": [
+        "R2.repetition",
+        "R1.612.remarks",
+        "R3.rep"
+      ]
+    },
+    {
+      "key": "quad_repeat_limit",
+      "value": 1,
+      "refs": [
+        "R2.repetition",
+        "R1.612.remarks",
+        "R3.rep"
+      ]
+    },
+    {
+      "key": "high_solo_repeat_factor",
+      "value": "0.80",
+      "refs": [
+        "R2.high_rep",
+        "R3.rep"
+      ]
+    },
+    {
+      "key": "sequence_limit",
+      "value": 1,
+      "refs": [
+        "R2.group_exceptions"
+      ]
+    },
+    {
+      "key": "sequence_connection",
+      "value": "direct_step_into_axel_as_second_or_third_listed_jump",
+      "refs": [
+        "R2.sequence"
+      ]
+    },
+    {
+      "key": "euler_limit",
+      "value": 1,
+      "refs": [
+        "R2.combinations",
+        "R2.sequence",
+        "R2.group_exceptions"
+      ]
+    },
+    {
+      "key": "euler_between_listed",
+      "value": "no_value_or_count_between_listed_jumps",
+      "refs": [
+        "R2.combinations",
+        "R2.sequence",
+        "R2.nonlisted"
+      ]
+    },
+    {
+      "key": "euler_sequence_pair",
+      "value": "no_euler_in_combo_when_paired_with_sequence",
+      "refs": [
+        "R2.group_exceptions",
+        "R2.combinations",
+        "R2.sequence"
+      ]
+    },
+    {
+      "key": "group_exceptions_factor",
+      "value": "0.80",
+      "refs": [
+        "R3.rep",
+        "R2.group_exceptions"
+      ]
+    },
+    {
+      "key": "single_combo_call",
+      "value": "short_program_exception_excluded_from_fs",
+      "refs": [
+        "R2.no_second"
+      ]
+    },
+    {
+      "key": "interrupted_tail",
+      "value": "subsequent_attempts_retained_with_star",
+      "refs": [
+        "R2.interrupted",
+        "R2.touchdown",
+        "R6.qa2",
+        "R6.qa3"
+      ]
+    },
+    {
+      "key": "called_jump_quota",
+      "value": "ordered_listed_calls_including_star",
+      "refs": [
+        "R2.call",
+        "R2.interrupted",
+        "R2.markings",
+        "R6.qa2"
+      ]
+    },
+    {
+      "key": "five_rotation_conflict",
+      "value": "applicability_unresolved",
+      "refs": [
+        "R1.612.remarks",
+        "R2.quint",
+        "R3.rep"
+      ]
+    },
+    {
+      "key": "timing_interruptions",
+      "value": "conditional_on_program_interruption",
+      "refs": [
+        "R1.interruption"
+      ]
+    },
+    {
+      "key": "bv.Eu",
+      "value": "0.00",
+      "refs": [
+        "R3.base.Eu"
+      ]
+    },
+    {
+      "key": "bv.1T",
+      "value": "0.40",
+      "refs": [
+        "R3.base.1T"
+      ]
+    },
+    {
+      "key": "bv.1S",
+      "value": "0.40",
+      "refs": [
+        "R3.base.1S"
+      ]
+    },
+    {
+      "key": "bv.1Lo",
+      "value": "0.50",
+      "refs": [
+        "R3.base.1Lo"
+      ]
+    },
+    {
+      "key": "bv.1F",
+      "value": "0.50",
+      "refs": [
+        "R3.base.1F"
+      ]
+    },
+    {
+      "key": "bv.1Lz",
+      "value": "0.60",
+      "refs": [
+        "R3.base.1Lz"
+      ]
+    },
+    {
+      "key": "bv.1Tq",
+      "value": "0.40",
+      "refs": [
+        "R3.base.1Tq"
+      ]
+    },
+    {
+      "key": "bv.1Sq",
+      "value": "0.40",
+      "refs": [
+        "R3.base.1Sq"
+      ]
+    },
+    {
+      "key": "bv.1Loq",
+      "value": "0.50",
+      "refs": [
+        "R3.base.1Loq"
+      ]
+    },
+    {
+      "key": "bv.1Fq",
+      "value": "0.50",
+      "refs": [
+        "R3.base.1Fq"
+      ]
+    },
+    {
+      "key": "bv.1Lzq",
+      "value": "0.60",
+      "refs": [
+        "R3.base.1Lzq"
+      ]
+    },
+    {
+      "key": "bv.1T<",
+      "value": "0.32",
+      "refs": [
+        "R3.base.1T<"
+      ]
+    },
+    {
+      "key": "bv.1S<",
+      "value": "0.32",
+      "refs": [
+        "R3.base.1S<"
+      ]
+    },
+    {
+      "key": "bv.1Lo<",
+      "value": "0.40",
+      "refs": [
+        "R3.base.1Lo<"
+      ]
+    },
+    {
+      "key": "bv.1F<",
+      "value": "0.40",
+      "refs": [
+        "R3.base.1F<"
+      ]
+    },
+    {
+      "key": "bv.1Lz<",
+      "value": "0.48",
+      "refs": [
+        "R3.base.1Lz<"
+      ]
+    },
+    {
+      "key": "bv.1T<<",
+      "value": "0.00",
+      "refs": [
+        "R3.base.1T<<"
+      ]
+    },
+    {
+      "key": "bv.1S<<",
+      "value": "0.00",
+      "refs": [
+        "R3.base.1S<<"
+      ]
+    },
+    {
+      "key": "bv.1Lo<<",
+      "value": "0.00",
+      "refs": [
+        "R3.base.1Lo<<"
+      ]
+    },
+    {
+      "key": "bv.1F<<",
+      "value": "0.00",
+      "refs": [
+        "R3.base.1F<<"
+      ]
+    },
+    {
+      "key": "bv.1Lz<<",
+      "value": "0.00",
+      "refs": [
+        "R3.base.1Lz<<"
+      ]
+    },
+    {
+      "key": "bv.1Fe",
+      "value": "0.40",
+      "refs": [
+        "R3.base.1Fe"
+      ]
+    },
+    {
+      "key": "bv.1Feq",
+      "value": "0.40",
+      "refs": [
+        "R3.base.1Feq"
+      ]
+    },
+    {
+      "key": "bv.1Fe<",
+      "value": "0.30",
+      "refs": [
+        "R3.base.1Fe<"
+      ]
+    },
+    {
+      "key": "bv.1Fe<<",
+      "value": "0.00",
+      "refs": [
+        "R3.base.1Fe<<"
+      ]
+    },
+    {
+      "key": "bv.1Lze",
+      "value": "0.48",
+      "refs": [
+        "R3.base.1Lze"
+      ]
+    },
+    {
+      "key": "bv.1Lzeq",
+      "value": "0.48",
+      "refs": [
+        "R3.base.1Lzeq"
+      ]
+    },
+    {
+      "key": "bv.1Lze<",
+      "value": "0.36",
+      "refs": [
+        "R3.base.1Lze<"
+      ]
+    },
+    {
+      "key": "bv.1Lze<<",
+      "value": "0.00",
+      "refs": [
+        "R3.base.1Lze<<"
+      ]
+    },
+    {
+      "key": "bv.1F!",
+      "value": "0.50",
+      "refs": [
+        "R3.base.1F!"
+      ]
+    },
+    {
+      "key": "bv.1F!q",
+      "value": "0.50",
+      "refs": [
+        "R3.base.1F!q"
+      ]
+    },
+    {
+      "key": "bv.1F!<",
+      "value": "0.40",
+      "refs": [
+        "R3.base.1F!<"
+      ]
+    },
+    {
+      "key": "bv.1F!<<",
+      "value": "0.00",
+      "refs": [
+        "R3.base.1F!<<"
+      ]
+    },
+    {
+      "key": "bv.1Lz!",
+      "value": "0.60",
+      "refs": [
+        "R3.base.1Lz!"
+      ]
+    },
+    {
+      "key": "bv.1Lz!q",
+      "value": "0.60",
+      "refs": [
+        "R3.base.1Lz!q"
+      ]
+    },
+    {
+      "key": "bv.1Lz!<",
+      "value": "0.48",
+      "refs": [
+        "R3.base.1Lz!<"
+      ]
+    },
+    {
+      "key": "bv.1Lz!<<",
+      "value": "0.00",
+      "refs": [
+        "R3.base.1Lz!<<"
+      ]
+    },
+    {
+      "key": "bv.1A",
+      "value": "1.10",
+      "refs": [
+        "R3.base.1A"
+      ]
+    },
+    {
+      "key": "bv.2S",
+      "value": "1.30",
+      "refs": [
+        "R3.base.2S"
+      ]
+    },
+    {
+      "key": "bv.1Aq",
+      "value": "1.10",
+      "refs": [
+        "R3.base.1Aq"
+      ]
+    },
+    {
+      "key": "bv.2Tq",
+      "value": "1.30",
+      "refs": [
+        "R3.base.2Tq"
+      ]
+    },
+    {
+      "key": "bv.2Sq",
+      "value": "1.30",
+      "refs": [
+        "R3.base.2Sq"
+      ]
+    },
+    {
+      "key": "bv.2Loq",
+      "value": "1.70",
+      "refs": [
+        "R3.base.2Loq"
+      ]
+    },
+    {
+      "key": "bv.2Fq",
+      "value": "1.80",
+      "refs": [
+        "R3.base.2Fq"
+      ]
+    },
+    {
+      "key": "bv.2Lzq",
+      "value": "2.10",
+      "refs": [
+        "R3.base.2Lzq"
+      ]
+    },
+    {
+      "key": "bv.1A<",
+      "value": "0.88",
+      "refs": [
+        "R3.base.1A<"
+      ]
+    },
+    {
+      "key": "bv.2T<",
+      "value": "1.04",
+      "refs": [
+        "R3.base.2T<"
+      ]
+    },
+    {
+      "key": "bv.2S<",
+      "value": "1.04",
+      "refs": [
+        "R3.base.2S<"
+      ]
+    },
+    {
+      "key": "bv.2Lo<",
+      "value": "1.36",
+      "refs": [
+        "R3.base.2Lo<"
+      ]
+    },
+    {
+      "key": "bv.2F<",
+      "value": "1.44",
+      "refs": [
+        "R3.base.2F<"
+      ]
+    },
+    {
+      "key": "bv.2Lz<",
+      "value": "1.68",
+      "refs": [
+        "R3.base.2Lz<"
+      ]
+    },
+    {
+      "key": "bv.1A<<",
+      "value": "0.00",
+      "refs": [
+        "R3.base.1A<<"
+      ]
+    },
+    {
+      "key": "bv.2T<<",
+      "value": "0.40",
+      "refs": [
+        "R3.base.2T<<"
+      ]
+    },
+    {
+      "key": "bv.2S<<",
+      "value": "0.40",
+      "refs": [
+        "R3.base.2S<<"
+      ]
+    },
+    {
+      "key": "bv.2Lo<<",
+      "value": "0.50",
+      "refs": [
+        "R3.base.2Lo<<"
+      ]
+    },
+    {
+      "key": "bv.2F<<",
+      "value": "0.50",
+      "refs": [
+        "R3.base.2F<<"
+      ]
+    },
+    {
+      "key": "bv.2Lz<<",
+      "value": "0.60",
+      "refs": [
+        "R3.base.2Lz<<"
+      ]
+    },
+    {
+      "key": "bv.2Fe",
+      "value": "1.44",
+      "refs": [
+        "R3.base.2Fe"
+      ]
+    },
+    {
+      "key": "bv.2Feq",
+      "value": "1.44",
+      "refs": [
+        "R3.base.2Feq"
+      ]
+    },
+    {
+      "key": "bv.2Fe<",
+      "value": "1.08",
+      "refs": [
+        "R3.base.2Fe<"
+      ]
+    },
+    {
+      "key": "bv.2Fe<<",
+      "value": "0.40",
+      "refs": [
+        "R3.base.2Fe<<"
+      ]
+    },
+    {
+      "key": "bv.2Lze",
+      "value": "1.68",
+      "refs": [
+        "R3.base.2Lze"
+      ]
+    },
+    {
+      "key": "bv.2Lzeq",
+      "value": "1.68",
+      "refs": [
+        "R3.base.2Lzeq"
+      ]
+    },
+    {
+      "key": "bv.2Lze<",
+      "value": "1.26",
+      "refs": [
+        "R3.base.2Lze<"
+      ]
+    },
+    {
+      "key": "bv.2Lze<<",
+      "value": "0.48",
+      "refs": [
+        "R3.base.2Lze<<"
+      ]
+    },
+    {
+      "key": "bv.2F!",
+      "value": "1.80",
+      "refs": [
+        "R3.base.2F!"
+      ]
+    },
+    {
+      "key": "bv.2F!q",
+      "value": "1.80",
+      "refs": [
+        "R3.base.2F!q"
+      ]
+    },
+    {
+      "key": "bv.2F!<",
+      "value": "1.44",
+      "refs": [
+        "R3.base.2F!<"
+      ]
+    },
+    {
+      "key": "bv.2F!<<",
+      "value": "0.50",
+      "refs": [
+        "R3.base.2F!<<"
+      ]
+    },
+    {
+      "key": "bv.2Lz!",
+      "value": "2.10",
+      "refs": [
+        "R3.base.2Lz!"
+      ]
+    },
+    {
+      "key": "bv.2Lz!q",
+      "value": "2.10",
+      "refs": [
+        "R3.base.2Lz!q"
+      ]
+    },
+    {
+      "key": "bv.2Lz!<",
+      "value": "1.68",
+      "refs": [
+        "R3.base.2Lz!<"
+      ]
+    },
+    {
+      "key": "bv.2Lz!<<",
+      "value": "0.60",
+      "refs": [
+        "R3.base.2Lz!<<"
+      ]
+    },
+    {
+      "key": "bv.3Lo",
+      "value": "4.90",
+      "refs": [
+        "R3.base.3Lo"
+      ]
+    },
+    {
+      "key": "bv.3F",
+      "value": "5.30",
+      "refs": [
+        "R3.base.3F"
+      ]
+    },
+    {
+      "key": "bv.3Lz",
+      "value": "5.90",
+      "refs": [
+        "R3.base.3Lz"
+      ]
+    },
+    {
+      "key": "bv.2Aq",
+      "value": "3.30",
+      "refs": [
+        "R3.base.2Aq"
+      ]
+    },
+    {
+      "key": "bv.3Tq",
+      "value": "4.20",
+      "refs": [
+        "R3.base.3Tq"
+      ]
+    },
+    {
+      "key": "bv.3Sq",
+      "value": "4.30",
+      "refs": [
+        "R3.base.3Sq"
+      ]
+    },
+    {
+      "key": "bv.3Loq",
+      "value": "4.90",
+      "refs": [
+        "R3.base.3Loq"
+      ]
+    },
+    {
+      "key": "bv.3Fq",
+      "value": "5.30",
+      "refs": [
+        "R3.base.3Fq"
+      ]
+    },
+    {
+      "key": "bv.3Lzq",
+      "value": "5.90",
+      "refs": [
+        "R3.base.3Lzq"
+      ]
+    },
+    {
+      "key": "bv.2A<",
+      "value": "2.64",
+      "refs": [
+        "R3.base.2A<"
+      ]
+    },
+    {
+      "key": "bv.3T<",
+      "value": "3.36",
+      "refs": [
+        "R3.base.3T<"
+      ]
+    },
+    {
+      "key": "bv.3S<",
+      "value": "3.44",
+      "refs": [
+        "R3.base.3S<"
+      ]
+    },
+    {
+      "key": "bv.3Lo<",
+      "value": "3.92",
+      "refs": [
+        "R3.base.3Lo<"
+      ]
+    },
+    {
+      "key": "bv.3F<",
+      "value": "4.24",
+      "refs": [
+        "R3.base.3F<"
+      ]
+    },
+    {
+      "key": "bv.3Lz<",
+      "value": "4.72",
+      "refs": [
+        "R3.base.3Lz<"
+      ]
+    },
+    {
+      "key": "bv.2A<<",
+      "value": "1.10",
+      "refs": [
+        "R3.base.2A<<"
+      ]
+    },
+    {
+      "key": "bv.3T<<",
+      "value": "1.30",
+      "refs": [
+        "R3.base.3T<<"
+      ]
+    },
+    {
+      "key": "bv.3S<<",
+      "value": "1.30",
+      "refs": [
+        "R3.base.3S<<"
+      ]
+    },
+    {
+      "key": "bv.3Lo<<",
+      "value": "1.70",
+      "refs": [
+        "R3.base.3Lo<<"
+      ]
+    },
+    {
+      "key": "bv.3F<<",
+      "value": "1.80",
+      "refs": [
+        "R3.base.3F<<"
+      ]
+    },
+    {
+      "key": "bv.3Lz<<",
+      "value": "2.10",
+      "refs": [
+        "R3.base.3Lz<<"
+      ]
+    },
+    {
+      "key": "bv.3Fe",
+      "value": "4.24",
+      "refs": [
+        "R3.base.3Fe"
+      ]
+    },
+    {
+      "key": "bv.3Feq",
+      "value": "4.24",
+      "refs": [
+        "R3.base.3Feq"
+      ]
+    },
+    {
+      "key": "bv.3Fe<",
+      "value": "3.18",
+      "refs": [
+        "R3.base.3Fe<"
+      ]
+    },
+    {
+      "key": "bv.3Fe<<",
+      "value": "1.44",
+      "refs": [
+        "R3.base.3Fe<<"
+      ]
+    },
+    {
+      "key": "bv.3Lze",
+      "value": "4.72",
+      "refs": [
+        "R3.base.3Lze"
+      ]
+    },
+    {
+      "key": "bv.3Lzeq",
+      "value": "4.72",
+      "refs": [
+        "R3.base.3Lzeq"
+      ]
+    },
+    {
+      "key": "bv.3Lze<",
+      "value": "3.54",
+      "refs": [
+        "R3.base.3Lze<"
+      ]
+    },
+    {
+      "key": "bv.3Lze<<",
+      "value": "1.68",
+      "refs": [
+        "R3.base.3Lze<<"
+      ]
+    },
+    {
+      "key": "bv.3F!",
+      "value": "5.30",
+      "refs": [
+        "R3.base.3F!"
+      ]
+    },
+    {
+      "key": "bv.3F!q",
+      "value": "5.30",
+      "refs": [
+        "R3.base.3F!q"
+      ]
+    },
+    {
+      "key": "bv.3F!<",
+      "value": "4.24",
+      "refs": [
+        "R3.base.3F!<"
+      ]
+    },
+    {
+      "key": "bv.3F!<<",
+      "value": "1.80",
+      "refs": [
+        "R3.base.3F!<<"
+      ]
+    },
+    {
+      "key": "bv.3Lz!",
+      "value": "5.90",
+      "refs": [
+        "R3.base.3Lz!"
+      ]
+    },
+    {
+      "key": "bv.3Lz!q",
+      "value": "5.90",
+      "refs": [
+        "R3.base.3Lz!q"
+      ]
+    },
+    {
+      "key": "bv.3Lz!<",
+      "value": "4.72",
+      "refs": [
+        "R3.base.3Lz!<"
+      ]
+    },
+    {
+      "key": "bv.3Lz!<<",
+      "value": "2.10",
+      "refs": [
+        "R3.base.3Lz!<<"
+      ]
+    },
+    {
+      "key": "bv.4T",
+      "value": "9.50",
+      "refs": [
+        "R3.base.4T"
+      ]
+    },
+    {
+      "key": "bv.4S",
+      "value": "9.70",
+      "refs": [
+        "R3.base.4S"
+      ]
+    },
+    {
+      "key": "bv.4Lo",
+      "value": "10.50",
+      "refs": [
+        "R3.base.4Lo"
+      ]
+    },
+    {
+      "key": "bv.4F",
+      "value": "11.00",
+      "refs": [
+        "R3.base.4F"
+      ]
+    },
+    {
+      "key": "bv.4Lz",
+      "value": "11.50",
+      "refs": [
+        "R3.base.4Lz"
+      ]
+    },
+    {
+      "key": "bv.4A",
+      "value": "12.50",
+      "refs": [
+        "R3.base.4A"
+      ]
+    },
+    {
+      "key": "bv.4Tq",
+      "value": "9.50",
+      "refs": [
+        "R3.base.4Tq"
+      ]
+    },
+    {
+      "key": "bv.4Sq",
+      "value": "9.70",
+      "refs": [
+        "R3.base.4Sq"
+      ]
+    },
+    {
+      "key": "bv.4Loq",
+      "value": "10.50",
+      "refs": [
+        "R3.base.4Loq"
+      ]
+    },
+    {
+      "key": "bv.4Fq",
+      "value": "11.00",
+      "refs": [
+        "R3.base.4Fq"
+      ]
+    },
+    {
+      "key": "bv.4Lzq",
+      "value": "11.50",
+      "refs": [
+        "R3.base.4Lzq"
+      ]
+    },
+    {
+      "key": "bv.4Aq",
+      "value": "12.50",
+      "refs": [
+        "R3.base.4Aq"
+      ]
+    },
+    {
+      "key": "bv.3A<",
+      "value": "6.40",
+      "refs": [
+        "R3.base.3A<"
+      ]
+    },
+    {
+      "key": "bv.4T<",
+      "value": "7.60",
+      "refs": [
+        "R3.base.4T<"
+      ]
+    },
+    {
+      "key": "bv.4S<",
+      "value": "7.76",
+      "refs": [
+        "R3.base.4S<"
+      ]
+    },
+    {
+      "key": "bv.4Lo<",
+      "value": "8.40",
+      "refs": [
+        "R3.base.4Lo<"
+      ]
+    },
+    {
+      "key": "bv.4F<",
+      "value": "8.80",
+      "refs": [
+        "R3.base.4F<"
+      ]
+    },
+    {
+      "key": "bv.4Lz<",
+      "value": "9.20",
+      "refs": [
+        "R3.base.4Lz<"
+      ]
+    },
+    {
+      "key": "bv.3A<<",
+      "value": "3.30",
+      "refs": [
+        "R3.base.3A<<"
+      ]
+    },
+    {
+      "key": "bv.4T<<",
+      "value": "4.20",
+      "refs": [
+        "R3.base.4T<<"
+      ]
+    },
+    {
+      "key": "bv.4S<<",
+      "value": "4.30",
+      "refs": [
+        "R3.base.4S<<"
+      ]
+    },
+    {
+      "key": "bv.4Lo<<",
+      "value": "4.90",
+      "refs": [
+        "R3.base.4Lo<<"
+      ]
+    },
+    {
+      "key": "bv.4F<<",
+      "value": "5.30",
+      "refs": [
+        "R3.base.4F<<"
+      ]
+    },
+    {
+      "key": "bv.4Lz<<",
+      "value": "5.90",
+      "refs": [
+        "R3.base.4Lz<<"
+      ]
+    },
+    {
+      "key": "bv.4Fe",
+      "value": "8.80",
+      "refs": [
+        "R3.base.4Fe"
+      ]
+    },
+    {
+      "key": "bv.4Feq",
+      "value": "8.80",
+      "refs": [
+        "R3.base.4Feq"
+      ]
+    },
+    {
+      "key": "bv.4Fe<",
+      "value": "6.60",
+      "refs": [
+        "R3.base.4Fe<"
+      ]
+    },
+    {
+      "key": "bv.4Fe<<",
+      "value": "4.24",
+      "refs": [
+        "R3.base.4Fe<<"
+      ]
+    },
+    {
+      "key": "bv.4Lze",
+      "value": "9.20",
+      "refs": [
+        "R3.base.4Lze"
+      ]
+    },
+    {
+      "key": "bv.4Lzeq",
+      "value": "9.20",
+      "refs": [
+        "R3.base.4Lzeq"
+      ]
+    },
+    {
+      "key": "bv.4Lze<",
+      "value": "6.90",
+      "refs": [
+        "R3.base.4Lze<"
+      ]
+    },
+    {
+      "key": "bv.4Lze<<",
+      "value": "4.72",
+      "refs": [
+        "R3.base.4Lze<<"
+      ]
+    },
+    {
+      "key": "bv.4F!",
+      "value": "11.00",
+      "refs": [
+        "R3.base.4F!"
+      ]
+    },
+    {
+      "key": "bv.4F!q",
+      "value": "11.00",
+      "refs": [
+        "R3.base.4F!q"
+      ]
+    },
+    {
+      "key": "bv.4F!<",
+      "value": "8.80",
+      "refs": [
+        "R3.base.4F!<"
+      ]
+    },
+    {
+      "key": "bv.4F!<<",
+      "value": "5.30",
+      "refs": [
+        "R3.base.4F!<<"
+      ]
+    },
+    {
+      "key": "bv.4Lz!",
+      "value": "11.50",
+      "refs": [
+        "R3.base.4Lz!"
+      ]
+    },
+    {
+      "key": "bv.4Lz!q",
+      "value": "11.50",
+      "refs": [
+        "R3.base.4Lz!q"
+      ]
+    },
+    {
+      "key": "bv.4Lz!<",
+      "value": "9.20",
+      "refs": [
+        "R3.base.4Lz!<"
+      ]
+    },
+    {
+      "key": "bv.4Lz!<<",
+      "value": "5.90",
+      "refs": [
+        "R3.base.4Lz!<<"
+      ]
+    },
+    {
+      "key": "bv.4A<",
+      "value": "10.00",
+      "refs": [
+        "R3.base.4A<"
+      ]
+    },
+    {
+      "key": "bv.4A<<",
+      "value": "8.00",
+      "refs": [
+        "R3.base.4A<<"
+      ]
+    },
+    {
+      "key": "bv.3A",
+      "value": "8.00",
+      "refs": [
+        "R3.base.3A"
+      ]
+    },
+    {
+      "key": "bv.3Aq",
+      "value": "8.00",
+      "refs": [
+        "R3.base.3Aq"
+      ]
+    },
+    {
+      "key": "quint_solo_only",
+      "value": true,
+      "refs": [
+        "R1.612.individual",
+        "R1.612.quint_group",
+        "R2.quint",
+        "R3.quint"
+      ]
+    },
+    {
+      "key": "quint_same_name_conflict",
+      "value": "two_vs_three",
+      "refs": [
+        "R1.612.remarks",
+        "R2.repetition",
+        "R3.quint"
+      ]
+    },
+    {
+      "key": "bv.5S",
+      "value": "14.00",
+      "refs": [
+        "R3.base.5S",
+        "R2.quint",
+        "R3.quint"
+      ]
+    },
+    {
+      "key": "bv.5Sq",
+      "value": "14.00",
+      "refs": [
+        "R3.base.5Sq",
+        "R2.quint",
+        "R3.quint"
+      ]
+    },
+    {
+      "key": "bv.5S<",
+      "value": "11.20",
+      "refs": [
+        "R3.base.5S<",
+        "R2.quint",
+        "R3.quint"
+      ]
+    },
+    {
+      "key": "bv.5S<<",
+      "value": "9.50",
+      "refs": [
+        "R3.base.5S<<",
+        "R2.quint",
+        "R3.quint"
+      ]
+    }
+  ],
+  "entries": [
+    {
+      "key": "R1.612.senior_women",
+      "topic": "R1.612.senior_women",
+      "claim": null,
+      "source": "R1",
+      "page": 70,
+      "section": "Rule 612 · Senior Well Balanced Program / Women",
+      "summary": "成年女子自由滑的跳跃元素上限为 6 项，其中至少一项须包含 Axel 类跳跃。",
+      "conditions": "Rule 612 成年女子均衡自由滑节目，按跳跃元素计项。",
+      "factKeys": [
+        "element_limit",
+        "axel_required"
+      ],
+      "lookup": [
+        "r1.612.senior_women",
+        "element_limit",
+        "rule 612",
+        "612"
+      ],
+      "anchorSha256": "99d8990907088f4098ff0a25f15f0ddfb906fb8aca1bad7ace374279f3e033e0"
+    },
+    {
+      "key": "R2.axel",
+      "topic": "R2.axel",
+      "claim": null,
+      "source": "R2",
+      "page": 33,
+      "section": "No Axel type jump in Free Skating",
+      "summary": "若全套自由滑没有尝试任何 Axel 类跳跃，末个跳跃元素格中已完成的跳跃加 * 且不计值。若末格原本为空，则保持空白，无需加 *。",
+      "conditions": "整套自由滑未尝试 Axel 类跳跃。是否标 * 取决于允许的末个跳跃元素格是否已占用。",
+      "factKeys": [
+        "missing_axel",
+        "axel_required"
+      ],
+      "lookup": [
+        "r2.axel",
+        "missing_axel"
+      ],
+      "anchorSha256": "a3256693f39316ceec59ab929c91b02cb2a73b8b38b9d88e7895871be542bbb2"
+    },
+    {
+      "key": "R3.base.3T<",
+      "topic": "R3.base.3T<",
+      "claim": null,
+      "source": "R3",
+      "page": 3,
+      "section": "Scale of Values / Jumps / 3T<, BASE column",
+      "summary": "3T< 的基础分（BASE）为 3.36。",
+      "conditions": "Communication 2786 分值表，3T< 行的 BASE 列。动作码含 < 判定标记。",
+      "factKeys": [
+        "bv.3T<"
+      ],
+      "lookup": [
+        "r3.base.3t<",
+        "3t<",
+        "bv.3t<"
+      ],
+      "anchorSha256": "5409feee4a9558ccea6d53e70ed1a52a6581e4bfb63f4f28c756edfe714d22c8"
+    },
+    {
+      "key": "R6.qa2",
+      "topic": "R6.qa2",
+      "claim": null,
+      "source": "R6",
+      "page": 1,
+      "section": "Q2",
+      "summary": "自由滑的连跳或连续跳出现带 * 的跳跃时，技术组仍会报出实际完成的每一跳，并按常规判定起跳刃和落冰。",
+      "conditions": "自由滑连跳或连续跳中被加 * 的跳跃，涉及技术组判定。",
+      "factKeys": [
+        "reference.judgments",
+        "interrupted_tail",
+        "called_jump_quota"
+      ],
+      "lookup": [
+        "r6.qa2",
+        "starred_jump",
+        "q2"
+      ],
+      "anchorSha256": "c738b3e6db08b3d6af36b599483fe24e417d7315c4752292e0a50f73c3005795"
+    },
+    {
+      "key": "R1.612.remarks.quint_group",
+      "topic": "quint_group",
+      "claim": false,
+      "source": "R1",
+      "page": 71,
+      "section": "Rule 612 §2 · Jump Combinations and Jump Sequences",
+      "summary": "自由滑五周跳不得作为连跳或连续跳的一部分。",
+      "conditions": "自由滑 · 连跳或连续跳内的五周跳。",
+      "factKeys": [],
+      "lookup": [
+        "r1.612.remarks",
+        "r1.612.remarks.quint_group",
+        "quint_group"
+      ],
+      "anchorSha256": "860cf327751fb129df1fd1ae119d0f839def4d4afc6b3e475dbf42dd6502ac63"
+    },
+    {
+      "key": "R2.quint.quint_solo",
+      "topic": "quint_solo",
+      "claim": true,
+      "source": "R2",
+      "page": 27,
+      "section": "Free Skating · Quint Jumps / Solo Jump",
+      "summary": "自由滑五周跳允许作为独立单跳。",
+      "conditions": "自由滑 · 独立五周单跳。",
+      "factKeys": [],
+      "lookup": [
+        "r2.quint",
+        "r2.quint.quint_solo",
+        "quint_solo"
+      ],
+      "anchorSha256": "57b87d02543f9297b96f0699d65a7555e6323ce987e4dc5b57b0e97a2802e287"
+    },
+    {
+      "key": "R2.quint.quint_group",
+      "topic": "quint_group",
+      "claim": false,
+      "source": "R2",
+      "page": 27,
+      "section": "Free Skating · Quint Jumps / Jump Combination or Sequence",
+      "summary": "自由滑五周跳不得作为连跳或连续跳的一部分。",
+      "conditions": "自由滑 · 连跳或连续跳内的五周跳。",
+      "factKeys": [],
+      "lookup": [
+        "r2.quint",
+        "r2.quint.quint_group",
+        "quint_group"
+      ],
+      "anchorSha256": "57b87d02543f9297b96f0699d65a7555e6323ce987e4dc5b57b0e97a2802e287"
+    },
+    {
+      "key": "R3.rep.quint_solo",
+      "topic": "quint_solo",
+      "claim": true,
+      "source": "R3",
+      "page": 14,
+      "section": "Remarks 6 · Free Skating / Individual Quint Jumps",
+      "summary": "自由滑五周跳允许作为独立单跳。",
+      "conditions": "自由滑 · 独立五周单跳。",
+      "factKeys": [],
+      "lookup": [
+        "r3.rep",
+        "r3.rep.quint_solo",
+        "quint_solo"
+      ],
+      "anchorSha256": "15a2e68e94648f25ff318aab5c4185da783beb057fa89161e656d9d5b58b342b"
+    },
+    {
+      "key": "R3.rep.quint_group",
+      "topic": "quint_group",
+      "claim": false,
+      "source": "R3",
+      "page": 14,
+      "section": "Remarks 6 · Free Skating / Jump Combination or Sequence",
+      "summary": "自由滑五周跳不得作为连跳或连续跳的一部分。",
+      "conditions": "自由滑 · 连跳或连续跳内的五周跳。",
+      "factKeys": [],
+      "lookup": [
+        "r3.rep",
+        "r3.rep.quint_group",
+        "quint_group"
+      ],
+      "anchorSha256": "15a2e68e94648f25ff318aab5c4185da783beb057fa89161e656d9d5b58b342b"
+    },
+    {
+      "key": "R1.612.remarks.quint_same_name_count",
+      "topic": "quint_same_name_count",
+      "claim": 2,
+      "source": "R1",
+      "page": 71,
+      "section": "Rule 612 §2 · Repetitions / Same-name Jumps",
+      "summary": "R1 将同名三周、四周和五周判作 2 种不同跳跃。",
+      "conditions": "自由滑重复规则 · 同名三周、四周和五周跳的种类计数。",
+      "factKeys": [
+        "reference.higher_repetitions"
+      ],
+      "lookup": [
+        "r1.612.remarks",
+        "r1.612.remarks.quint_same_name_count",
+        "quint_same_name_count"
+      ],
+      "anchorSha256": "23d9ee7b5aa03f747a052667a175ba053a6bc39d6f9a91bed8d78c957a74ebc0"
+    },
+    {
+      "key": "R2.repetition.quint_same_name_count",
+      "topic": "quint_same_name_count",
+      "claim": 3,
+      "source": "R2",
+      "page": 27,
+      "section": "Free Skating · Repetitions / Same-name Jumps",
+      "summary": "R2 将同名三周、四周和五周判作 3 种不同跳跃。",
+      "conditions": "自由滑重复规则 · 同名三周、四周和五周跳的种类计数。",
+      "factKeys": [
+        "reference.higher_repetitions"
+      ],
+      "lookup": [
+        "r2.repetition",
+        "r2.repetition.quint_same_name_count",
+        "quint_same_name_count"
+      ],
+      "anchorSha256": "40917b9e0c56e4dd3774cbd186c24d17d5fe9855493700533bdd1fc56f5a8322"
+    },
+    {
+      "key": "R3.rep.quint_same_name_count",
+      "topic": "quint_same_name_count",
+      "claim": 2,
+      "source": "R3",
+      "page": 14,
+      "section": "Remarks 6 · Repetition of Quint Jumps in Free Skating",
+      "summary": "R3 将同名三周、四周和五周判作 2 种不同跳跃。",
+      "conditions": "自由滑重复规则 · 同名三周、四周和五周跳的种类计数。",
+      "factKeys": [
+        "reference.higher_repetitions"
+      ],
+      "lookup": [
+        "r3.rep",
+        "r3.rep.quint_same_name_count",
+        "quint_same_name_count"
+      ],
+      "anchorSha256": "23d9ee7b5aa03f747a052667a175ba053a6bc39d6f9a91bed8d78c957a74ebc0"
+    },
+    {
+      "key": "R3.base.5S",
+      "topic": "R3.base.5S",
+      "claim": null,
+      "source": "R3",
+      "page": 5,
+      "section": "Scale of Values / Jumps / 5S, BASE column",
+      "summary": "5S 的基础分（BASE）为 14.00。适用于当前索引范围内已确认的独立单跳。",
+      "conditions": "2026/27 成年女单自由滑独立单跳。Communication 2786 的 BASE 列，实计还受重复与时点约束。",
+      "factKeys": [
+        "bv.5S"
+      ],
+      "lookup": [
+        "r3.base.5s",
+        "5s",
+        "bv.5s"
+      ],
+      "anchorSha256": "b536c0ac34e4ab20b7e26cb740219a002274950b4254889eba6ba1f93e78b99c"
+    },
+    {
+      "key": "R3.base.5Sq",
+      "topic": "R3.base.5Sq",
+      "claim": null,
+      "source": "R3",
+      "page": 5,
+      "section": "Scale of Values / Jumps / 5Sq, BASE column",
+      "summary": "5Sq 的基础分（BASE）为 14.00。适用于当前索引范围内已确认的独立单跳。",
+      "conditions": "2026/27 成年女单自由滑独立单跳。Communication 2786 的 BASE 列，实计还受重复与时点约束。",
+      "factKeys": [
+        "bv.5Sq"
+      ],
+      "lookup": [
+        "r3.base.5sq",
+        "5sq",
+        "bv.5sq"
+      ],
+      "anchorSha256": "43329317324967bc12ad4ca84a1bac36094bbf6e0b6f062c6ef2d4bfd86ce206"
+    },
+    {
+      "key": "R3.base.5S<",
+      "topic": "R3.base.5S<",
+      "claim": null,
+      "source": "R3",
+      "page": 5,
+      "section": "Scale of Values / Jumps / 5S<, BASE column",
+      "summary": "5S< 的基础分（BASE）为 11.20。适用于当前索引范围内已确认的独立单跳。",
+      "conditions": "2026/27 成年女单自由滑独立单跳。Communication 2786 的 BASE 列，实计还受重复与时点约束。",
+      "factKeys": [
+        "bv.5S<"
+      ],
+      "lookup": [
+        "r3.base.5s<",
+        "5s<",
+        "bv.5s<"
+      ],
+      "anchorSha256": "d0f6381027761d97b2f10f4ba8e1f803304537faac146ae1061bab8348ffc569"
+    },
+    {
+      "key": "R3.base.5S<<",
+      "topic": "R3.base.5S<<",
+      "claim": null,
+      "source": "R3",
+      "page": 5,
+      "section": "Scale of Values / Jumps / 5S<<, BASE column",
+      "summary": "5S<< 的基础分（BASE）为 9.50。适用于当前索引范围内已确认的独立单跳。",
+      "conditions": "2026/27 成年女单自由滑独立单跳。Communication 2786 的 BASE 列，实计还受重复与时点约束。",
+      "factKeys": [
+        "bv.5S<<"
+      ],
+      "lookup": [
+        "r3.base.5s<<",
+        "5s<<",
+        "bv.5s<<"
+      ],
+      "anchorSha256": "9466ae601f85eb6912fd0994607bacc33708375a71979cbbfb4e2c62a4755080"
+    },
+    {
+      "key": "R1.353",
+      "topic": "R1.353",
+      "claim": null,
+      "source": "R1",
+      "page": 9,
+      "section": "Rule 353 §1(h)(iii) · Second-half bonus",
+      "summary": "正常未中断的自由滑中，后半程开始的跳跃元素只有最后三项的 BV 乘 1.10。",
+      "conditions": "成年女子单人自由滑，按已确认的跳跃元素开始时点，节目中断适用单独条件。",
+      "factKeys": [
+        "bonus_factor",
+        "bonus_limit"
+      ],
+      "lookup": [
+        "r1.353",
+        "bonus_factor",
+        "bonus_limit"
+      ],
+      "anchorSha256": "f9e9b0aa8bd43508a0510ac37a638b1ec710f87d5d8ee27ecc0fb0130736394a"
+    },
+    {
+      "key": "R2.repetition",
+      "topic": "R2.repetition",
+      "claim": null,
+      "source": "R2",
+      "page": 27,
+      "section": "Free Skating · Repetition of a double jump",
+      "summary": "同一个两周跳（包括两周 Axel）在一套自由滑最多出现两次，单跳、连跳和连续跳合并计数。",
+      "conditions": "成年女子单人自由滑，同一两周动作编码在整个节目中的次数。",
+      "factKeys": [
+        "same_double_limit"
+      ],
+      "lookup": [
+        "r2.repetition",
+        "same_double_limit"
+      ],
+      "anchorSha256": "264a8eb0ee923259b4f0ceed7495fd72b5ca9a5b8b63e735d721ce1ad412f583"
+    },
+    {
+      "key": "R2.sequence",
+      "topic": "R2.sequence",
+      "claim": null,
+      "source": "R2",
+      "page": 29,
+      "section": "Jump Sequence · Axel connection",
+      "summary": "自由滑连续跳由两或三跳组成，第二跳或第三跳中至少有一跳为 Axel，并从上一跳的落冰弧线直接迈入 Axel 起跳弧线。",
+      "conditions": "成年女子单人自由滑，连续跳的连接与 Axel 位置要求。另有动作准入规则。",
+      "factKeys": [
+        "sequence_connection"
+      ],
+      "lookup": [
+        "r2.sequence",
+        "sequence_connection"
+      ],
+      "anchorSha256": "6dc09c8578a523cf523cff9ac04c7e57bca9eae599df38645b495f5793fbc66a"
+    },
+    {
+      "key": "R2.group_exceptions",
+      "topic": "R2.group_exceptions",
+      "claim": null,
+      "source": "R2",
+      "page": 33,
+      "section": "Free Skating · More than one jump sequence",
+      "summary": "一套自由滑只允许一组连续跳。执行第二组时，该组只有第一跳计值。",
+      "conditions": "成年女子单人自由滑，重复连续跳的整组限制及超出后的计值。",
+      "factKeys": [
+        "sequence_limit"
+      ],
+      "lookup": [
+        "r2.group_exceptions",
+        "sequence_limit"
+      ],
+      "anchorSha256": "39dbcf36e1d49e17e1335a7ce2df50132385eff959ac27caa4467e737b38c812"
+    },
+    {
+      "key": "R2.interrupted.same_group",
+      "topic": "R2.interrupted.same_group",
+      "claim": null,
+      "source": "R2",
+      "page": 33,
+      "section": "Jump combination or sequence · Executions not counted",
+      "summary": "连跳或连续跳中，选手摔倒或步出后立即做出的后续跳跃仍记录，技术判定标 *，这些后续跳跃不计值。",
+      "conditions": "成年女子单人自由滑，仅适用于摔倒或步出后在同一连跳或连续跳内立即续跳。",
+      "factKeys": [
+        "interrupted_tail",
+        "called_jump_quota"
+      ],
+      "lookup": [
+        "r2.interrupted.same_group",
+        "interrupted_tail",
+        "called_jump_quota",
+        "r2.interrupted"
+      ],
+      "anchorSha256": "888f3b7ca08e15b2d27c5958ca3e1c273f9988d163d03d1f6fc5f86be37194b4"
+    },
+    {
+      "key": "R1.612.remarks.group_limits",
+      "topic": "R1.612.remarks.group_limits",
+      "claim": null,
+      "source": "R1",
+      "page": 71,
+      "section": "Rule 612 §2 · Jump Combination and Sequence limits",
+      "summary": "自由滑至多两组连跳，或一组不含 Euler 的连跳加一组连续跳。一组至多三个计数跳跃，另一组至多两个。",
+      "conditions": "成年女子单人自由滑，连跳与连续跳合并名额及两组的长度。",
+      "factKeys": [
+        "combo_limit",
+        "combo_long_limit"
+      ],
+      "lookup": [
+        "r1.612.remarks.group_limits",
+        "combo_limit",
+        "combo_long_limit"
+      ],
+      "anchorSha256": "5ab449e84ed40551691ad67c76cf7340dc2860580794948256e7c0cf857f6e2b"
+    },
+    {
+      "key": "R2.combinations.euler",
+      "topic": "R2.combinations.euler",
+      "claim": null,
+      "source": "R2",
+      "page": 28,
+      "section": "Jump Combination · Euler",
+      "summary": "Euler 在连跳的两个列名跳跃之间使用时不计值，也不占该组的计数跳数。自由滑中 Euler 只能在两个列名跳之间使用一次。",
+      "conditions": "成年女子单人自由滑，Euler 在连跳中的用法。配套的连续跳及组合名额限制同时适用。",
+      "factKeys": [
+        "euler_limit",
+        "euler_between_listed"
+      ],
+      "lookup": [
+        "r2.combinations.euler",
+        "euler_limit",
+        "euler_between_listed"
+      ],
+      "anchorSha256": "176fac4147024b2f3cae694645f5cb8ee7458a1e2d6abc4d10b972ff84e8bf31"
+    },
+    {
+      "key": "R2.repetition.family",
+      "topic": "R2.repetition.family",
+      "claim": null,
+      "source": "R2",
+      "page": 27,
+      "section": "Free Skating · Jump type count",
+      "summary": "一套自由滑中，同类跳跃合计至多三次，各周数合并计数。",
+      "conditions": "成年女子单人自由滑，按起跳类型计数，同动作编码和高周数另有重复名额。",
+      "factKeys": [
+        "jump_type_limit"
+      ],
+      "lookup": [
+        "r2.repetition.family",
+        "jump_type_limit"
+      ],
+      "anchorSha256": "302c49647e0abad2d28a65ebaae5cf01617e65b0312d5a9b4677ddbe44d9b3b6"
+    },
+    {
+      "key": "R2.high_rep",
+      "topic": "R2.high_rep",
+      "claim": null,
+      "source": "R2",
+      "page": 32,
+      "section": "Free Skating · First repetition as solo jumps",
+      "summary": "同名同周数的高周跳第一次重复，且两次均为单跳时，第二跳标 +REP 并按基础分的 80% 计值，结果舍入到两位小数。",
+      "conditions": "成年女子单人自由滑，重复同一高周数单跳的计值。适用名额和动作准入另行核对。",
+      "factKeys": [
+        "high_solo_repeat_factor"
+      ],
+      "lookup": [
+        "r2.high_rep",
+        "high_solo_repeat_factor"
+      ],
+      "anchorSha256": "963f7597ff57231beb9dcba03cfcabb69545eb74f18bc15eb7e6e65b51d66706"
+    },
+    {
+      "key": "R2.markings.quarter",
+      "topic": "R2.markings.quarter",
+      "claim": null,
+      "source": "R2",
+      "page": 29,
+      "section": "Clarifications · Landed on the quarter",
+      "summary": "跳跃恰好少转四分之一圈时，技术组在动作代号后标 q。",
+      "conditions": "2026/27 成年女子单人自由滑，列名跳跃的落冰转体技术标记。Euler 与其他转体缺口另有规则。",
+      "factKeys": [
+        "reference.judgments"
+      ],
+      "lookup": [
+        "r2.markings.quarter"
+      ],
+      "anchorSha256": "7d0a009ec0f3811511e9f2ed5524044e427a6b24148572d0757a4cad65185b2e"
+    },
+    {
+      "key": "R2.markings.edge",
+      "topic": "R2.markings.edge",
+      "claim": null,
+      "source": "R2",
+      "page": 30,
+      "section": "Clarifications · Taking off from wrong edge",
+      "summary": "Flip 或 Lutz 起跳刃明确错误时标 e，基础分取分值表对应行。起跳刃不清楚时标 !，基础分不因此降低。",
+      "conditions": "2026/27 成年女子单人自由滑，Flip 或 Lutz 起跳判刃。其他标记并存时需核对对应分值表行。",
+      "factKeys": [
+        "reference.judgments"
+      ],
+      "lookup": [
+        "r2.markings.edge"
+      ],
+      "anchorSha256": "61766dc746a6d6d024d070dc450c5471b095c9b7458b7dcf56d7c746a7fcf1c9"
+    },
+    {
+      "key": "R2.third_combo",
+      "topic": "R2.third_combo",
+      "claim": null,
+      "source": "R2",
+      "page": 33,
+      "section": "Free Skating · More than two combinations or sequences",
+      "summary": "连跳和连续跳合计超过两组时，超额组只计第一跳，标 +REP，按该跳基础分的 80% 计值。",
+      "conditions": "2026/27 成年女子单人自由滑，第三组及后续超额连跳或连续跳的计值。",
+      "factKeys": [
+        "extra_combo_first_factor",
+        "extra_combo_tail"
+      ],
+      "lookup": [
+        "r2.third_combo"
+      ],
+      "anchorSha256": "1ddfd08f2e1af33702f7856e4c8660b6dce72584188169b7c06dbae42ee23709"
+    },
+    {
+      "key": "R1.612.senior_women.extra",
+      "topic": "R1.612.senior_women.extra",
+      "claim": null,
+      "source": "R1",
+      "page": 70,
+      "section": "Rule 612 · Senior Women / §2 Additional elements",
+      "summary": "成年女子自由滑最多计六个跳跃元素。按执行顺序，超额的第七项整项不计值；即使第七项是连跳或连续跳，其中的跳跃也不计入 BV。",
+      "conditions": "成年女子单人自由滑，按跳跃元素计项；连跳或连续跳各占一项。适用于第七项及其后的超额元素。",
+      "factKeys": [
+        "element_limit",
+        "extra_element"
+      ],
+      "lookup": [
+        "r1.612.senior_women.extra",
+        "extra_element"
+      ],
+      "anchorSha256": "a722e61769f5dca1d6fefef60c0646cc70eeb3210363e9f264f2ebd1c7bec002"
+    },
+    {
+      "key": "R2.combinations.connection",
+      "topic": "R2.combinations.connection",
+      "claim": null,
+      "source": "R2",
+      "page": 28,
+      "section": "Jump combination · General / Landing and take-off foot",
+      "summary": "普通连跳中，前一跳的落冰脚就是下一跳的起跳脚。两跳之间在冰上转一整圈仍可构成连跳；自由脚可以触冰，但重心不能转移到自由脚。",
+      "conditions": "成年女子单人自由滑，普通连跳的两跳衔接。Axel 连续跳和其他专门连接另有适用条款。",
+      "factKeys": [
+        "combo_connection"
+      ],
+      "lookup": [
+        "r2.combinations.connection",
+        "combo_connection"
+      ],
+      "anchorSha256": "72115149f5f8c400d8021c96e9f737f7cc45b3b71835c88a21664ff5235c0dbf"
+    },
+    {
+      "key": "R2.repeat_outcome.second_long_group",
+      "topic": "R2.repeat_outcome.second_long_group",
+      "claim": null,
+      "source": "R2",
+      "page": 32,
+      "section": "Free Skating · Second jump combo or sequence with 3 jumps",
+      "summary": "一套自由滑只有一组连跳或连续跳可以含三跳，另一组最多两跳。按执行顺序，后一个三跳组的第三跳标 *、不计值，组内其余合规跳跃仍计值。",
+      "conditions": "成年女子单人自由滑，两组都完成三个计数跳跃，后一个组超出三跳组名额。组数及其他违规另按适用条款判断。",
+      "factKeys": [
+        "combo_long_limit",
+        "extra_jump"
+      ],
+      "lookup": [
+        "r2.repeat_outcome.second_long_group"
+      ],
+      "anchorSha256": "748b1d41458f21d55bf57927f767f3dc154def5dfe69143da2524cafb323e414"
+    },
+    {
+      "key": "R2.repetition.high_quota",
+      "topic": "R2.repetition.high_quota",
+      "claim": null,
+      "source": "R2",
+      "page": 27,
+      "section": "Solo jump / Free Skating · Repetition of triple, quadruple and quint jumps",
+      "summary": "三周、四周和五周跳合计只有两种动作可以各做两次，其中四周或五周共用一个重复名额。任何同一高周跳最多尝试两次；同名跨周数的冲突和五周的使用形式另核。",
+      "conditions": "成年女子单人自由滑，按整个节目累计高周跳重复名额。此处说明名额上限，适用动作的种类归并和单跳限制仍须核对。",
+      "factKeys": [
+        "high_repeat_limit",
+        "quad_repeat_limit",
+        "same_high_limit"
+      ],
+      "lookup": [
+        "r2.repetition.high_quota",
+        "high_repeat_limit",
+        "quad_repeat_limit",
+        "same_high_limit"
+      ],
+      "anchorSha256": "eb4a6575143dca30489b559d1d199cc404f86c456462b4a1aefa327e6676f579"
+    },
+    {
+      "key": "R2.repeat_outcome.group_repetition",
+      "topic": "R2.repetition.high_quota",
+      "claim": null,
+      "source": "R2",
+      "page": 32,
+      "section": "Free Skating · Second/third repetition",
+      "summary": "在连跳或连续跳中，超出重复规则的跳跃不计值，同组其余合规跳跃仍计值。",
+      "conditions": "成年女子单人自由滑，按执行顺序处理同名同周数的重复；适用于组内有重复超额的跳。",
+      "factKeys": [
+        "extra_jump"
+      ],
+      "lookup": [
+        "r2.repeat_outcome.group_repetition"
+      ],
+      "anchorSha256": "279ef1ede050471e48f197e34de76f3ea6ab56a58aa4934dcbf3c7c4ec492ec0"
+    },
+    {
+      "key": "R2.group_exceptions.euler_sequence",
+      "topic": "R2.group_exceptions.euler_sequence",
+      "claim": null,
+      "source": "R2",
+      "page": 33,
+      "section": "Free Skating · Jump element with Euler and Jump Sequence in the program",
+      "summary": "自由滑可以安排两组连跳，或一组不含 Euler 的连跳加一组连续跳。如果同套把含 Euler 的连跳和连续跳搭配，按执行顺序，后到的不合规组只有第一跳计值并标 +REP，其余列名跳标 *、不计值。",
+      "conditions": "成年女子单人自由滑，含 Euler 的连跳与连续跳同套搭配；原件分别列举两种执行顺序。",
+      "factKeys": [
+        "euler_sequence_pair",
+        "group_exceptions_factor"
+      ],
+      "lookup": [
+        "r2.group_exceptions.euler_sequence",
+        "euler_sequence_pair"
+      ],
+      "anchorSha256": "d82004df734b70b8a84e8d72bb6f3bc1e48d0007868664d3b22ca879b2c3598f"
+    },
+    {
+      "key": "R3.rep.group_factor",
+      "topic": "R2.group_exceptions.euler_sequence",
+      "claim": null,
+      "source": "R3",
+      "page": 14,
+      "section": "Remarks 5 · +Rep Base Value factor",
+      "summary": "标为 +REP 的跳跃按该跳基础分的 80% 计值。",
+      "conditions": "Communication 2786 备注 5。R2 因 Euler 连跳与连续跳搭配而判首跳 +REP 时，使用这个 BV 系数。",
+      "factKeys": [
+        "group_exceptions_factor"
+      ],
+      "lookup": [
+        "r3.rep.group_factor"
+      ],
+      "anchorSha256": "2bf95e332fcc720db0454e3e4da239357534927febf4408ec79321a90750f045"
+    },
+    {
+      "key": "R2.markings.attempted_jump",
+      "topic": "R2.markings.attempted_jump",
+      "claim": null,
+      "source": "R2",
+      "page": 31,
+      "section": "Clarifications · Attempted Jump",
+      "summary": "漏接且没有尝试第二跳时，按实际做出的跳记录；没有执行的计划动作不占重复次数。技术组已报无分尝试时，零 BV 仍须保留判定；按无分尝试报出的元素占一个元素格。未离冰的起跳准备是否报作尝试由技术组判断。",
+      "conditions": "成年女子单人自由滑，区分未尝试的漏接和技术组已报的无分尝试；若为同组带 * 的已报跳，保留在该组。",
+      "factKeys": [
+        "reference.judgments",
+        "called_jump_quota"
+      ],
+      "lookup": [
+        "r2.markings.attempted_jump"
+      ],
+      "anchorSha256": "a34b10b1b34de610dc7411e293d421500472efcc2b91386295db70e982104ccd"
+    },
+    {
+      "key": "R2.call.actual",
+      "topic": "R2.markings.popped",
+      "claim": null,
+      "source": "R2",
+      "page": 2,
+      "section": "General · Calling procedure / Actual execution",
+      "summary": "技术组尽可能按实际执行的元素报动作；被标 * 的错误元素无分。自由滑复盘按已报结果更新，用实际列名动作的编码更新重复次数。",
+      "conditions": "成年女子单人自由滑，漏接、跳空或已报无分时按实际报出的动作处理；技术组尚未给出判定的尝试须待核。",
+      "factKeys": [
+        "reference.judgments",
+        "called_jump_quota"
+      ],
+      "lookup": [
+        "r2.call.actual"
+      ],
+      "anchorSha256": "3cfedaa9fcb018f4b930eea0e6fb8eecc6a64de1fcec060d2588c5ae94737cc1"
+    },
+    {
+      "key": "R2.markings.popped",
+      "topic": "R2.markings.popped",
+      "claim": null,
+      "source": "R2",
+      "page": 30,
+      "section": "Clarifications · Popped listed jumps",
+      "summary": "列名跳跳空仍占一个跳跃元素格。如果原计划三周但技术组报为两周，按报出的两周动作更新后续重复次数。",
+      "conditions": "成年女子单人自由滑，跳空的列名跳已有技术组动作判定；按实报周数更新次数。",
+      "factKeys": [
+        "called_jump_quota"
+      ],
+      "lookup": [
+        "r2.markings.popped"
+      ],
+      "anchorSha256": "d94143a2593c35b7f2e9464f46886427fe2d8755068b16ae0a116c3392ec22b9"
+    },
+    {
+      "key": "R2.markings.rotation_call",
+      "topic": "R2.markings.rotation_call",
+      "claim": null,
+      "source": "R2",
+      "page": 29,
+      "section": "Clarifications · Under-rotated and Downgraded jumps",
+      "summary": "列名跳落冰少转超过四分之一圈且不足半圈时标 <，基础分取分值表的对应欠周行。少转半圈或更多时标 <<，按降组计值。",
+      "conditions": "成年女子单人自由滑，列名跳落冰少转的 < 与 << 判定；恰少四分之一圈的 q 及 Euler 另有口径。",
+      "factKeys": [
+        "reference.judgments"
+      ],
+      "lookup": [
+        "r2.markings.rotation_call"
+      ],
+      "anchorSha256": "b56765dfc86c1f6cdd413576aee702d5f48a30acf4484570e413ec0d9acaebbd"
+    },
+    {
+      "key": "R2.markings.downgrade_value",
+      "topic": "R2.markings.rotation_call",
+      "claim": null,
+      "source": "R2",
+      "page": 30,
+      "section": "Clarifications · Downgraded jumps / Scale of Value",
+      "summary": "降组标记 << 使用少一周的对应动作分值表，例如三周降组用对应两周的分值。",
+      "conditions": "成年女子单人自由滑，列名跳已被技术组判降组时的 BV 口径。",
+      "factKeys": [
+        "reference.judgments"
+      ],
+      "lookup": [
+        "r2.markings.downgrade_value"
+      ],
+      "anchorSha256": "7ecba2e70d093a1b1697971113bf3b8e7f4a451ab7aec6b4f5b6e8ad745c8e09"
+    }
+  ]
+}

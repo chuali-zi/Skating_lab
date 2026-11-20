@@ -25,7 +25,7 @@ import java.security.MessageDigest
 internal fun parsePlanTime(input: String): Double? = input.toDoubleOrNull()?.takeIf { it.isFinite() }
 
 enum class Destination(val label: String) { PREPARE("准备"), PLAN("编排"), KNOWLEDGE("资料"), MEMORY("档案") }
-data class Candidate(val title: String, val body: PlanBody, val kind: String = "MAIN", val rationale: String = "")
+data class Candidate(val title: String, val body: PlanBody, val kind: String = "MAIN", val rationale: String = "", val evidenceIds: Set<String> = emptySet())
 data class CoachUiState(
     val destination: Destination = Destination.PREPARE,
     val recoveryMode: Boolean = false,
@@ -55,6 +55,8 @@ data class CoachUiState(
     val recoveryFrozenCount: Int = 0,
     val recoveryDescription: String = "",
     val recoverySaved: PlanView? = null,
+    val pendingVideoReview: VideoReview? = null,
+    val videoJobToOpen: String? = null,
 )
 
 class CoachViewModel(application: Application) : AndroidViewModel(application) {
@@ -65,6 +67,18 @@ class CoachViewModel(application: Application) : AndroidViewModel(application) {
     private val mutableState = MutableStateFlow(CoachUiState(baseUrl = prefs.getString("baseUrl", "http://127.0.0.1:8080")!!, draft = restored))
     val state = mutableState.asStateFlow()
     private var api: CoachApi? = null
+    internal val connectedApi get() = api
+    fun openVideo(job: String) { mutableState.update { it.copy(destination = Destination.KNOWLEDGE, videoJobToOpen = job) } }
+    fun closeVideo() { mutableState.update { it.copy(videoJobToOpen = null) } }
+    fun attachVideo(review: VideoReview) {
+        val draft = state.value.draft
+        if (draft.planId == null || draft.contextInvalidated || draft.elements.isEmpty()) {
+            mutableState.update { it.copy(error = "请先在编排页打开已保存的有效主方案，再选择这条片段复核。") }
+            return
+        }
+        mutableState.update { it.copy(pendingVideoReview = review, videoJobToOpen = null, destination = Destination.PLAN) }
+    }
+    fun clearPendingReview() { mutableState.update { it.copy(pendingVideoReview = null) } }
     private var conversationId: String? = null
     private var localEditVersion = 0L
     private var undoDraft: LocalDraft? = null
@@ -225,6 +239,7 @@ class CoachViewModel(application: Application) : AndroidViewModel(application) {
                 put("ruleSet", planBody.ruleSet ?: JsonNull)
                 put("selection", json.encodeToJsonElement(selection()))
                 put("failureDescription", snapshot.recoveryDescription)
+                planBody.videoReview?.let { put("videoReview",json.encodeToJsonElement(it)) }
             }).plan
         } else if (existingId == null) client.post<PlanView>("/api/v1/plans", payload) else client.patch<PlanView>("/api/v1/plans/$existingId", payload)
         if (recovery) mutableState.update { it.copy(recoverySaved = saved) } else {
@@ -255,7 +270,10 @@ class CoachViewModel(application: Application) : AndroidViewModel(application) {
             snapshot.draft.planId?.let { put("planId", it) }
             put("competitionKey", snapshot.draft.competition)
             put("selection", json.encodeToJsonElement(selection()))
-            if (recovery) put("completedPrefix", json.encodeToJsonElement(snapshot.recoveryBody?.completedPrefix.orEmpty()))
+            if (recovery) {
+                put("completedPrefix", json.encodeToJsonElement(snapshot.recoveryBody?.completedPrefix.orEmpty()))
+                snapshot.recoveryBody?.videoReview?.let { put("videoReview",json.encodeToJsonElement(it)) }
+            }
         })
         readRun(run)
     }
@@ -289,12 +307,17 @@ class CoachViewModel(application: Application) : AndroidViewModel(application) {
         }
         check(run.status == "SUCCEEDED") { "服务返回了尚未完成的分析状态，请稍后重新查看。" }
         val result = run.result?.jsonObject
-        val explanation = result?.get("explanation")?.jsonPrimitive?.contentOrNull.orEmpty()
+        val explanation = buildString {
+            append(result?.get("explanation")?.jsonPrimitive?.contentOrNull.orEmpty())
+            result?.get("unknowns")?.jsonArray?.mapNotNull { it.jsonPrimitive.contentOrNull }?.distinct()?.forEach { append("\n待核 · ").append(it) }
+        }
         val candidates = result?.get("candidates")?.jsonArray?.mapNotNull { element ->
             runCatching {
                 val candidate = element.jsonObject
                 val candidateBody = candidate["body"] ?: buildJsonObject { put("elements", candidate["elements"] ?: JsonArray(emptyList())); put("ruleSet", result["ruleSet"] ?: JsonNull) }
-                Candidate(candidate["title"]?.jsonPrimitive?.contentOrNull ?: "建议方案", json.decodeFromJsonElement<PlanBody>(candidateBody), candidate["kind"]?.jsonPrimitive?.contentOrNull ?: "MAIN", candidate["rationale"]?.jsonPrimitive?.contentOrNull.orEmpty())
+                Candidate(candidate["title"]?.jsonPrimitive?.contentOrNull ?: "建议方案", json.decodeFromJsonElement<PlanBody>(candidateBody),
+                    candidate["kind"]?.jsonPrimitive?.contentOrNull ?: "MAIN", candidate["rationale"]?.jsonPrimitive?.contentOrNull.orEmpty(),
+                    candidate["evidenceIds"]?.jsonArray?.mapNotNull { it.jsonPrimitive.contentOrNull }?.toSet().orEmpty())
             }.getOrNull()
         }.orEmpty()
         val evidence = result?.get("evidence")?.let { runCatching { json.decodeFromJsonElement<List<SearchHit>>(it) }.getOrDefault(emptyList()) }.orEmpty()
@@ -322,7 +345,8 @@ class CoachViewModel(application: Application) : AndroidViewModel(application) {
         val performed = draft.elements[index].copy(jumps = codes, type = if (codes.size > 1) "COMBINATION" else "SINGLE")
         val elements = draft.elements.take(index) + performed + draft.elements.drop(index + 1)
         localEditVersion++
-        mutableState.update { it.copy(recoveryMode = true, recoveryBody = PlanBody(elements, draft.ruleSet, description, completedPrefix = elements.take(index + 1), sourcePlanId = draft.planId, failureDescription = description, selection = selection()), recoveryFrozenCount = index + 1, recoveryDescription = description, recoverySaved = null, recoveryEvaluation = null) }
+        val reference = state.value.pendingVideoReview?.let { ReviewRef(it.id,it.revision) }
+        mutableState.update { it.copy(recoveryMode = true, recoveryBody = PlanBody(elements, draft.ruleSet, description, completedPrefix = elements.take(index + 1), sourcePlanId = draft.planId, failureDescription = description, selection = selection(), videoReview = reference), recoveryFrozenCount = index + 1, recoveryDescription = description, recoverySaved = null, recoveryEvaluation = null, pendingVideoReview = null) }
         evaluate(true)
     }
     fun defaultRecovery(onChooseScenario: () -> Unit) = operation("正在确定默认失误情景") {

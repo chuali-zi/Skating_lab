@@ -5,6 +5,10 @@ server:
     include-message: never
     include-stacktrace: never
 spring:
+  task:
+    scheduling:
+      pool:
+        size: 2
   application:
     name: skating-coach
   datasource:
@@ -26,6 +30,8 @@ spring:
       max-request-size: ${UPLOAD_MAX_REQUEST_SIZE:256MB}
 skating:
   dev-login-enabled: false
+  video:
+    enabled: ${SKATING_RUN_LIVE_LUNA:false}
   llm:
     endpoint: ${LLM_ENDPOINT:}
     api-key: ${LLM_API_KEY:}

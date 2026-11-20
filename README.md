@@ -14,11 +14,11 @@
 - [个性化记忆设计](docs/personal-memory-design.md)：每位选手的长期档案、当前情境、来源、自动更新、冲突、纠正与遗忘。
 - [知识库与混合检索设计](docs/knowledge-rag-design.md)：文档入库、规则版本、结构化查询、RAG、原文展开、引用与知识管理。
 
-**当前产品以 2026-11-14 的手绘需求、后续用户修正和 PRD v0.8 为准。首版用户端已确定为原生 Android，仅接收服务并承担交互。** 已排除 Web 前端、网页套壳、Python 后端和端侧推理。建议引擎采用云端 LLM + 花滑知识库/RAG + 个人长期档案；当前不训练、不微调模型，不采购训练 GPU。本轮架构基线采用 Kotlin + Jetpack Compose、Java + Spring Boot、PostgreSQL/pgvector 与对象存储；具体云端模型和依赖版本通过后续验证选定，视频由服务端调用云端模型分析。
+**当前产品以 2026-11-14 的手绘需求、后续用户修正和 PRD v0.8 为准。首版用户端是原生 Android。** 手机负责交互，Java 服务负责计算、检索、外部模型调用和结果核验。服务端结合已有模型、花滑知识库及每位选手的档案形成建议。本机已联调 GLM-5.3 编排和 OpenAI gpt-6-luna 视频帧观察。中文 BGE 检索模型在服务端 CPU 运行。
 
-三份架构文档当前为 v0.1 目标设计。Android、Java 服务、计算、数据库和知识处理已建立首个可构建的工程闭环，实际完成范围与验证见[本轮实现记录](docs/implementation-status-2026-11-14.md)。产品仍以主编排编辑和失误预案为核心，LLM 在服务端提供个性化建议。
+三份架构文档记录 v0.1 目标设计。Android、Java 服务、计算、数据库和知识处理的早期实现见[11 月 14 日记录](docs/implementation-status-2026-11-14.md)。当前规则知识、真实比赛裁判表核对、手机复核和云端编排验证见[专家知识与验收](docs/expert-knowledge-research.md)。产品以主编排编辑和失误预案为核心。
 
-已有 Python 后端、Agent 和 ML 文件仅为旧方案骨架，不代表当前技术路线，也未完成新版产品实现。
+日常开发统一在本仓的 Kotlin Android 应用和 Java 17 Spring Boot 服务上。手机端使用 Jetpack Compose，服务端管理账户、知识、推荐、确定性计算、视频抽帧和人工复核。完整 FastAPI 源线保存在 Gitee 固定提交，早期骨架集中在归档目录。[专家知识与验收](docs/expert-knowledge-research.md) · [FastAPI 迁移与归档](archive/fastapi/README.md)
 
 ## 当前工程与本机启动
 
@@ -37,13 +37,18 @@ Windows PowerShell 7、Docker Desktop 和完整 JDK 17 就绪后：
 
 初始化脚本创建忽略入库的 `.env` 和独立随机数据库密码，并启动绑定本机 `15432` 端口的 PostgreSQL/pgvector。服务启动在 `127.0.0.1:8080`，默认本机配置显式启用开发会话。正式配置没有开发登录；生产身份接入尚待实现。
 
-在 `.env` 配置实际 `LLM_ENDPOINT`、`LLM_API_KEY`、`LLM_MODEL` 后，服务才能调用云端教练。Embedding 有独立配置；未配置时检索明确降级为关键词模式。当前使用实际 HTTP 模型适配器，Spring AI 运行依赖尚未接入。
+在本机配置 LLM_ENDPOINT、LLM_API_KEY 和 LLM_MODEL 可以启用云端教练。专家问答直接读取已核规则、分值表和训练研究。运行下面的脚本可安装带指纹校验的中文 BGE，供规则主题排序和私有资料混合检索使用；开启视频观察需要可用的 FFmpeg、FFprobe 和服务进程可读取的 OPENAI_API_KEY。
+
+~~~powershell
+.\scripts\install-expert-embedding.ps1
+.\scripts\start-server.ps1 -GlmCodingPlan -VideoObservations
+~~~
 
 Windows 已设置 `GLM_API_KEY` 时，可用 `scripts/start-server.ps1 -GlmCodingPlan` 启动本机真实模型开发联调；密钥仅从环境读取，具体行为和适用范围见[服务端说明](server/README.md)。
 
 2026-11-15 的 GLM 实际调用、个人记忆/知识验证和 Android 端到端结果见 [真实模型联调记录](docs/glm-live-validation-2026-11-15.md)。它验证开发链路，不代替教练盲评或真实运动员效果评估。
 
-`scripts/smoke-api.ps1` 可验证记忆操作、明确测试规则下的 BV 和方案保存；其中测试规则标明为开发样例，不是正式赛事规则。上传资料可保留原件并解析文本；自动视觉理解、完整规则包构建和真实教练效果仍在后续实施范围。
+Android「资料 → 问滑冰教练」可查看回答、适用条件、冲突及原始出处。「资料 → 视频观察与复核」支持提交 H.264 MP4、查看实际采样时间、对照图像、确认或纠正观察，并把复核备注用于当前主方案的失误预案。自定义比赛可继续上传专属规程。开发验收脚本沿用明确标注的样例规则。[服务端运行和接口](server/README.md)
 
 ## 核心流程
 

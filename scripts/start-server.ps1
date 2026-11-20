@@ -1,6 +1,7 @@
 param(
     [switch]$SkipBuild,
     [switch]$GlmCodingPlan,
+    [switch]$VideoObservations,
     [string]$GlmModel = 'glm-5.3',
     [ValidateRange(0,65535)][int]$Port = 0
 )
@@ -30,6 +31,23 @@ try {
     if ($Port -ne 0) {
         $previousModelEnvironment['SERVER_PORT'] = [Environment]::GetEnvironmentVariable('SERVER_PORT', 'Process')
         $env:SERVER_PORT = [string]$Port
+    }
+    $installedEncoder = Join-Path $projectRoot 'storage/models/bge-small-zh-v1.5'
+    if (-not $env:SKATING_BGE_DIR -and (Test-Path -LiteralPath (Join-Path $installedEncoder 'model_quantized.onnx'))) {
+        $previousModelEnvironment['SKATING_BGE_DIR'] = $null
+        $env:SKATING_BGE_DIR = $installedEncoder
+    }
+    if ($VideoObservations) {
+        $previousModelEnvironment['OPENAI_API_KEY'] = $env:OPENAI_API_KEY
+        $previousModelEnvironment['SKATING_RUN_LIVE_LUNA'] = $env:SKATING_RUN_LIVE_LUNA
+        foreach ($scope in @('Process','User','Machine')) {
+            $videoKey = [Environment]::GetEnvironmentVariable('OPENAI_API_KEY',$scope)
+            if ($videoKey) { break }
+        }
+        if (-not $videoKey) { throw 'Video observations require OPENAI_API_KEY in the runtime environment.' }
+        $env:OPENAI_API_KEY = $videoKey
+        $env:SKATING_RUN_LIVE_LUNA = 'true'
+        $videoKey = $null
     }
     if ($GlmCodingPlan) {
         # Read the Windows store too: an already-running terminal may not have

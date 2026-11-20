@@ -1,0 +1,186 @@
+{
+  "coverage": {
+    "R1.612.senior_women": [
+      "跳跃|跳躍|腾空|騰空|跳项|\\bjumps?\\b",
+      "(?:多少|几)\\s*(?:个|個|项|項|次)|项数|項數|上限|至多|最多|how many|limit"
+    ],
+    "R2.axel": [
+      "axel|阿[克式]|向前起跳|燕式跳",
+      "没有|沒|没|未|缺|omitted|missing|without"
+    ],
+    "R3.base.3T<": [
+      "后外点冰|後外點冰|toe loop",
+      "三周|三圈|triple",
+      "不足|短缺|欠周|under.?rotat",
+      "基础分|基本分|基值|分值|多少分|计分|计值|計值|\\b(?:base|bv|scores?)\\b"
+    ],
+    "R6.qa2": [
+      "取消计值|取消分值|取消了基础值|不计值|无分|带星|星号|no value|starred",
+      "起跳|判刃|\\bedge\\b|take.?off",
+      "落冰|落地|降落|landing"
+    ],
+    "quint_solo": [
+      "[五5]\\s*[周圈转轉]|\\bquint",
+      "单个|单独|独立|單獨|solo|individual"
+    ],
+    "quint_group": [
+      "[五5]\\s*[周圈转轉]|\\bquint",
+      "连跳|连续跳|連跳|連續跳|跳跃组合|组合跳|\\b(?:combinations?|sequences?)\\b"
+    ],
+    "quint_same_name_count": [
+      "同名|名称相同|名称一样|名字相同|名字一样|same.?name",
+      "[三3][次周圈转轉]|triple",
+      "[四4][次周圈转轉]|quad",
+      "[五5][次周圈转轉]|quint"
+    ],
+    "R1.353": [
+      "后半|後半|过半|過半|second half|halfway",
+      "加成|加分|加权|乘|倍率|额外|加算|bonus|multipl",
+      "跳|jump"
+    ],
+    "R2.repetition": [
+      "两周|兩周|两圈|兩圈|双周|雙周|double",
+      "同一|一样|一樣|相同|同样|同樣|同个|同個|same",
+      "几次|幾次|次数|次數|上限|重复|重複|repet|how many"
+    ],
+    "R2.sequence": [
+      "连续跳|連續跳|跳间直接迈|跳間直接邁|sequence",
+      "阿[克式]|axel|向前起跳",
+      "第[二三23]|哪一跳|哪几跳|哪幾跳|迈步|邁步|direct step"
+    ],
+    "R2.group_exceptions": [
+      "连续跳|連續跳|jump sequence",
+      "两组|兩組|第二组|第二組|几组|幾組|组数|組數|two|second"
+    ],
+    "R2.interrupted.same_group": [
+      "连跳|连续跳|連跳|連續跳|跳跃组合|组合跳|\\b(?:combinations?|sequences?)\\b",
+      "摔倒|跌倒|摔了|步出|跨步出去|\\b(?:falls?|fell|fallen|falling)\\b|step(?:ped)?[ -]?out",
+      "接着跳|接著跳|紧接|緊接|后续跳|後續跳|之后.*跳|之後.*跳|subsequent|immediately",
+      "计值|計值|算分|有分|标记|標記|报出|報出|count|call|value"
+    ],
+    "R1.612.remarks.group_limits": [
+      "连跳|連跳|跳跃组合|跳躍組合|jump combination",
+      "几组|幾組|几套|幾套|组数|組數|几跳|幾跳|几项|幾項|长度|長度|how many|limit"
+    ],
+    "R2.combinations.euler": [
+      "欧拉|歐拉|euler|半环|半環",
+      "计值|計值|占|分|用几次|用幾次|只能用|次数|次數|count|value|once"
+    ],
+    "R2.repetition.family": [
+      "同一类|同一類|同类|同類|同一种|同一種|same type|same family",
+      "几次|幾次|次数|次數|上限|重复|重複|how many|limit"
+    ],
+    "R2.high_rep": [
+      "高周|高轉|三周|三圈|四周|四圈|triple|quad",
+      "单跳|單跳|solo",
+      "第二次|重复|重複|两次|兩次|second|repet",
+      "计值|計值|算分|打折|折算|百分|base value|factor"
+    ],
+    "R2.markings.quarter": [
+      "四分之一(?:圈|周|轉)|1[/⁄]4(?:圈|周)|\\bquarter\\b",
+      "少转|少轉|不足|缺|missing|short",
+      "标|標|记|記|写|寫|符号|符號|\\b(?:call|mark|notation|symbol)"
+    ],
+    "R2.markings.edge": [
+      "flip|lutz|菲利普|勾手|後內點冰|后内点冰|後外勾|后外勾",
+      "起跳刃|用刃|判刃|\\bedge\\b",
+      "(?:错|錯|不清|有疑|wrong|unclear)",
+      "标|標|基[础礎]分|\\bbv\\b|base value|\\bmark"
+    ],
+    "R2.third_combo": [
+      "连跳|连续跳|連跳|連續跳|跳跃组合|组合跳|\\b(?:combinations?|sequences?)\\b",
+      "第三组|第三組|超过两组|超過兩組|超额组|超額組|third|more than two",
+      "计值|計值|基础分|基礎分|算分|得分|\\bbv\\b|count|base value|score"
+    ],
+    "R1.612.senior_women.extra": [
+      "跳跃|跳躍|单跳|單跳|连跳|連跳|跳项|跳項|\\bjump",
+      "第[七7]\\s*(?:个|個|项|項)|多跳一项|多跳一項|超过六项|超過六項|seventh",
+      "计值|計值|分|作废|作廢|计入|計入|count|score|value"
+    ],
+    "R2.combinations.connection": [
+      "连跳|連跳|组合跳|組合跳|\\bjump combination\\b",
+      "连接|連接|衔接|銜接|落冰脚|落冰腳|起跳脚|起跳腳|同脚|同腳|换脚|換腳|触冰|觸冰|接法|connection"
+    ],
+    "R2.repeat_outcome.second_long_group": [
+      "连跳|连续跳|連跳|連續跳|跳跃组合|组合跳|\\b(?:combinations?|sequences?)\\b",
+      "三跳|三个跳|三個跳|3\\s*跳|three jumps",
+      "两组|兩組|第二组|第二組|后一组|後一組|两套|兩套|另一组|two groups|second",
+      "计值|計值|分|标|標|count|value"
+    ],
+    "R2.repetition.high_quota": [
+      "高周|高轉|[三四五3-5]\\s*[圈周转轉]|(?<![a-z0-9_.])[345](?:lo|lz|[atsf])|triple|quad|quint",
+      "重复|重複|做[两兩三]次|repet",
+      "名额|名額|几种|幾種|几个|幾個|几次|幾次|第[三3]次|配额|配額|超[出限额額]|用尽|用盡|limit|quota"
+    ],
+    "R2.group_exceptions.euler_sequence": [
+      "欧拉|歐拉|半环|半環|\\b(?:euler|eu)\\b",
+      "连续跳|連續跳|\\bjump sequence\\b",
+      "同套|同一套|搭配|配在|同时|同時|一起|same program|together"
+    ],
+    "R2.markings.attempted_jump": [
+      "漏接|(?:没|沒|未)尝试|(?:没|沒|未)嘗試|没接|沒接|未接|missed connection",
+      "已报|已報|报作|報作|报成|報成|已经判|已經判|called",
+      "无分|無分|计零|計零|零分|无值|無值|标\\s*\\*|標\\s*\\*|no value"
+    ],
+    "R2.markings.popped": [
+      "跳空|(?:少跳|跳少|实际跳了|實際跳了).{0,8}(?:圈|周)|popped",
+      "计数|計數|次数|次數|重复|重複|配额|配額|占.*(?:项|項|格)|count|quota"
+    ],
+    "R2.markings.rotation_call": [
+      "<|欠周|欠轉|降组|降組|under.?rotat|downgrad",
+      "少转|少轉|落冰|欠周|降组|降組|判|标|標|分|计值|計值|mark|value|rotation"
+    ]
+  },
+  "patterns": {
+    "CODES": "(?<![a-z0-9_.])(?:[1-5](?:lo|lz|[atsf])|eu)(?:<<|[<qe!*])*(?![a-z0-9_<>!*])",
+    "LOCATORS": "(?<![a-z0-9_.])(?:r\\d+|bv)\\.[a-z0-9_.<>!*]+",
+    "SHORT_PROGRAM": "短节目|短節目|短曲|短套|\\bshort[ -](?:program|routine)\\b|\\bsp\\b",
+    "PAIRS": "双人|雙人|[抛拋]\\s*(?:跳|[一二三四五1-5])|\\bpairs? skating\\b|\\bpairs\\b|\\bthrow(?:n)?[ -](?:jump|quint|[1-5])",
+    "OTHER_EVENTS": "男[单單]|男子单人|青年|青少年|少年(?:[组組级級]|女[单單子])|冰舞|同步滑冰|\\b(?:men|junior|novice|ice dance|synchronized skating)\\b",
+    "QUINT": "[五5]\\s*[周转轉]|\\bquint(?:uple)?s?\\b",
+    "TRIPLE": "[三3]\\s*[周转轉]|\\btriples?\\b",
+    "QUAD": "[四4]\\s*[周转轉]|\\bquad(?:ruple)?s?\\b",
+    "SAME_NAME": "同名|同名称|\\bsame[ -]name\\b",
+    "COUNT": "几个|几种|几类|不同|计数|\\bdifferent\\b|\\bcount\\b",
+    "GROUP": "连跳|连续跳|連跳|連續跳|跳跃组合|组合跳|\\b(?:combinations?|sequences?)\\b",
+    "NEGATED_GROUP": "(?:不(?:放进|放入|放在|加入|在|作为)|\\b(?:outside|not (?:in|part of))\\s+(?:(?:a|any|the)\\s+)?)\\s*(?:连跳|连续跳|連跳|連續跳|跳跃组合|组合跳|\\b(?:combinations?|sequences?)\\b)(?:\\s*(?:或|/|\\bor\\b)\\s*(?:连跳|连续跳|連跳|連續跳|跳跃组合|组合跳|\\b(?:combinations?|sequences?)\\b))?",
+    "SEPARATE_ELEMENT": "(?:独立|獨立|单独|單獨|另一[个個项項])(?:的|开始|開始)?(?:[后後]续|[后後]續)?(?:跳|元素|[项項])|(?:下|另|新)一(?:个|個)?(?:[项項]|元素)|新(?:的)?元素|另起|\\b(?:next|separate|independent) (?:(?:jump|skating) )?element\\b|\\b(?:separate|independent) jump\\b|\\b(?:next|following) solo jump\\b",
+    "NEGATED_SEPARATE_ELEMENT": "(?:并非|並非|不是|不算|没有|沒有|并未|並未|\\bnot)\\s*(?:(?:a|an|the)\\s+)?(?:(?:独立|獨立|单独|單獨|另一[个個项項])(?:的|开始|開始)?(?:[后後]续|[后後]續)?(?:跳|元素|[项項])|(?:下|另|新)一(?:个|個)?(?:[项項]|元素)|新(?:的)?元素|另起|\\b(?:next|separate|independent) (?:(?:jump|skating) )?element\\b|\\b(?:separate|independent) jump\\b|\\b(?:next|following) solo jump\\b)",
+    "GROUP_ENDED": "(?:连跳|连续跳|連跳|連續跳|跳跃组合|组合跳|\\b(?:combinations?|sequences?)\\b|[该該上一][组組])[^。！？.!?；;]{0,18}(?:已经|已經|已|就)(?:结束|結束)",
+    "LANDING_FAILURE": "摔倒|跌倒|摔了|步出|跨步出去|\\b(?:falls?|fell|fallen|falling)\\b|step(?:ped)?[ -]?out",
+    "NOT_EXACT_QUARTER": "欧拉|歐拉|半环|半環|\\b(?:euler|eu)\\b|<|欠周|欠轉|降组|降組|under.?rotat|downgrad|(?:少于|少於|低于|低於|超过|超過|不到|多于|多於)\\s*(?:四分之一|1[/⁄]4)|\\b(?:more|less) than (?:a )?quarter\\b",
+    "CODE_CONNECTION": "\\s*(?:\\+(?:\\s*seq\\s*\\+)?|接(?:上)?)\\s*",
+    "GROUP_CALL": "\\+\\s*(?:combo|seq)\\b",
+    "SEPARATE_MARK": "(?:\\s*(?:[带帶]有?|[标標]記|标记|with\\b(?:\\s+an?)?)\\s*|\\s+)([<qe!*]+)(?![a-z0-9_<>!*])",
+    "QUINT_SCORE": "基础分|基本分|基值|分值|多少分|计分|计值|計值|\\b(?:base|bv|scores?)\\b",
+    "REPETITION": "重复|\\brepetitions?\\b",
+    "OUTSIDE_INDEX": "旋转(?!周|圈|次数)|音乐|步法|舞步|接[续續]步|滑行编排|扣分|节目时长|助滑|助跑|节目内容分|比赛总分|赛事总分|整套节目编排|编排[^。！？!?]{0,10}完整节目|新赛季|下赛季|\\b(?:step sequences?|spins?|music|deductions?|choreography|program duration|approach time|goe|pcs|competition total|next season)\\b",
+    "ROTATION_DISTINCTION": "(?<!<)<(?!<).*<<|<<.*(?<!<)<(?!<)|(?:欠周|欠轉).*(?:降组|降組)"
+  },
+  "aliases": [
+    [
+      "(?:最多|至多|上限).{0,12}(?:跳跃|跳几项)|跳跃.{0,12}(?:最多|上限|项数)|能跳几项",
+      "element_limit"
+    ],
+    [
+      "阿克塞尔|阿克谢尔|阿克塞|(?:未尝试|没跳|未跳).{0,8}(?:axel|a跳)|燕式跳|末格|最后一格|no axel|missing axel",
+      "missing_axel"
+    ],
+    [
+      "带[星＊*]|星号|判刃.{0,10}落冰|起跳刃.{0,10}落冰|starred|take.off edge",
+      "starred_jump"
+    ],
+    [
+      "\\brule\\s+612\\b|第\\s*612\\s*条",
+      "rule 612"
+    ]
+  ],
+  "policyTopics": [
+    "R1.612.senior_women.extra",
+    "R2.combinations.connection",
+    "R2.group_exceptions.euler_sequence",
+    "R2.markings.attempted_jump",
+    "R2.markings.popped",
+    "R2.repeat_outcome.second_long_group"
+  ]
+}

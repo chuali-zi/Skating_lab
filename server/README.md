@@ -1,6 +1,6 @@
 # Java 服务端
 
-首个可运行后端：Java 17、Spring Boot 3.5.16、Maven 3.9.16。Maven Wrapper 固定发行版及 SHA-256，无需预先安装 Maven。数据库与知识迁移属于这个工程；不要同时执行旧 `db/schema/00*.sql`。
+Java 17、Spring Boot 3.5.16 和 Maven 3.9.16 构成当前唯一服务端。Maven Wrapper 固定发行版及 SHA-256。应用数据表使用本工程的 Flyway 迁移，旧 FastAPI 数据库结构保存在归档中。
 
 ## 构建与启动
 
@@ -73,6 +73,16 @@ Windows 本机使用已存在的 `GLM_API_KEY` 做 GLM Coding Plan 开发联调�
 | `POST /scoring/default-failure` | 可确定时选择最高 BV 连跳的默认失误情景；不存在时 404 |
 | `POST /recommendations` | 保存推荐任务；包含 `requestId/sessionId/prompt`，可带 `planId/competitionKey/completedPrefix/selection`（兼容旧 `ruleBundleId` 字段） |
 | `GET /recommendations/{id}` | 查询结果，按需续跑排队或租约已过期的任务 |
+| GET /knowledge/expert/catalog | 当前官方比赛范围、版本、有效期、指纹、来源和数量 |
+| GET /knowledge/expert?q=…&competitionKey=… | 查已核规则或训练研究，可附 revision 及重复的 sources 参数。返回回答、条件、来源、页码和匹配／冲突／过期／资料不足状态 |
+| GET /assets/video-jobs | 当前运动员的最近 50 个任务、启用状态和视频规格 |
+| POST /assets/video-jobs | 原始 video/mp4 请求体，单次确认头 X-Skating-Frame-Consent 取值 1，异步返回任务 |
+| POST /assets/video-jobs/from-source/{id} | 从该运动员已上传的 MP4 建立观察任务，要求同样的单次授权 |
+| GET /assets/video-jobs/{id}、GET /assets/video-jobs/{id}/frames/{index} | 观察、实际时间戳、待核项、已保存复核及私有 JPEG。帧索引从 0 起算 |
+| PUT /assets/video-jobs/{id}/observations/{index}/review | 明确 confirmed 为 true，accept 或 correct 填写片段备注，ignore 时备注留空 |
+| DELETE /assets/video-jobs/{id} | 删除片段及其帧和复核。关联建议和预案失效 |
+
+运行根目录 scripts/install-expert-embedding.ps1 后，启动脚本会发现已验证的 BGE 文件；也可以用 SKATING_BGE_DIR 传入模型目录。公开规则精确问答可以离线使用。运行 scripts/start-server.ps1 -VideoObservations 可从本机环境读取 OPENAI_API_KEY 并启用 gpt-6-luna；手动运行 JAR 时，另设 SKATING_RUN_LIVE_LUNA=true。服务依赖 PATH 上的 ffprobe 和 ffmpeg。开启供应商后，运动员每次提交仍须在 Android 明确同意发送采样帧。应用可同时使用 -GlmCodingPlan 做编排开发联调。
 
 记忆和知识接口由对应模块提供，见根目录文档。API 的 JSON 内部结构不是对用户输入表达的约束；用户的原话、资料和自由规则由输入/知识模块接收。
 
@@ -84,7 +94,7 @@ Windows 本机使用已存在的 `GLM_API_KEY` 做 GLM Coding Plan 开发联调�
 
 没有模型配置时，输入仍保存，任务明确返回 `PROVIDER_UNAVAILABLE`。没有可执行比赛规则快照时，模型可依据已读原文提出带未知项的候选，但精确评分保持未知。模型自行输出的规则、评分和未经授权的引用不会作为权威结果。
 
-LLM 输出候选目前使用一次有界的修复重试：把结构、证据引用、选择范围或冻结前缀的具体错误反馈给模型，仍须通过同一套服务端检查。成功结果记录 validationAttempts 和 repairReasons，失败只公开固定错误码，不回显被拒绝的原始输出；并未实现任意工具循环、多模态视频教练或自动生成可执行新规则。HTTP 适配层对标准 chat-completions 格式进行真实请求，通过 `LanguageModelGateway` 隔离业务。本轮尚未引入 Spring AI 运行依赖；原架构中采用 Spring AI 的适配方案仍待集成，当前不能宣称 Spring AI 已经接入。后续可增加 Spring AI 或其他厂商适配，而无需改动个人记忆和业务接口。
+LLM 的候选可按结构、证据引用、选择范围或冻结前缀错误修复一次，全程通过同一套服务端检查。成功结果记录 validationAttempts 和 repairReasons。文字编排通过 LanguageModelGateway 使用 chat-completions 接口，采样图像通过独立的 Responses 接口处理。推荐和失误预案可携带 videoReview，其中 id、revision 必须对应当前选手主动选择的有效复核记录。模型自行给出的分值不进入计分器。[专家知识、研究与验收](../docs/expert-knowledge-research.md)
 
 用户更正、撤回或遗忘导致版本失效时，旧任务不能重新发布；已生成结果再次读取也检查上下文版本。保存的历史方案通过 `contextInvalidated` 提醒来源发生变化，并阻止直接作为推荐或预案基线；读取清理后的新版本、明确重新保存当前编排后才能继续。方案 JSON 通过类型投影去除未知嵌套字段，避免产生不受来源管理的私人证据副本。恢复方案的已发生前缀在保存后冻结，纠正实际情景应创建新预案。
 
@@ -94,4 +104,4 @@ LLM 输出候选目前使用一次有界的修复重试：把结构、证据引�
 
 云端开发联调独立于上述 fixture 测试：2026-11-15 使用真实 GLM 接口检查个人资料更正、知识范围、冻结前缀、自由输入提取、来源撤回及 Android 操作。实际结果和边界见 [GLM 联调记录](../docs/glm-live-validation-2026-11-15.md)。新增数据库集成测试还验证具体错误反馈能修复虚构引用、被拒绝的原文不进入最终结果、连续失败在一次修复后终止。
 
-数据库集成测试验证 PostgreSQL/Flyway/RLS 及资料生命周期；以实际测试报告判断是否执行。Android 的实际画面、正式账号、外部云端模型效果和长视频理解需要相应环境与真实样本继续验证。
+数据库集成测试验证 PostgreSQL、Flyway、行级隔离及资料生命周期。本轮已使用真实 OpenAI 接口跑完三段比赛录像，并在 Android API 36 模拟器查看证据帧、人工纠正、保存关联预案。正式账号接入、长视频和专业裁判盲评仍在现有验收范围以外。[实拍录像逐段记录](../docs/public-skating-validation.md) · [规则检索与编排实测](../docs/expert-knowledge-research.md)

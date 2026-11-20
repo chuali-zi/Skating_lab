@@ -10,6 +10,10 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
 public class ApiExceptionHandler {
+    @ExceptionHandler(org.springframework.web.HttpMediaTypeNotSupportedException.class)
+    ResponseEntity<ApiError> unsupported() {
+        return ResponseEntity.status(HttpStatus.UNSUPPORTED_MEDIA_TYPE).body(new ApiError("UNSUPPORTED_MEDIA_TYPE","请检查上传文件或请求的媒体类型。"));
+    }
     @ExceptionHandler(ApiException.class)
     ResponseEntity<ApiError> handle(ApiException error) {
         return ResponseEntity.status(error.status()).body(new ApiError(error.code(), error.getMessage()));

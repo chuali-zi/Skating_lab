@@ -1,0 +1,37 @@
+[
+  {
+    "key":"takeoff-six-doubles","title":"Yamaguchi、Sakurai · 六种双周跳的起跳角动量（2025）",
+    "url":"https://doi.org/10.3389/fspor.2025.1597598","section":"方法、图 3 与结论",
+    "patterns":["起跳|起转|手臂|自由腿|角动量|take.?off|angular momentum","跳|点冰|刃|动作|jump"],
+    "summary":"七名高水平女性选手的六种双周跳中，全身起跳角动量整体接近，各跳种的双臂和自由腿贡献模式有差异。比较技术时应保留跳种、起跳侧和完成条件。",
+    "conditions":"研究对象做的是双周跳。把结果用于个人复盘时，可对照同一跳种成功与失误的尝试，请教练确认起跳与空中阶段的区别。个人错误原因和成功率需要该选手自己的证据。"
+  },
+  {
+    "key":"youth-axel","title":"青少年不同周数 Axel 的下肢生物力学研究（2025）",
+    "url":"https://doi.org/10.3389/fbioe.2025.1606817","section":"§2.1–2.2 受试者和测量",
+    "patterns":["axel|阿克塞尔|阿克谢尔|华尔兹|waltz|阿克赛尔","进阶|升级|学习|起跳|训练|周数|青少年|progress|转速"],
+    "summary":"11 名青少年选手完成华尔兹跳和一周 Axel，其中 3 人还完成两周 Axel。研究结合双机位高速摄影和肌电，把推进、起跳及落冰分阶段观察。",
+    "conditions":"两周 Axel 的子样本只有 3 人。对学习目标，可询问当前已稳定的前置动作与教练反馈，再比较同一选手的录像。研究设计不能给某位选手升级期限。"
+  },
+  {
+    "key":"landing-observation","title":"Lockwood 等 · 冰上落冰的生物力学与裁判观察（2006）",
+    "url":"https://pubmed.ncbi.nlm.nih.gov/16939155/","section":"方法与结果摘要",
+    "patterns":["落冰|落地|landing","观察|看|稳定|分析|姿态|质量|训练|视频|评估|review|quality"],
+    "summary":"研究记录了 10 位全国排名选手的双周、三周落冰，以 60 Hz 三维录像分析，并由 42 位裁判按落冰标准评价。生物力学评估与裁判对同批落冰质量的判断有一致性。",
+    "conditions":"该研究有校准空间与连续影像。对约半秒间隔的手机采样帧，可描述真实帧里看得见的姿态，把帧间接触时刻、技术符号及个人 GOE 留给更充分证据。"
+  },
+  {
+    "key":"fatigue-program","title":"双人滑选手反复跳跃实验（2012）",
+    "url":"https://pmc.ncbi.nlm.nih.gov/articles/PMC3737852/","section":"Methods · Repeated jump test",
+    "patterns":["累|疲惫|疲劳|体能|fatigue|tired|后程乏力","训练|跳|编排|后半|时间|稳定|秒|个人|plan|jump|累|疲劳"],
+    "summary":"36 名双人滑选手参加了 60 秒陆地连续纵跳实验，研究按分段功率和关节运动分析表现。实验任务、地面与受试者范围都影响解释。",
+    "conditions":"用于个人编排时，记录选手自述的疲劳时点及相同时段做同种跳的结果，对照前置或后移的方案。陆地实验的时长不能直接换成冰上比赛的个人疲劳阈值或成功概率。"
+  },
+  {
+    "key":"development-stage","title":"Skate Canada · 选手长期发展框架",
+    "url":"https://skatecanada.ca/community/athletes/long-term-development/","section":"Long-Term Development · 项目概述",
+    "patterns":["阶段|长期|初学|基础|进阶|成长|development|新手","计划|训练|目标|阶段|skater|选手|学习"],
+    "summary":"加拿大滑冰协会以长期发展框架组织不同水平和项目的训练与比赛指导。制定阶段目标时，需要结合选手当前技能和参与路径。",
+    "conditions":"依据是协会公开框架介绍。具体内容应来自可用的课程、教练指导及选手训练记录。先确认已能重复完成的动作、目标和近期训练条件。"
+  }
+]

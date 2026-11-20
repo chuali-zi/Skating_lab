@@ -2,6 +2,7 @@ package com.skatingcoach.knowledge;
 
 import com.skatingcoach.access.CurrentActor;
 import com.skatingcoach.api.ApiException;
+import com.skatingcoach.video.*;
 import com.skatingcoach.gateway.LanguageModelGateway;
 import com.skatingcoach.gateway.ModelReply;
 import com.skatingcoach.memory.MemoryModels;
@@ -34,7 +35,7 @@ import org.testcontainers.utility.DockerImageName;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-@SpringBootTest(properties={"skating.knowledge.worker-enabled=false","KNOWLEDGE_STORAGE_PATH=./target/integration-storage"})
+@SpringBootTest(properties={"skating.knowledge.worker-enabled=false","skating.video.worker-enabled=false","KNOWLEDGE_STORAGE_PATH=./target/integration-storage"})
 @Testcontainers
 class KnowledgeMemoryIntegrationTest {
     @Container static final PostgreSQLContainer<?> DATABASE=new PostgreSQLContainer<>(
@@ -56,6 +57,8 @@ class KnowledgeMemoryIntegrationTest {
     @Autowired com.skatingcoach.coach.RecommendationService recommendations;
     @Autowired com.skatingcoach.conversation.ConversationService conversations;
     @MockitoBean LanguageModelGateway model; @MockitoBean EmbeddingGateway embeddings;
+    @org.springframework.test.context.bean.override.mockito.MockitoSpyBean FrameObserver observer;
+    @Autowired VideoJobs videos;
     CurrentActor alice,bob;
 
     @BeforeEach void createAthletes() {
@@ -281,9 +284,57 @@ class KnowledgeMemoryIntegrationTest {
         var source=document(alice,"different vocabulary",null);
         tenant.write(alice,()-> {jdbc.update("update knowledge_block set embedding='[1,0,0]'::vector,embedding_model='fixture-space',embedding_dimensions=3 where source_id=?",source.id());return null;});
         when(embeddings.available()).thenReturn(true);when(embeddings.model()).thenReturn("fixture-space");
-        when(embeddings.embed(anyList())).thenReturn(List.of(new double[]{1,0,0}));
+        when(embeddings.query("semantic paraphrase")).thenReturn(new double[]{1,0,0});
         var result=knowledge.search(alice,"semantic paraphrase",null,10);
         assertThat(result.mode()).isEqualTo("hybrid");assertThat(result.items()).hasSize(1);
+    }
+    @Test void videoQueueFramesAndVersionedHumanReviewStayPrivate(@org.junit.jupiter.api.io.TempDir java.nio.file.Path dir) throws Exception {
+        var bytes=FrameObserverTest.syntheticClip(dir);
+        var source=knowledge.upload(alice,"geometry","video/mp4",null,UUID.randomUUID().toString(),new ByteArrayInputStream(bytes));
+        assertThatThrownBy(()->videos.requireConsent(null)).isInstanceOf(ApiException.class);
+        doReturn(true).when(observer).available();
+        doAnswer(invocation->{
+            VideoSampler.Clip clip=invocation.getArgument(0);
+            var result=mapper.createObjectNode().put("duration_seconds",clip.duration()).put("model","test").put("max_sampling_gap_seconds",clip.maxGap());
+            result.set("frame_timestamps_seconds",mapper.valueToTree(clip.timestamps()));
+            result.set("model_output",mapper.readTree("""
+                {"observations":[{"frame_indices":[0,2],"visible_evidence":"画面中的物体向右移动。","confidence":"high"}],"pending_review":["未见滑冰者，技术待核。"]}
+                """));
+            return result;
+        }).when(observer).observe(any(VideoSampler.Clip.class));
+        videos.requireConsent("1");
+        var id=(UUID)videos.fromSource(alice,source.id()).get("id");
+        assertThatThrownBy(()->videos.enqueue(alice,bytes)).isInstanceOf(ApiException.class);
+        assertThatThrownBy(()->videos.fromSource(bob,source.id())).isInstanceOf(ApiException.class);
+        assertThat(videos.processOne()).isTrue();
+        assertThat(videos.processOne()).isFalse();
+        assertThat(videos.detail(alice,id).get("status")).isEqualTo("completed");
+        assertThat(videos.frame(alice,id,0)).startsWith((byte)0xff,(byte)0xd8);
+        assertThatThrownBy(()->videos.frame(bob,id,0)).isInstanceOf(ApiException.class);
+        assertThatThrownBy(()->videos.detail(bob,id)).isInstanceOf(ApiException.class);
+        assertThatThrownBy(()->videos.review(alice,id,0,new VideoJobs.Review("accept",false,"未确认"))).isInstanceOf(ApiException.class);
+        var accepted=videos.review(alice,id,0,new VideoJobs.Review("accept",true,"只见方块。"));
+        var first=new VideoJobs.ReviewRef((UUID)accepted.get("id"),1);
+        assertThat(videos.reviewedEvidence(alice,first).locator()).contains("0.0 秒","1.0 秒");
+        assertThatThrownBy(()->videos.reviewedEvidence(bob,first)).isInstanceOf(ApiException.class);
+        var plan=plans.create(alice,new PlanInput("fixture",Kind.MAIN,mapper.readTree("{\"elements\":[]}"),null));
+        var row=new Element("row",ElementType.SINGLE,List.of("2T"),null);
+        var saved=plans.recovery(alice,plan.id(),new RecoveryInput(plan.revision(),"fixture scenario",List.of(row),List.of(row),
+                null,null,"手选失误",first)).plan();
+        videos.review(alice,id,0,new VideoJobs.Review("correct",true,"只限该次片段"));
+        assertThat(plans.get(alice,saved.id()).contextInvalidated()).isTrue();
+        assertThat(plans.get(alice,plan.id()).contextInvalidated()).isFalse();
+        assertThatThrownBy(()->videos.reviewedEvidence(alice,first)).isInstanceOf(ApiException.class);
+        assertThat(videos.reviewedEvidence(alice,new VideoJobs.ReviewRef(first.id(),2)).text()).contains("只限该次片段");
+        videos.review(alice,id,0,new VideoJobs.Review("ignore",true,null));
+        assertThatThrownBy(()->videos.reviewedEvidence(alice,new VideoJobs.ReviewRef(first.id(),3))).isInstanceOf(ApiException.class);
+        tenant.write(alice,()->jdbc.update("update video_evidence set result=jsonb_set(result,'{model_output,observations,0,visible_evidence}','\"unreviewed technical verdict\"') where id=?",id));
+        assertThat(videos.detail(alice,id).get("reviews")).isEqualTo(List.of());
+        assertThat(videos.detail(alice,id).toString()).doesNotContain("unreviewed technical verdict");
+        knowledge.delete(alice,source.id());
+        assertThatThrownBy(()->videos.detail(alice,id)).isInstanceOf(ApiException.class);
+        assertThatThrownBy(()->videos.frame(alice,id,0)).isInstanceOf(ApiException.class);
+        verify(observer,times(1)).observe(any());
     }
     @Test void mislabeledVideoWaitsForVisualAnalysisAndCannotEnterRetrieval()throws Exception {
         var source=knowledge.upload(alice,"mislabeled training.txt","text/plain",null,UUID.randomUUID().toString(),

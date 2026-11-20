@@ -94,6 +94,15 @@ public class CoachResponseValidator {
         }
     }
 
+    void requireGrounding(JsonNode result, Set<String> professional, String reviewId) {
+        for(var candidate:result.path("candidates")) {
+            var cited=new java.util.HashSet<String>();
+            candidate.path("evidenceIds").forEach(id->cited.add(id.asText()));
+            if(!professional.isEmpty() && java.util.Collections.disjoint(professional,cited))
+                throw invalid("EXPERT_EVIDENCE_REQUIRED","说明该候选与哪条已载入的专业证据有关，并在evidenceIds引用其完整id。");
+            if(reviewId!=null && !cited.contains(reviewId)) throw invalid("VIDEO_EVIDENCE_REQUIRED","本次预案选用了片段复核，请按该复核的适用范围说明，并引用其id。");
+        }
+    }
     private ValidationFailure invalid(String code, String feedback) { return new ValidationFailure(code, feedback); }
 
     /** Only fixed reason codes and calculator check codes; never include raw model output in errors/logs. */
